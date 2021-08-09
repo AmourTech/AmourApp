@@ -16,31 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `contact`
+-- Table structure for table `proposal`
 --
 
-DROP TABLE IF EXISTS `contact`;
+DROP TABLE IF EXISTS `proposal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `contact` (
-  `ContactID` int NOT NULL AUTO_INCREMENT,
-  `Fname` varchar(45) DEFAULT NULL,
-  `Lname` varchar(45) DEFAULT NULL,
-  `Email` varchar(45) DEFAULT NULL,
-  `Address` varchar(45) DEFAULT NULL,
-  `Relationship` varchar(45) DEFAULT NULL,
-  `PhoneNbr` int DEFAULT NULL,
-  PRIMARY KEY (`ContactID`)
+CREATE TABLE `proposal` (
+  `Client` int NOT NULL,
+  `Contact` int NOT NULL,
+  `Start` varchar(45) DEFAULT NULL,
+  `MinLength` varchar(45) DEFAULT NULL,
+  `ProposalName` varchar(45) DEFAULT NULL,
+  `OrganisationID` int NOT NULL,
+  `ProposalID` int NOT NULL,
+  `Billing` enum('Weekly','Single') DEFAULT NULL,
+  PRIMARY KEY (`ProposalID`),
+  KEY `PConId_idx` (`Contact`),
+  KEY `POrgId_idx` (`OrganisationID`),
+  KEY `PCliId` (`Client`),
+  CONSTRAINT `PCliId` FOREIGN KEY (`Client`) REFERENCES `client` (`AccountID`),
+  CONSTRAINT `PConId` FOREIGN KEY (`Contact`) REFERENCES `contact` (`ContactID`),
+  CONSTRAINT `POrgId` FOREIGN KEY (`OrganisationID`) REFERENCES `organisation` (`OrganisationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `contact`
+-- Dumping data for table `proposal`
 --
 
-LOCK TABLES `contact` WRITE;
-/*!40000 ALTER TABLE `contact` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contact` ENABLE KEYS */;
+LOCK TABLES `proposal` WRITE;
+/*!40000 ALTER TABLE `proposal` DISABLE KEYS */;
+/*!40000 ALTER TABLE `proposal` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-09 15:44:31
+-- Dump completed on 2021-08-09 15:44:32
