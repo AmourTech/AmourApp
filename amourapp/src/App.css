@@ -28,11 +28,59 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+
+aside {
+  text-align: left;
+  list-style: none;
+  margin: 0;
+  position: fixed;
+  height: 100%
+}
+
+/* header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  text-align: left;
+  padding: 30px
+} */
+
+aside a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 3px;
+  transition: 0.3s ease all;
+  color: white;
+  
+}
+
+.navbar {
+   background-color: #222; 
+   list-style-type: none;
+  text-align: left; 
+  overflow: hidden;
+  position: fixed;
+  width: 100%
   }
-  to {
-    transform: rotate(360deg);
-  }
+  
+.navbar-brand, .navbar Form, .ml-auto{
+  color: #ffffff;
+  display: inline-block;
+  font-size: 20px;
+  padding-right: 200px;
+  
+}
+
+.App-logo {
+  width:100px;
+  height: auto;
+  display: inline-block;
+}
+
+.pro-sidebar {
+  padding-top: 109px;
 }
