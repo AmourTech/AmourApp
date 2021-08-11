@@ -10,7 +10,8 @@ import Proposals from './Proposals'
 import Services from './Services'
 import Library from './Library'
 import Settings from './Settings'
-import { Nav, Navbar, Form, FormControl } from 'react-bootstrap';
+import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
@@ -18,12 +19,23 @@ function App() {
 
   return (
     <div className="App1">
+      <aside1>
     <Navbar expand="lg">
-    <Navbar.Brand><img src={logo} className="App-logo" alt="logo" /></Navbar.Brand>
-      <Navbar.Brand>Username</Navbar.Brand>
+      <Navbar.Brand>Organisation</Navbar.Brand>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />
       </Form>
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          Username
+      </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item href="#/Settings">Settings</Dropdown.Item>
+          <Dropdown.Item href="#/Logout">Logout</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+
       <Navbar.Collapse id="basic-navbar-nav">
         {/* <Nav className="ml-auto">
           <Nav.Item>Username</Nav.Item>
@@ -31,11 +43,14 @@ function App() {
       </Navbar.Collapse>
     </Navbar>
 
+    
+    </aside1>
+
     <Router>
-      <div className="App">
         <aside>
           <ProSidebar>
             <Menu>
+              <MenuItem><img src={logo} className="App-logo" alt="logo" /></MenuItem>
               <MenuItem><Link to={'/'}>Dashboard</Link></MenuItem>
               <MenuItem><Link to={'/Clients'}>Clients</Link></MenuItem>
               {/* <SubMenu title="Proposals">
@@ -60,7 +75,6 @@ function App() {
           <Route path="/Library" component={Library} />
           <Route path="/Settings" component={Settings} />
         </main>
-      </div>
     </Router>
     </div>
 
