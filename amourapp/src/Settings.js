@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from '';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import FormControl from 'react-bootstrap/FormControl';
