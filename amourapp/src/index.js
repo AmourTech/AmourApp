@@ -2,11 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Login from './Login';
+import Comm from './Comm';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+
+
+
+React.Component.prototype.$url = 'http://localhost:3000';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+  
+  <Router >
+    <Route path="/admin" component={App}>
+    </Route>
+	
+	<Route path="/index" component={Login}>
+	</Route>
+  </Router>
+   
   </React.StrictMode>,
   document.getElementById('root')
 );

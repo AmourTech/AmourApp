@@ -10,16 +10,58 @@ import Proposals from './Proposals'
 import Services from './Services'
 import Library from './Library'
 import Settings from './Settings'
+import Login from './Login'
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 
 
 
-function App() {
+class App extends React.Component{
 
+    constructor(props) {
+       super(props);
+       this.state = {
+    	
+    			};
+    			
+		this.out = this.out.bind(this);
+     }
+  
+   
+  
+    out(){
+		localStorage.setItem("user","");
+		this.props.history.push('/index');
+	}
+   
+   render() {
+	   
+	   if(!localStorage.getItem("user")){
+	   	   
+	   	  
+	   	   
+	   	 //  this.props.history.push('/index');
+	   	   return ( <>Not logged in<Link to={'/index'}> click here to log in</Link></>);
+	   	   
+	   }
+	   
+	   console.log(localStorage.getItem("user"))
+	   let view  = JSON.parse(localStorage.getItem("user"))[0]
+	   console.log(view)
+	   
+	    let admin = localStorage.getItem("admin")
+		let username =''
+		if(admin == 1){
+			username = view.Fname + view.Lname
+		}else{
+			username = view.FirstName + view.LastName
+		}
+	   //console.log(view[2])
   return (
     <div className="App1">
-      <aside1>
+      
     <Navbar expand="lg">
       <Navbar.Brand>Organisation</Navbar.Brand>
       <Form className="form-center">
@@ -27,31 +69,32 @@ function App() {
       </Form>
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
-          Username
+		
+           {username}
       </Dropdown.Toggle>
 
         <Dropdown.Menu>
           <Dropdown.Item href="#/Settings">Settings</Dropdown.Item>
-          <Dropdown.Item href="#/Logout">Logout</Dropdown.Item>
+          <Dropdown.Item onClick={() => this.out()} href="#/Logout">Logout</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
       <Navbar.Collapse id="basic-navbar-nav">
         {/* <Nav className="ml-auto">
           <Nav.Item>Username</Nav.Item>
-        </Nav> */}
+        </Nav> */}0
       </Navbar.Collapse>
     </Navbar>
 
     
-    </aside1>
+    
 
     <Router>
         <aside>
           <ProSidebar>
             <Menu>
               <MenuItem><img src={logo} className="App-logo" alt="logo" /></MenuItem>
-              <MenuItem><Link to={'/'}>Dashboard</Link></MenuItem>
+              <MenuItem><Link to={'/Home'}>Dashboard</Link></MenuItem>
               <MenuItem><Link to={'/Clients'}>Clients</Link></MenuItem>
               {/* <SubMenu title="Proposals">
                 <MenuItem><Link to={'/Proposals'}>Create a new proposal</Link></MenuItem>
@@ -68,7 +111,8 @@ function App() {
         </aside>
 
         <main>
-          <Route exact path="/" component={Home} />
+
+          <Route  path="/Home" component={Home} />
           <Route path="/Clients" component={Clients} />
           <Route path="/Proposals" component={Proposals} />
           <Route path="/Services" component={Services} />
@@ -80,5 +124,6 @@ function App() {
 
 
   );
+  }
 }
 export default App;
