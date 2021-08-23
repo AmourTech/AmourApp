@@ -14,8 +14,9 @@ module.exports = {
   connection: {
   host: 'localhost',
   database: 'amourapp',
-  user: 'root'
+  user: 'root',
   //password: 'charlie'
+  password: 'None'
   }
 }
  
