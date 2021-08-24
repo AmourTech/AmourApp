@@ -1,4 +1,4 @@
-const knex = require('./knexfile')
+const knex = require('./../knexfile')
 exports.addEmployee = async (req, res) => {
     knex('user')
         .insert({
