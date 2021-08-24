@@ -8,7 +8,6 @@ exports.addEmployee = async (req, res) => {
             'LastName' : req.body.LastName,
             'Organisation' : req.body.Organisation,
             'password' : req.body.password,
-            'UserID' : req.body.UserID,
             'username' : req.body.username
         })
         .then(() => {
