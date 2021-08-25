@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const options = require('./knexfile.js');
-const knex = require('knex')(options);
+const knex = require('knex', options);
 // const helmet = require('helmet')
 //const cors = require('cors');
 

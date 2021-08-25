@@ -1,7 +1,7 @@
 import './App.css';
 import logo from './logo.svg';
-import React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
 import Home from './Home'

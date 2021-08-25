@@ -7,10 +7,10 @@ const EmpRoutes = require('./../controllers/Employee-Controller.js')
 const router = express.Router()
 
 // Add route for POST request to add employee
-router.get('/add', EmpRoutes.addEmployee)
+router.post('/add', EmpRoutes.addEmployee)
 
 // Add route for GET to retrieve all employees
-router.post('/view', EmpRoutes.viewEmployees)
+router.get('/view', EmpRoutes.viewEmployees)
 
 // Add route for PUT request to delete specific employee
 router.put('/delete', EmpRoutes.delEmployee)
