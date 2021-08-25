@@ -15,8 +15,7 @@ module.exports = {
   host: 'localhost',
   database: 'amourapp',
   user: 'root',
-  //password: 'charlie'
-  password: 'None'
+  password: 'pass1'
   }
 }
  

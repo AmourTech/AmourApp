@@ -32,7 +32,7 @@ CREATE TABLE `organisation` (
   UNIQUE KEY `OrganisationID_UNIQUE` (`OrganisationID`),
   KEY `Contact_idx` (`OContactID`),
   CONSTRAINT `OContactID` FOREIGN KEY (`OContactID`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
