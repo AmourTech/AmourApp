@@ -8,22 +8,21 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 
 
-//create employee component
+// create employee component
 // Create new Employee
 const handleEmployeeAdd = (event) => {
   // Send POST request to 'emp/add' endpoint
-  axios
-    // .post('http://localhost:4001/emp/add', {
-    //   Admin: event.Admin,
-    //   email : event.email,
-    //   FirstName : event.FirstName,
-    //   LastName : event.LastName,
-    //   Organisation : 2,
-    //   password : 'Test',
-    //   username : 'Test'
+  axios.post('http://localhost:8080/emp/add', {
+      Admin: event.Admin,
+      email : event.email,
+      FirstName : event.FirstName,
+      LastName : event.LastName,
+      Organisation : 2,
+      password : 'Test',
+      username : 'Test'
 
-    // })
-    .put('http://localhost:4001/emp/del',{
+    })
+    axios.put('http://localhost:8080/emp/del',{
       Organisation : 2,
       UserID : 1
   })

@@ -13,8 +13,8 @@ module.exports = {
   client: 'mysql',
   connection: {
   host: 'localhost',
-  user: 'jerry',
-  password: 'charlie',
+  user: 'newuser',
+  password: 'pass1',
   database: 'amourapp'
   }
 }
