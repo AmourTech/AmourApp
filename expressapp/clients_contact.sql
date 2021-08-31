@@ -31,7 +31,7 @@ CREATE TABLE `contact` (
   `Relationship` varchar(45) DEFAULT NULL,
   `PhoneNbr` int DEFAULT NULL,
   PRIMARY KEY (`ContactID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

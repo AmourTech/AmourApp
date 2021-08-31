@@ -11,6 +11,7 @@ import Col from 'react-bootstrap/Col'
 
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'
+import { CSVLink, CSVDownload } from "react-csv";
 
 class App extends React.Component {
 	
@@ -21,13 +22,18 @@ class App extends React.Component {
 		   
 		 st :1,
 		 clients:[],
-		 oname:'',
-		 email:'',
-		 cfname:'',
-		 clname:'',
-		 cnumber:'',
-		 password:'',
-		 name:'adsf',
+		 clientname:'',
+		 abn:'',
+		 acn:'',
+		 baddress:'',
+		 bsbname:'',
+		 bsbaccountn:'',
+		 contact:'',
+		 tfn:'',
+		 type:'',
+		//  Fname: '',
+		//  Lname: '',
+		//  email:'',
 		 viewdata:[],
 	   };
 			
@@ -41,7 +47,7 @@ class App extends React.Component {
 	 
 	 getList(){
 	 	
-	 	axios.get(this.$url+'/users/get',null)
+	 	axios.get(this.$url+'/users/getcl',null)
 	 	  .then(res => {
 	 			
 	 		   this.setState({viewdata: res.data});		 
@@ -90,7 +96,7 @@ class App extends React.Component {
 		 
 		   var data  = this.state
 		 
-		   axios.post(this.$url+'/users/addc',data)
+		   axios.post(this.$url+'/users/addcl',data)
 		     .then(res => {
 		 				 
 		 				 
@@ -118,7 +124,7 @@ render() {
 	
 	let admin = localStorage.getItem("admin")
 	 
-	 if(admin != 1){
+	 if(admin == 1){
 		return (  <>
  	<div className="App">
  	  <header className="App-header1">
@@ -132,27 +138,25 @@ render() {
 		  <tr className="table-tr">
 		    <td>Client</td>
 		    <td>Contact</td>
-		    <td>Email</td>
 		 			
 		  </tr>
 		  
 		 {
 		 				this.state.viewdata.map((item, index) => {
 		 					return <tr>
-		 				   <td >{item.organ}</td>
-		 				   <td >{item.Fname} {item.Lname}</td>
-		 				   <td >{item.Email}</td>
+		 				   <td >{item.clientname}</td>
+		 				   <td >{item.Contact}</td>
 		 			
 		 				   
 		 				 
 		 				   </tr>
 		 				})
 		   }
+			 
 		 
 		  </table> 
  		
  		</div>
- 		
  	  
  	  </header>
  	</div>
@@ -171,22 +175,21 @@ render() {
 			<Form>
 					 
 					 <Row className="mb-3">
-					 
-				
+					
 					 
 			<Form.Group as={Col}  md="3" controlId="formGridEmail">
-					 <Form.Label>Organisation Name</Form.Label>
+					 <Form.Label>Client Name</Form.Label>
 								 
-					 <Form.Control     value={this.state.oname}
-						onChange={e => this.setState({ oname: e.target.value })} type="text" placeholder="" />
+					 <Form.Control     value={this.state.clientname}
+						onChange={e => this.setState({ clientname: e.target.value })} type="text" placeholder="" />
 							
 			</Form.Group>
 						   
 			<Form.Group as={Col}  md="3" controlId="formGridEmail">
-								 <Form.Label>Email</Form.Label>
+								 <Form.Label>ABN</Form.Label>
 											 
-								 <Form.Control     value={this.state.email}
-									onChange={e => this.setState({ email: e.target.value })} type="text" placeholder="" />
+								 <Form.Control     value={this.state.abn}
+									onChange={e => this.setState({ abn: e.target.value })} type="text" placeholder="" />
 										
 			</Form.Group>
 									 
@@ -196,18 +199,18 @@ render() {
 					 
 					 <Row className="mb-3">
 					 			   <Form.Group as={Col}  md="3" controlId="formGridEmail">
-					 				 <Form.Label>Contact First Name</Form.Label>
+					 				 <Form.Label>Contact</Form.Label>
 					 							 
-					 				 <Form.Control     value={this.state.cfname}
-					 					onChange={e => this.setState({ cfname: e.target.value })} type="text" placeholder="" />
+					 				 <Form.Control     value={this.state.contact}
+					 					onChange={e => this.setState({ contact: e.target.value })} type="text" placeholder="" />
 					 						
 					 			   </Form.Group>
 					 			   
 					 			   <Form.Group as={Col}  md="3" controlId="formGridEmail">
-					 			   				 <Form.Label>Contact last Name</Form.Label>
+					 			   				 <Form.Label>ACN</Form.Label>
 					 			   							 
-					 			   				 <Form.Control     value={this.state.clname}
-					 			   					onChange={e => this.setState({ clname: e.target.value })} type="text" placeholder="" />
+					 			   				 <Form.Control     value={this.state.acn}
+					 			   					onChange={e => this.setState({ acn: e.target.value })} type="text" placeholder="" />
 					 			   						
 					 			   </Form.Group>
 								   
@@ -215,27 +218,51 @@ render() {
 					 						 
 					 			  
 					 </Row>
-					 
-					 
 					 <Row className="mb-3">
 					 <Form.Group as={Col}  md="3" controlId="formGridEmail">
-					 				 <Form.Label>Contact number</Form.Label>
+					 				 <Form.Label>Business Address</Form.Label>
 					 							 
-					 				 <Form.Control     value={this.state.cnumber}
-					 					onChange={e => this.setState({ cnumber: e.target.value })} type="text" placeholder="" />
+					 				 <Form.Control     value={this.state.baddress}
+					 					onChange={e => this.setState({ baddress: e.target.value })} type="text" placeholder="" />
 					 						
 					 </Form.Group>
 					 
 					 
 					 <Form.Group as={Col}  md="3" controlId="formGridEmail">
-					 				 <Form.Label>Password</Form.Label>
+					 				 <Form.Label>Business Name</Form.Label>
 					 							 
-					 				 <Form.Control     value={this.state.password}
-					 					onChange={e => this.setState({ password: e.target.value })} type="text" placeholder="" />
+					 				 <Form.Control     value={this.state.bsbname}
+					 					onChange={e => this.setState({ bsbname: e.target.value })} type="text" placeholder="" />
 					 						
 					 </Form.Group>
 					 
 					  </Row>
+
+						<Row className="mb-3">
+
+						<Form.Group as={Col}  md="3" controlId="formGridEmail">
+					 				 <Form.Label>BSB Account Number</Form.Label>
+					 							 
+					 				 <Form.Control     value={this.state.bsbaccountn}
+					 					onChange={e => this.setState({ bsbaccountn: e.target.value })} type="text" placeholder="" />
+					 						
+					 </Form.Group>
+
+					 <Form.Group as={Col}  md="3" controlId="formGridEmail">
+					 				 <Form.Label>Tax file number</Form.Label>
+					 							 
+					 				 <Form.Control     value={this.state.tfn}
+					 					onChange={e => this.setState({ tfn: e.target.value })} type="text" placeholder="" />
+						</Form.Group>
+
+						<Form.Group as={Col}  md="3" controlId="formGridEmail">
+					 				 <Form.Label>Type</Form.Label>
+					 							 
+					 				 <Form.Control     value={this.state.type}
+					 					onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+						</Form.Group>
+
+					 </Row>
 					  
 					  <Button className="me-2" onClick={() => this.create()}>
 					    Create
@@ -256,16 +283,14 @@ render() {
 		  <tr className="table-tr">
 		    <td>Client</td>
 		    <td>Contact</td>
-		    <td>Email</td>
 			
 		  </tr>
 		  
 		 {
 				this.state.viewdata.map((item, index) => {
 					return <tr>
-				   <td >{item.organ}</td>
-				   <td >{item.Fname} {item.Lname}</td>
-				   <td >{item.Email}</td>
+				   <td >{item.clientname}</td>
+				   <td >{item.Contact}</td>
 					<td ><a href="javascript:;" onClick={() => this.delete(item.ContactID)}>delete</a></td>
 				   
 				 
@@ -277,15 +302,32 @@ render() {
 		 
 		 
 	 }
+
+
+	const headers = [
+		{ label: "Client Name", key: "clientname" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+	];
+
+	 const csvReport = {
+		 filename: 'Report.csv',
+		 //headers: headers,
+		 data: this.state.viewdata
+	 }
 	
  return (
  	<>
  	<div className="App">
+
  	  <header className="App-header1">
- 	   
  		
  		<div className="body">
- 		
+ 		<CSVLink {...csvReport}> Export to CSV</CSVLink>
  		
  		<Nav fill variant="tabs" defaultActiveKey="link-1">
  		  <Nav.Item>

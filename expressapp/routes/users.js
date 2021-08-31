@@ -79,6 +79,17 @@ router.get('/get', function(req, res, next) {
 	
 });
 
+router.get('/getcl', function(req, res, next) {
+	
+	console.log(db)
+	db.query('SELECT *  from client', function (error, results, fields) { //, contact WHERE organ = Handler AND (SELECT Organisation FROM user) = Handler
+	  if (error) throw error;
+	  //console.log('The solution is: ');
+	  res.send(results);
+	});
+	
+});
+
 
 router.post('/acc', function(req, res, next) {
 	
@@ -163,6 +174,29 @@ router.post('/addc', function(req, res, next) {
 	
 });
 
+router.post('/addcl', function(req, res, next) {
+	
+	
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	var  addSql = 'INSERT INTO client(clientname, Contact, AccountID,ABN,ACN,BAddress,BSBAccountnumber, BSBName, TFN, Type, Handler) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)'; //need to set this last value to whatever your organisation id is in sql until we set up the system
+	var  addSqlParams = [data.clientname, data.contact, data.accountid, data.abn ,data.acn , data.baddress,data.bsbaccountn, data.bsbname, data.tfn, data.type];
+	db.query(addSql,addSqlParams,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
 
 router.get('/deuser', function(req, res, next) {
 	
@@ -237,6 +271,7 @@ router.get('/udel', function(req, res, next) {
 	
  // res.send('respond with a resource');
 });
+
 
 
 module.exports = router;
