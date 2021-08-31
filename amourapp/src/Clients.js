@@ -31,6 +31,9 @@ class App extends React.Component {
 		 contact:'',
 		 tfn:'',
 		 type:'',
+		//  Fname: '',
+		//  Lname: '',
+		//  email:'',
 		 viewdata:[],
 	   };
 			
@@ -142,7 +145,7 @@ render() {
 		 				this.state.viewdata.map((item, index) => {
 		 					return <tr>
 		 				   <td >{item.clientname}</td>
-		 				   <td >{item.contact}</td>
+		 				   <td >{item.Contact}</td>
 		 			
 		 				   
 		 				 
@@ -287,7 +290,7 @@ render() {
 				this.state.viewdata.map((item, index) => {
 					return <tr>
 				   <td >{item.clientname}</td>
-				   <td >{item.contact}</td>
+				   <td >{item.Contact}</td>
 					<td ><a href="javascript:;" onClick={() => this.delete(item.ContactID)}>delete</a></td>
 				   
 				 
@@ -304,11 +307,16 @@ render() {
 	const headers = [
 		{ label: "Client Name", key: "clientname" },
 		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
+		{ label: "Contact", key: "contact" },
 	];
 
 	 const csvReport = {
 		 filename: 'Report.csv',
-		 headers: headers,
+		 //headers: headers,
 		 data: this.state.viewdata
 	 }
 	

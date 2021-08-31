@@ -82,7 +82,7 @@ router.get('/get', function(req, res, next) {
 router.get('/getcl', function(req, res, next) {
 	
 	console.log(db)
-	db.query('SELECT clientname, contact from client', function (error, results, fields) {
+	db.query('SELECT *  from client', function (error, results, fields) { //, contact WHERE organ = Handler AND (SELECT Organisation FROM user) = Handler
 	  if (error) throw error;
 	  //console.log('The solution is: ');
 	  res.send(results);
@@ -271,6 +271,7 @@ router.get('/udel', function(req, res, next) {
 	
  // res.send('respond with a resource');
 });
+
 
 
 module.exports = router;
