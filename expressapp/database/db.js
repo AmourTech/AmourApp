@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
  //database : 'clients'
 
  //Yaza//
-user        : 'newuser',
+user        : 'root',
 password    : 'pass1',
 database    : 'amourapp'
 });
