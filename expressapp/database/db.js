@@ -1,10 +1,16 @@
 const mysql = require('mysql');
 const connection = mysql.createConnection({
-  host : '',
-  port : '',
-  user: '',
-  password: '',
-  database: ''
+ host     : 'localhost',
+ 
+ //Boyi//
+ //user     : 'root',
+ //password : 'Qwer77df88',
+ //database : 'clients'
+
+ //Yaza//
+user        : 'newuser',
+password    : 'pass1',
+database    : 'amourapp'
 });
 
 connection.connect(function (err) {
@@ -12,8 +18,8 @@ connection.connect(function (err) {
 });
 
 
-
-module.exports = (req, res, next) => {
-  req.db = connection;
-  next()
-}
+module.exports = connection
+// module.exports = (req, res, next) => {
+//   req.db = connection;
+//   next()
+// }

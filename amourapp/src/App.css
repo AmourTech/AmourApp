@@ -24,6 +24,15 @@
   color: white;
 }
 
+.App-header1 {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  color: white;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -85,3 +94,56 @@ aside a {
   height: auto;
   display: inline-block;
 }
+
+.body{
+	/* display: flex; */
+	margin-top: 6.25rem;
+	margin-left: 18.75rem;
+	/* flex-wrap: wrap; */
+}
+
+
+
+
+.table{
+
+color:#666;
+}
+.table th {
+
+background-repeat:repeat-x;
+height:30px;
+}
+.table td,.table th{
+color: white;
+border:1px solid #FFFFFF;
+padding:0 1em 0;
+}
+.table-tr{
+
+}
+/* .body  div{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 12.5rem;
+	margin-left: 1.875rem;
+} */
+
+
+/* .body  select{
+	width: 10rem;
+}
+
+.input{
+	display: flex;
+	margin-top: 6.25rem;
+	margin-left: 18.75rem;
+}
+
+.input-margin{
+	
+	margin-left: 1.25rem;
+}
+ */

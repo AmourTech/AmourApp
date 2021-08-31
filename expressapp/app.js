@@ -1,13 +1,26 @@
 var createError = require('http-errors');
 var express = require('express');
+var cors = require("cors")
+var app = express();
+app.use(cors());
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '1mb'}));  //body-parser 解析json格式数据
+app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下面,为参数编码
+  extended: true
+}));
+
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var app = express();
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,5 +50,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
