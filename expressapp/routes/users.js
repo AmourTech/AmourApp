@@ -120,8 +120,12 @@ router.post('/adduser', function(req, res, next) {
 	var data = req.body
 	
 	console.log(data)
-	var  addSql = 'INSERT INTO user(email,password , username, FirstName,LastName) VALUES ( ?, ?, ?, ?, ?)';
-	var  addSqlParams = [data.email, data.password, (data.fname+data.lname), data.fname ,data.lanme];
+	if (data.Admin == true)
+	{var IAdmin = 1}
+	else
+	{var IAdmin = 0}
+	var  addSql = 'INSERT INTO `user` (Organisation, Admin, email,password , username, FirstName,LastName) VALUES (?,?, ?, ?, ?, ?, ?)';
+	var  addSqlParams = [data.org, IAdmin, data.email, data.password, data.fname, data.fname ,data.lname];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
@@ -133,8 +137,8 @@ router.post('/adduser', function(req, res, next) {
 	 
 	      res.send('1');
 	});
-	
 });
+
 router.post('/addc', function(req, res, next) {
 	
 	
@@ -164,7 +168,7 @@ router.get('/deuser', function(req, res, next) {
 	
 	console.log(req.query)
 	db.query('delete  from user where UserID = ?', [req.query.id],function (error, results, fields) {
-	  if (error) throw error;
+	  if (error) console.log("oops");
 	  //console.log('The solution is: ');
 	  res.send('1');
 	});
@@ -194,7 +198,7 @@ router.post('/login', function(req, res, next) {
 	db.query(' select  * from user where email = ? and password = ?', [data.email,data.password],function (error, results, fields) {
 	  if (error){
 		  
-		  throw error;
+		  console.log("oops")
 		  res.send('0');
 		  return;
 	  } 
@@ -226,7 +230,7 @@ router.get('/udel', function(req, res, next) {
 	
 	console.log(req.query)
 	db.query('delete  from contact where ContactID = ?', [req.query.id],function (error, results, fields) {
-	  if (error) throw error;
+	  if (error) console.log("oops");
 	  //console.log('The solution is: ');
 	  res.send('1');
 	});

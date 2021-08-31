@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react'
+import React, {useState} from 'react'
 
 
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
@@ -18,6 +18,10 @@ class App extends React.Component{
 	constructor(props) {
 	   super(props);
 	   this.state = {
+		   			//test org
+		   		  org :2,
+				  Admin: false,
+				
 		          st :1,
 				  email:'',
 				  fname:'',
@@ -25,9 +29,10 @@ class App extends React.Component{
 				  password:'',
 				  viewdata:[],
 				};
-				
+		this.handleAdmin = this.handleAdmin.bind(this);
 		this.adduser = this.adduser.bind(this);
 		this.getuser =   this.getuser.bind(this);
+		this.delete = this.delete.bind(this)
 
 	 }
 	 
@@ -40,7 +45,24 @@ class App extends React.Component{
 	 	 
 	 	  this.setState({show: flag});
 	 }
-	 
+	 getuser(){
+		 
+		 
+		axios.get(this.$url+'/users/getuser',null)
+		
+		
+		
+			  .then(res => {
+								 
+				 this.setState({viewdata:res.data})
+											  
+				
+				
+			  })
+			  .catch(err => {
+				 console.log(err);
+			  })
+		}	 
 	 delete(id){
 	 	
 	 	if (window.confirm("confirm delete?")) {
@@ -65,28 +87,17 @@ class App extends React.Component{
 	 	
 	 }
 	 
-	 
-	 
-	 
-	 
-	 getuser(){
-		 
-		 
-	 axios.get(this.$url+'/users/getuser',null)
-	 
-	 
-	 
-		   .then(res => {
-		 		 			
-			  this.setState({viewdata:res.data})
-										   
-             
-		     
-		   })
-		   .catch(err => {
-		      console.log(err);
-		   })
+	 handleAdmin (event) {
+			const name = event.target.name;
+			const value = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+			this.setState({
+				[name]: value
+			})
 	 }
+	 
+	 
+	 
+
 	 
 	 adduser(){
 		 
@@ -114,7 +125,7 @@ class App extends React.Component{
 	 
 	 let admin = localStorage.getItem("admin")
 	 
-	 if(admin != 1){
+	 if(admin == 1){
 		return (  <div className="App">
       <header className="App-header">
         <p>
@@ -136,7 +147,7 @@ class App extends React.Component{
 		
 			 <Form.Group md="3"  as={Col} controlId="formGridAddress1">
 			   <Form.Label>First Name</Form.Label>
-			   <Form.Control  type="text" value={this.state.first}
+			   <Form.Control  type="text" value={this.state.fname}
 					onChange={e => this.setState({ fname: e.target.value })}   />
 				</Form.Group>		
 					
@@ -167,7 +178,13 @@ class App extends React.Component{
 		  </Form.Group>
 		
 		 </Row>
+		<Row>
+		<Form.Group md="3"  as={Col} controlId="formBasicCheckbox">
+		<Form.Check type="checkbox" name="Admin" label="admin" checked={this.state.Admin} onChange={this.handleAdmin}/>
+		</Form.Group>
 		
+		
+		</Row>
 	 
 	   </Form>
            <Button onClick={() => this.adduser()} className="me-2" >
@@ -197,7 +214,7 @@ class App extends React.Component{
 		 				   <td >{item.username} {item.Lname}</td>
 		 				   <td >{item.password}</td>
 						   <td >{item.create_time}</td>
-		 					<td ><a href="#" onClick={() => this.delete(item.UserID)}>delete</a></td>
+		 					<td ><a href="javascript:;" onClick={() => this.delete(item.UserID)}>delete</a></td>
 		 				   
 		 				   </tr>
 		 				})
