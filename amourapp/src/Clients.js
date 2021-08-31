@@ -31,9 +31,9 @@ class App extends React.Component {
 		 contact:'',
 		 tfn:'',
 		 type:'',
-		//  Fname: '',
-		//  Lname: '',
-		//  email:'',
+		 Fname: '',
+		 Lname: '',
+		 Email:'',
 		 viewdata:[],
 	   };
 			
@@ -255,7 +255,10 @@ render() {
 					 					onChange={e => this.setState({ tfn: e.target.value })} type="text" placeholder="" />
 						</Form.Group>
 
-						<Form.Group as={Col}  md="3" controlId="formGridEmail">
+					 </Row>
+
+					 <Row className="mb-3">
+					 <Form.Group as={Col}  md="3" controlId="formGridEmail">
 					 				 <Form.Label>Type</Form.Label>
 					 							 
 					 				 <Form.Control     value={this.state.type}
@@ -282,15 +285,16 @@ render() {
 		  
 		  <tr className="table-tr">
 		    <td>Client</td>
-		    <td>Contact</td>
-			
+		    <td>Contact Name</td>
+				<td>Contact Email</td>
 		  </tr>
 		  
 		 {
 				this.state.viewdata.map((item, index) => {
 					return <tr>
 				   <td >{item.clientname}</td>
-				   <td >{item.Contact}</td>
+				   <td >{item.Fname}&nbsp;{item.Lname}</td>
+					 <td >{item.Email}</td>
 					<td ><a href="javascript:;" onClick={() => this.delete(item.ContactID)}>delete</a></td>
 				   
 				 
