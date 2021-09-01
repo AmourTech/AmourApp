@@ -82,7 +82,7 @@ class App extends React.Component{
       <Navbar.Collapse id="basic-navbar-nav">
         {/* <Nav className="ml-auto">
           <Nav.Item>Username</Nav.Item>
-        </Nav> */}0
+        </Nav> */}
       </Navbar.Collapse>
     </Navbar>
 

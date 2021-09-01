@@ -64,7 +64,7 @@ class App extends React.Component {
 	 delete(id){
 	 	
 	 	if (window.confirm("confirm delete?")) {
-	 	  axios.get(this.$url+'/users/udel?id='+id,null)
+	 	  axios.get(this.$url+'/users/udelcl?id='+id,null)
 	 	    .then(res => {
 	 	  		
 	 	  		//this.setState({viewdata: res.data});		 
@@ -324,6 +324,17 @@ render() {
 				reader.onload = () => {
 				// Do whatever you want with the file contents
 					const binaryStr = reader.result
+					axios.post('localhost:3000'+'/users/addcl',binaryStr)
+						.then(res => {		 
+								 if(res.data==1){
+									 alert("Created successfully!")
+								 }else{
+								 }
+						})
+						.catch(err => {
+							 console.log(err);
+						})
+					
 					console.log(binaryStr)
 					console.log(binaryStr)
 				}

@@ -272,6 +272,16 @@ router.get('/udel', function(req, res, next) {
  // res.send('respond with a resource');
 });
 
-
+router.get('/udelcl', function(req, res, next) {
+	
+	console.log(req.query)
+	db.query('delete  from client where AccountID = ?', [req.query.id],function (error, results, fields) {
+	  if (error) console.log("oops");
+	  //console.log('The solution is: ');
+	  res.send('1');
+	});
+	
+ // res.send('respond with a resource');
+});
 
 module.exports = router;
