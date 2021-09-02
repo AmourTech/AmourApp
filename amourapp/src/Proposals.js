@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
-
+import ReactFileReader from 'react-file-reader';
 
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
@@ -12,7 +12,8 @@ import Col from 'react-bootstrap/Col'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
 import data from './Comm';
-
+import { CSVLink, CSVDownload } from "react-csv";
+var reader = new FileReader();
 class App extends React.Component{
 	
 	 constructor(props) {
@@ -523,7 +524,11 @@ duplicateadd(data){
 			 </table> </>;
 		   }
   
-  
+		   const csvReport = {
+			filename: 'Report.csv',
+			//headers: headers,
+			data: this.state.viewdata
+		}
   
   
   
@@ -539,8 +544,10 @@ duplicateadd(data){
 	   
 		
 		<div className="body">
-		
-		
+		<CSVLink {...csvReport}> Export to CSV</CSVLink>
+		<ReactFileReader handleFiles={this.handleFiles} fileTypes={'.csv'}>
+    <button className='btn'>Upload</button>
+</ReactFileReader>
 		<Nav fill variant="tabs" defaultActiveKey="link-1">
 		  <Nav.Item>
 		    <Nav.Link  onClick={() => this.setMenu(1)} eventKey="link-1" >Create new Proposals</Nav.Link>
