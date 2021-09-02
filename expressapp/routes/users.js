@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 router.post('/add', function (req, res, next) {
 	
    var data = req.body
-   console.log(data)
+   console.log(data.name)
    var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
    var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
@@ -38,7 +38,7 @@ router.post('/add', function (req, res, next) {
 
 router.get('/find', function(req, res, next) {
 	
-	console.log(db)
+	//console.log(db)
 	db.query('SELECT * from pro where  client = ?', [req.query.id],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
@@ -47,9 +47,30 @@ router.get('/find', function(req, res, next) {
 });
 
 
+router.get('/findprop', function(req, res, next) {
+	
+	db.query('SELECT * from pro where id = ?', [req.query.id],function (error, results, fields) {
+		if (error) throw error;
+		json = JSON.stringify(results);
+		temp = JSON.parse(json)
+		console.log(temp)
+		console.log(temp[0].name)
+	  var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+	  var  addSqlParams = [temp[0].name, temp[0].client, temp[0].sdate, temp[0].edate, temp[0].clen, temp[0].message, temp[0].acc, temp[0].pay1, temp[0].pay2, temp[0].userid];
+	  db.query(addSql,addSqlParams,function (err, result) {
+			  if(err){
+			   console.log('[INSERT ERROR] - ',err.message);
+			   res.send('0');
+			   return;
+			  }        
+	   
+			res.send('1');
+	  });
+	});
+});
 router.get('/findus', function(req, res, next) {
 	
-	console.log(db)
+	//console.log(db)
 	db.query('SELECT * from pro where  userid = ?', [req.query.id],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
@@ -57,20 +78,20 @@ router.get('/findus', function(req, res, next) {
 	});
 });
 
-router.get('/add', function(req, res, next) {
+// router.get('/add', function(req, res, next) {
 	
-	console.log(db)
-	db.query('SELECT * from pro', function (error, results, fields) {
-	  if (error) throw error;
-	  //console.log('The solution is: ');
-	  res.send(results);
-	});
-});
+
+// 	db.query('SELECT * from pro', function (error, results, fields) {
+// 	  if (error) throw error;
+// 	  //console.log('The solution is: ');
+// 	  res.send(results);
+// 	});
+// });
 
 
 router.get('/get', function(req, res, next) {
 	
-	console.log(db)
+	//console.log(db)
 	db.query('SELECT * from contact', function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');

@@ -11,6 +11,7 @@ import Col from 'react-bootstrap/Col'
 
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
+import data from './Comm';
 
 class App extends React.Component{
 	
@@ -27,7 +28,7 @@ class App extends React.Component{
 			  contact:"12 Month...",
 			  sdate:"", 
 			  edate:"", 
-			  clen:"12 Moth", 
+			  clen:"12 Month", 
 			  message:"", 
 			  acc:"0", 
 			  pay1:"Weekly...", 
@@ -44,6 +45,7 @@ class App extends React.Component{
 			this.setShow1 = this.setShow1.bind(this);
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
+			this.duplicate = this.duplicate.bind(this);
 	  }
 	  
 	  componentDidMount() {
@@ -138,6 +140,46 @@ class App extends React.Component{
 		 
 		}
 		
+		
+	}
+	duplicate(id){
+		if (window.confirm("confirm duplicate?")) {
+		  axios.get(this.$url+'/users/findprop?id='+id,null)
+		    .then(res => {
+		  		//this.setState({viewdata: res.data});		 
+		  	  // this.state.viewdata =  res.data
+		  	   console.log(res.data)
+		  			
+		  	   this.getList();
+		     
+		    })
+		    .catch(err => {
+		       console.log(err);
+		    })
+		} else {
+			return 
+		 
+		}
+	}
+
+duplicateadd(data){
+	axios.post(this.$url+'/users/add',data)
+	.then(res => {
+					 
+					 
+		if(res.data==1){
+			
+			alert("Successful operation!")
+			
+		   this.getList();
+			
+		}else{
+			
+			
+		}
+		
+
+})
 		
 	}
 	
@@ -472,9 +514,8 @@ class App extends React.Component{
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a></td>
-								   
-								 
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
+		
 								   </tr>
 			                   })
 			               }
