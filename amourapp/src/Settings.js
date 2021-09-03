@@ -105,7 +105,7 @@ class App extends React.Component{
 		 axios.post(this.$url+'/users/adduser',data)
 		   .then(res => {
 		 		 				 				 
-			 if(res.data==1){
+			 if(res.data===1){
 				 alert("Create  User successfully!")
 				 //this.setShow(false)
 				 
@@ -123,9 +123,9 @@ class App extends React.Component{
 	
  render() {	
 	 
-	 let admin = localStorage.getItem("admin")
-	 
-	 if(admin == 1){
+	 let viewing  = JSON.parse(localStorage.getItem("user"))[0]
+	 let admin = viewing.Admin
+	 if(admin === 0){
 		return (  <div className="App">
       <header className="App-header">
         <p>
@@ -138,7 +138,7 @@ class App extends React.Component{
 	 
 	 const isisd = this.state.st;
 	 let view;
-	 if (isisd == 1) {
+	 if (isisd === 1) {
 		 
 		 view = <> <Form>
 	 

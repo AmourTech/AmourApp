@@ -51,10 +51,11 @@ class App extends React.Component{
 	   let view  = JSON.parse(localStorage.getItem("user"))[0]
 	   console.log(view)
 	   
-	    let admin = localStorage.getItem("admin")
+     let admincheck  = JSON.parse(localStorage.getItem("user"))[0]
+     let admin = admincheck.Admin
 		let username =''
-		if(admin == 1){
-			username = view.Fname + view.Lname
+		if(admin === 1){
+			username = view.Firstname + view.Lastname
 		}else{
 			username = view.FirstName + view.LastName
 		}

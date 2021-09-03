@@ -95,10 +95,11 @@ class App extends React.Component{
 		
 		console.log(localStorage.getItem("user"))
 		let view  = JSON.parse(localStorage.getItem("user"))[0]
-		let admin = localStorage.getItem("admin")
+		let admin = view.Admin
+		console.log(view.Admin)
 		 let url = ''
-		if(admin == 1){
-			url = this.$url+'/users/find?id='+view.ContactID
+		if(admin === 1){
+			url = this.$url+'/users/find?id='+view.Organisation
 		}else{
 			url = this.$url+'/users/findus?id='+view.UserID
 		}
@@ -269,9 +270,10 @@ duplicateadd(data){
 	}
 	  render() {
 		  
-		  
-		 let admin = localStorage.getItem("admin")
-		 
+		console.log('startup');
+		 let temp =  JSON.parse(localStorage.getItem("user"))[0]
+		 let admin = temp.Admin;
+		 console.log(admin);
 		  
 		  if(admin == 1){
 		 	return (  <>

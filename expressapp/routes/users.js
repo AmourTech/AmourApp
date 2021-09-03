@@ -39,9 +39,10 @@ router.post('/add', function (req, res, next) {
 router.get('/find', function(req, res, next) {
 	
 	//console.log(db)
-	db.query('SELECT * from pro where  client = ?', [req.query.id],function (error, results, fields) {
+	db.query('SELECT * FROM pro WHERE userid IN (SELECT UserID FROM user WHERE Organisation = ?)', [req.query.id],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
+	  console.log(results)
 	  res.send(results);
 	});
 });
