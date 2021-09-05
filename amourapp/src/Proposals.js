@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
 import data from './Comm';
 import { CSVLink, CSVDownload } from "react-csv";
+import Calendar from 'react-calendar';
 var reader = new FileReader();
 class App extends React.Component{
 	
@@ -28,6 +29,7 @@ class App extends React.Component{
 			  client:"", 
 			  contact:"12 Month...",
 			  sdate:"", 
+			  followdate:"",
 			  edate:"", 
 			  clen:"12 Month", 
 			  message:"", 
@@ -54,23 +56,7 @@ class App extends React.Component{
 	   }
 	  
 	  
-	    componentWillMount(){
-			axios.get(this.$url+'/users/add',null)
-			  .then(res => {
-							 
-				 // this.setState({viewdata: res.data});
-				   console.log(res.data)
-			   
-			  })
-			  .catch(err => {
-			     console.log(err);
-			  })
-			  
-			  
-			  this.getClient();
-			
-	        
-	      }
+
 
 	
 	getClient(){
@@ -276,6 +262,7 @@ duplicateadd(data){
 		  if(admin == 1){
 		 	return (  <>
 		 	<div className="App">
+
 		 	  <header className="App-header1">
 		 	   
 		 		
@@ -398,21 +385,16 @@ duplicateadd(data){
 			 								      
 			 					  <Form.Group md="3" as={Col} controlId="formGridPassword">
 			 					    <Form.Label>Effective Start Date</Form.Label>
-			 					   <Form.Select value={this.state.sdate}
-			          onChange={e => this.setState({ sdate: e.target.value })} defaultValue="Choose...">
-			 		                 <option value="">Choose...</option>
-			 		                 <option value="3 months">3 months</option>
-			 					     <option value="6 months">6 months</option>
-			 					     <option value="12 months">12 months</option>
-			 					   </Form.Select>
+			 					   <Form.Control  type="date" value={this.state.sdate}
+									onChange={e => this.setState({ sdate: e.target.value })}  placeholder="Choose..." />
 			 					  </Form.Group>
 			 					</Row>
 			 					
 			 <Row className="mb-3">
 			   <Form.Group md="3"  as={Col} controlId="formGridAddress1">
-			     <Form.Label>Effiective Start Date</Form.Label>
-			     <Form.Control  type="date" value={this.state.edate}
-			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="1234 Main St" />
+			     <Form.Label>Effective end Date</Form.Label>
+			     <Form.Control  type="date" value={this.state.followdate}
+			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="Choose..." />
 			   </Form.Group>
 			 </Row>
 			 
@@ -421,7 +403,7 @@ duplicateadd(data){
 			     <Form.Label>Minimum Contract Length</Form.Label>
 			     <Form.Select value={this.state.clen}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
-			       <option value="12 Moth">12 Month...</option>
+			       <option value="12 Month">12 Month...</option>
 			       <option value="6 Month">6 Month...</option>
 			 	  <option value="3 Month">3 Month...</option>
 			     </Form.Select>

@@ -14,7 +14,37 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+router.get('/getservo',function(req,res,next){
 
+    	db.query('SELECT * FROM service WHERE Organisation = ?', [req.query.id],function (error, results, fields) {
+			if(error){
+				console.log('[INSERT ERROR] - ',error.message);
+				res.send('0');
+				return;
+			   }
+			res.send(results)
+		
+});
+})
+router.post('/applyservo', function(req, res, next) {
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, StandardPrice =? where Organisation=?', [data.Dbill,data.TRate,data.Xero,data.SPrice,data.org],function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
 //  POST 请求
 router.post('/add', function (req, res, next) {
 	
