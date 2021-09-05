@@ -122,9 +122,8 @@ class App extends React.Component {
 render() {
 	
 	
-	let admincheck  = JSON.parse(localStorage.getItem("user"))[0]
-	let admin = admincheck.Admin
-	 if(admin === 2){
+	let admin  = JSON.parse(localStorage.getItem("admin"))[0]
+	 if(admin === 1){
 		return (  <>
  	<div className="App">
  	  <header className="App-header1">
