@@ -15,6 +15,7 @@ import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
+import axios from 'axios';
 
 
 
@@ -23,19 +24,34 @@ class App extends React.Component{
     constructor(props) {
        super(props);
        this.state = {
-    	
+    	 orgname:''
     			};
     			
 		this.out = this.out.bind(this);
+    this.getname = this.getname.bind(this);
+    
      }
-  
+
+  componentDidMount(){this.getname()}
+
    
   
     out(){
 		localStorage.setItem("user","");
 		this.props.history.push('/index');
 	}
-   
+  getname() {
+    let orga  = (JSON.parse(localStorage.getItem("user"))[0])
+
+    let organ = orga.Organisation;
+  
+    axios.get(this.$url+'/users/OrgName?id='+organ,null)
+    .then(res=>{
+      console.log(res.data)
+    this.setState({orgname: ((res.data)[0]).organisationName})
+    console.log(this.state.orgname)
+    })
+  } 
    render() {
 	   
 	   if(!localStorage.getItem("user")){
@@ -63,7 +79,7 @@ class App extends React.Component{
     <div className="App1">
       
     <Navbar expand="lg">
-      <Navbar.Brand>Organisation</Navbar.Brand>
+      <Navbar.Brand>{this.state.orgname}</Navbar.Brand>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />
       </Form>

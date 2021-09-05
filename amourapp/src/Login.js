@@ -116,6 +116,7 @@ class App extends React.Component{
 				 if(res.data!=0){
 					 alert("Login successfully!")
 					 //this.$login.login  = true;
+					
 					 if('Admin' in res.data[0]){
 						  localStorage.setItem("admin", 1)
 					 }else{

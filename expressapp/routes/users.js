@@ -22,6 +22,7 @@ router.get('/getservo',function(req,res,next){
 				res.send('0');
 				return;
 			   }
+		
 			res.send(results)
 		
 });
@@ -275,8 +276,23 @@ router.get('/del', function(req, res, next) {
 	
  // res.send('respond with a resource');
 });
+router.get('/OrgName', function(req, res, next) {
+	
 
-
+	
+	db.query(' select organisationName from organisation where OrganisationID = ?', [req.query.id],function (error, results, fields) {
+		console.log(results)
+		if(error){
+			console.log('[INSERT ERROR] - ',error.message);
+			res.send('0');
+			console.log(results)
+			return;
+		   }
+		//console.log('The solution is: ');
+		console.log(results)
+		res.send(results);
+	})
+})
 router.post('/login', function(req, res, next) {
 	
 	var data = req.body
