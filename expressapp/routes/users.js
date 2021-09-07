@@ -46,13 +46,23 @@ router.post('/applyservo', function(req, res, next) {
 	});
 	
 });
+router.post('/csvadd',function (req, res, next){
+var data = req.body
+var addSql = 'INSERT INTO pro(name, client,sdate,edate)'
+
+
+
+})
+
+
+
 //  POST 请求
 router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-   var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.userid];
+   var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,contact,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? , ?,?)';
+   var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.contact,data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);

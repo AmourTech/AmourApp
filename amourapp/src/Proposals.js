@@ -12,9 +12,11 @@ import Col from 'react-bootstrap/Col'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
 import data from './Comm';
-import { CSVLink, CSVDownload } from "react-csv";
-import Calendar from 'react-calendar';
-var reader = new FileReader();
+
+import { CSVLink} from "react-csv";
+import {readString, CSVReader} from 'react-papaparse';
+const buttonRef = React.createRef();
+
 class App extends React.Component{
 	
 	 constructor(props) {
@@ -40,7 +42,7 @@ class App extends React.Component{
 			  show1:false,
 			  mes:"",
 			  userid:'',
-			  
+			  importer:[{}],
 			};
 			
 			this.sub = this.sub.bind(this);
@@ -49,14 +51,52 @@ class App extends React.Component{
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
 			this.duplicate = this.duplicate.bind(this);
+			this.handleOnFileLoad = this.handleOnFileLoad.bind(this);
+			this.handleOnRemoveFile = this.handleOnRemoveFile.bind(this);
+			this.handleconfirm = this.handleconfirm.bind(this);
 	  }
-	  
+
 	  componentDidMount() {
 	      this.getList()
+			
 	   }
-	  
-	  
-
+	   handleOpenDialog = (e) => {
+		if (buttonRef.current) {
+		  buttonRef.current.open(e);
+		}
+	  };
+	   handleOnFileLoad = (data) => {
+		console.log('-----onfileload----------------');
+		this.setState({importer: data})
+		console.log(data)
+		console.log('---------------------------');
+	  };
+	  handleRemoveFile = (e) => {
+		// Note that the ref is set async, so it might be null at some point
+		if (buttonRef.current) {
+		  buttonRef.current.removeFile(e);
+		}
+	  };
+	  handleOnError = (err, file, inputElem, reason) => {
+		console.log('-----------onerror---------');
+		console.log(err);
+		console.log('---------------------------');
+	  };
+	
+	  handleOnRemoveFile = (data) => {
+		console.log('-------onremove-------------');
+		this.setState({importer: data})
+		console.log('---------------------------');
+	  };
+	  handleconfirm(){
+		  //confirm1
+		var csv = this.state.importer
+		csv.forEach(csv => (
+			this.addnoalert(csv.data)
+		))
+		window.confirm('import confirmed')
+		console.log(csv.length)
+	  }
 
 	
 	getClient(){
@@ -148,7 +188,23 @@ class App extends React.Component{
 		 
 		}
 	}
-
+	addnoalert(data){
+		axios.post(this.$url+'/users/add',data)
+		.then(res => {
+						 
+						 
+			if(res.data==1){
+				
+			   this.getList();
+				
+			}else{
+				
+				
+			}
+			
+	
+	})
+}
 duplicateadd(data){
 	axios.post(this.$url+'/users/add',data)
 	.then(res => {
@@ -527,9 +583,32 @@ duplicateadd(data){
 		
 		<div className="body">
 		<CSVLink {...csvReport}> Export to CSV</CSVLink>
-		<ReactFileReader handleFiles={this.handleFiles} fileTypes={'.csv'}>
-    <button className='btn'>Upload</button>
-</ReactFileReader>
+		<CSVReader   ref={buttonRef}
+  onFileLoad={this.handleOnFileLoad}
+  onError={this.handleOnError}
+  noClick
+  noDrag
+  noProgressBar
+  config={{header: true}}
+  style={{}}
+  onRemoveFile={this.handleOnRemoveFile}
+  >
+  {({ file }) => (
+    <div>
+      <button
+        type='button'
+        onClick={this.handleOpenDialog}
+      >
+          Import CSV
+      </button>
+        {file && file.name}
+      <button onClick={this.handleRemoveFile}>Remove</button>
+	  </div>
+    
+  )}
+</CSVReader><button onClick={this.handleconfirm}>Confirm</button>
+
+<br/><br/><br/><br/>
 		<Nav fill variant="tabs" defaultActiveKey="link-1">
 		  <Nav.Item>
 		    <Nav.Link  onClick={() => this.setMenu(1)} eventKey="link-1" >Create new Proposals</Nav.Link>
