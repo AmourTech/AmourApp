@@ -41,6 +41,14 @@ class App extends React.Component{
 			  show:false,
 			  show1:false,
 			  mes:"",
+				na:"", 
+				sda:"",
+				eda:"",
+				py1: "",
+				py2:"", 
+				cont:"",
+				cle:"", 
+				ac:"", 
 			  userid:'',
 			  importer:[{}],
 			};
@@ -169,6 +177,34 @@ class App extends React.Component{
 		
 		
 	}
+
+	update(){
+		 
+		var data  = this.state
+	
+		axios.post(this.$url+'/users/update',data)
+			.then(res => {
+					 
+					 
+					 if(res.data==1){
+						 
+						 alert("Updated successfully!")
+						 
+						 //this.setShow(false)
+						 
+					 }else{
+						 
+						 
+					 }
+					 
+			 
+			})
+			.catch(err => {
+				 console.log(err);
+			})
+	
+}
+
 	duplicate(id){
 		if (window.confirm("confirm duplicate?")) {
 		  axios.get(this.$url+'/users/findprop?id='+id,null)
@@ -241,6 +277,11 @@ duplicateadd(data){
 		 
 		  this.setState({show1: flag,mes:mes});
 	}
+
+	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac){
+		 
+		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac});
+}
 	
 	acc(id,value){
 		
@@ -553,7 +594,8 @@ duplicateadd(data){
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
 		
 								   </tr>
 			                   })
@@ -633,12 +675,46 @@ duplicateadd(data){
 		  </Modal.Header>
 		  <Modal.Body>
 						<Form>
-								
+						<Form.Label>Edit Proposal Information</Form.Label>
 								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-									<Form.Label>content</Form.Label>
-									<Form.Control value={this.state.mes}
-		          as="textarea" rows={10} />
-								  </Form.Group>
+							
+							
+							<Form.Label>Proposal Name</Form.Label>
+							<Form.Control value={this.state.na}
+		          onChange={e => this.setState({ na: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Start Date</Form.Label>
+							<Form.Control value={this.state.sda}
+		          onChange={e => this.setState({ type: e.target.value })} type="date" placeholder="" />
+							<Form.Label>End Date</Form.Label>
+							<Form.Control value={this.state.eda}
+		          onChange={e => this.setState({ type: e.target.value })} type="date" placeholder="" />
+							<Form.Label>Contract Length</Form.Label>
+							<Form.Select value={this.state.cle}
+			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
+			       		<option value="12 Month">12 Month...</option>
+			       		<option value="6 Month">6 Month...</option>
+			 	  			<option value="3 Month">3 Month...</option>
+			     </Form.Select>
+							<Form.Label>Message</Form.Label>
+							<Form.Control value={this.state.mes}
+		          onChange={e => this.setState({ mes: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Status</Form.Label>
+							<Form.Control value={this.state.ac}
+		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Timeline</Form.Label>
+							<Form.Control value={this.state.py1}
+		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Fulfilment</Form.Label>
+							<Form.Control value={this.state.py2}
+		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Contact Details</Form.Label>
+							<Form.Control value={this.state.cont}
+		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+							</Form.Group>
+							<Button className="me-2" onClick={() => this.update()}>
+					    Update
+					  
+					  </Button>
 						</Form>
 						
 					</Modal.Body>

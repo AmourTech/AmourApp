@@ -76,6 +76,24 @@ router.post('/add', function (req, res, next) {
    //res.send('Hello POST'+data);
 })
 
+router.post('/update', function (req, res, next) {
+	
+	var data = req.body
+	console.log(data.name)
+	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, pay1 = ?, pay2 = ?,contact = ? WHERE id = 51",[data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.contact],function (err, results) {
+					if(err){
+					 console.log('[INSERT ERROR] - ',err.message);
+		 res.send('0');
+					 return;
+					}        
+	 
+				res.send('1');
+				console.log(results)
+	});
+	
+	//res.send('Hello POST'+data);
+})
+
 
 router.get('/find', function(req, res, next) {
 	
