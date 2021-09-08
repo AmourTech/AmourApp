@@ -85,7 +85,6 @@ class App extends React.Component {
 		  //confirm1
 		var csv = this.state.importer
 		csv.forEach(csv => (
-			console.log(csv.data)
 			this.addnoalert(csv.data)
 		))
 		window.confirm('import confirmed')
