@@ -119,8 +119,6 @@ class App extends React.Component{
                 <MenuItem>View Proposals</MenuItem>
               </SubMenu> */}
               <MenuItem><Link to={'/Proposals'}>Proposals</Link></MenuItem>
-              <MenuItem><Link to={'/Services'}>Services</Link></MenuItem>
-              <MenuItem><Link to={'/Library'}>Library</Link></MenuItem>
               <MenuItem><Link to={'/Settings'}>Settings</Link></MenuItem>
             </Menu>
           </ProSidebar>
@@ -131,8 +129,6 @@ class App extends React.Component{
           <Route  path="/Home" component={Home} />
           <Route path="/Clients" component={Clients} />
           <Route path="/Proposals" component={Proposals} />
-          <Route path="/Services" component={Services} />
-          <Route path="/Library" component={Library} />
           <Route path="/Settings" component={Settings} />
         </main>
     </Router>

@@ -363,7 +363,7 @@ duplicateadd(data){
 
 		 	  <header className="App-header1">
 		 	   
-		 		
+		 		when client accepts they pay with stripe before signing
 		 		<div className="body">
 		 		 		
 		 		
