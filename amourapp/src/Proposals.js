@@ -50,6 +50,7 @@ class App extends React.Component{
 				cle:"", 
 				ac:"", 
 			  userid:'',
+				id:'',
 			  importer:[{}],
 			};
 			
@@ -278,9 +279,9 @@ duplicateadd(data){
 		  this.setState({show1: flag,mes:mes});
 	}
 
-	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac){
+	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac, id){
 		 
-		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac});
+		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac, id:id});
 }
 	
 	acc(id,value){
@@ -595,7 +596,7 @@ duplicateadd(data){
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit Proposal</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
 		
 								   </tr>
 			                   })
@@ -690,7 +691,7 @@ duplicateadd(data){
 		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
 							<Form.Label>Contract Length</Form.Label>
 							<Form.Select value={this.state.cle}
-			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
+			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
 			       		<option value="12 Month">12 Month...</option>
 			       		<option value="6 Month">6 Month...</option>
 			 	  			<option value="3 Month">3 Month...</option>

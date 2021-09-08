@@ -78,7 +78,7 @@ class App extends React.Component{
   return (
     <div className="App1">
       
-    <Navbar expand="lg">
+    <Navbar expand="lg" variant = 'dark'>
       <Navbar.Brand>{this.state.orgname}</Navbar.Brand>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />

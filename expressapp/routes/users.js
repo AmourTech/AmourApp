@@ -80,7 +80,7 @@ router.post('/update', function (req, res, next) {
 	
 	var data = req.body
 	console.log(data.name)
-	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, pay1 = ?, pay2 = ?,contact = ? WHERE id = 51",[data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.contact],function (err, results) {
+	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, pay1 = ?, pay2 = ?,contact = ? WHERE id = ?",[data.na, data.client, data.sda, data.eda, data.cle, data.mes, data.ac, data.py1, data.py2, data.cont, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
