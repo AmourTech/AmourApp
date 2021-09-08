@@ -28,8 +28,9 @@ class App extends React.Component {
 		 abn:'',
 		 acn:'',
 		 baddress:'',
-		 bsbname:'',
+		 bname:'',
 		 bsbaccountn:'',
+		 bsbname:'',
 		 contact:'',
 		 tfn:'',
 		 type:'',
@@ -213,6 +214,11 @@ class App extends React.Component {
 	
 }
 
+setShow1(flag,mes){
+		 
+	this.setState({show1: flag,mes:mes});
+}
+
 setShow2(flag,clientname, abn, acn, baddress, bsbname, bsbaccountn, contact, tfn, type, id){
 		 
 	this.setState({show1: flag,clientname:clientname, abn:abn, acn:acn, baddress:baddress, bsbname:bsbname, bsbaccountn:bsbaccountn, contact:contact, tfn:tfn, type:type, id:id});
@@ -390,9 +396,8 @@ render() {
 				   <td >{item.clientname}</td>
 				   <td >{item.Contact}</td>
 					<td ><a href="javascript:;" onClick={() => this.delete(item.AccountID)}>delete</a>
-					<a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit client</a></td>
-				   
+					<a href="javascript:;" onClick={() => this.setShow2(true,item.clientname, item.ABN, item.ACN, item.BAddress, item.BName, item.BSBName, 
+										item.Contact, item.TFN, item.Type, item.AccountID)} href="javascript:;" >edit client</a></td>
 				 
 				   </tr>
 				})
@@ -469,45 +474,53 @@ render() {
 
 		 <Modal show={this.state.show1} fullscreen={true} onHide={() => this.setShow1(false,'')}>
 		  <Modal.Header closeButton>
-		    <Modal.Title>Proposal Edit</Modal.Title>
+		    <Modal.Title>Client Edit</Modal.Title>
 		  </Modal.Header>
 		  <Modal.Body>
 						<Form>
-						<Form.Label>Edit Proposal Information</Form.Label>
+						<Form.Label>Edit Client Information</Form.Label>
 								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 							
 							
-							<Form.Label>Proposal Name</Form.Label>
-							<Form.Control value={this.state.na}
-		          onChange={e => this.setState({ na: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Start Date</Form.Label>
-							<Form.Control value={this.state.sda}
-		          onChange={e => this.setState({ sda: e.target.value })} type="date" placeholder="" />
-							<Form.Label>End Date</Form.Label>
-							<Form.Control value={this.state.eda}
-		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
-							<Form.Label>Contract Length</Form.Label>
-							<Form.Select value={this.state.cle}
-			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
-			       		<option value="12 Month">12 Month...</option>
-			       		<option value="6 Month">6 Month...</option>
-			 	  			<option value="3 Month">3 Month...</option>
-			     </Form.Select>
-							<Form.Label>Message</Form.Label>
-							<Form.Control value={this.state.mes}
-		          onChange={e => this.setState({ mes: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Status</Form.Label>
-							<Form.Control value={this.state.ac}
-		          onChange={e => this.setState({ ac: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Payment Timeline</Form.Label>
-							<Form.Control value={this.state.py1}
-		          onChange={e => this.setState({ py1: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Payment Fulfilment</Form.Label>
-							<Form.Control value={this.state.py2}
-		          onChange={e => this.setState({ py2: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Client Name</Form.Label>
+							<Form.Control value={this.state.clientname}
+		          onChange={e => this.setState({ clientname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>ABN</Form.Label>
+							<Form.Control value={this.state.abn}
+		          onChange={e => this.setState({ abn: e.target.value })} type="text" placeholder="" />
+							<Form.Label>ACN</Form.Label>
+							<Form.Control value={this.state.acn}
+		          onChange={e => this.setState({ acn: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Business Address</Form.Label>
+							<Form.Control value={this.state.baddress}
+		          onChange={e => this.setState({ baddress: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Business Name</Form.Label>
+							<Form.Control value={this.state.bname}
+		          onChange={e => this.setState({ bname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>BSB Account Number</Form.Label>
+							<Form.Control value={this.state.bsbaccountn}
+		          onChange={e => this.setState({ bsbaccountn: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Contact Details</Form.Label>
-							<Form.Control value={this.state.cont}
-		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
+							<Form.Control value={this.state.bsbname}
+		          onChange={e => this.setState({ bsbname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>BSB Account Number</Form.Label>
+							<Form.Control value={this.state.contact}
+		          onChange={e => this.setState({ contact: e.target.value })} type="text" placeholder="" />
+							<Form.Label>TFN</Form.Label>
+							<Form.Control value={this.state.tfn}
+		          onChange={e => this.setState({ tfn: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Type of Business</Form.Label>
+							<Form.Select value={this.state.type}
+			          onChange={e => this.setState({ type: e.target.value })}  defaultValue="Choose...">
+			       		<option value="Trader">Trader</option>
+			       		<option value="Individual">Individual</option>
+			 	  			<option value="Partner">Partner</option>
+								<option value="Company">Company</option>
+								<option value="Trust">Trust</option>
+								<option value="Super">Super</option>
+								<option value="NFP">NFP</option>
+			     		</Form.Select>
+
 							</Form.Group>
 							<Button className="me-2" onClick={() => this.update()}>
 					    Update

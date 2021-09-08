@@ -97,8 +97,8 @@ router.post('/updatepro', function (req, res, next) {
 router.post('/updateclient', function (req, res, next) {
 	
 	var data = req.body
-	console.log(data.name)
-	db.query("UPDATE client SET clientname = ?, ABN = ?, ACN = ?, BAddress = ?, BName = ?, BSBAccountNumber = ?, BSBName = ?, Contact = ?, TFN = ?, Type = ? WHERE AccountID = ?",[data.clientname, data.abn, data.acn, data.baddress, data.bsbname, data.bsbaccountn, data.contact, data.tfn, data.type, data.id],function (err, results) {
+	console.log(data.clientname)
+	db.query("UPDATE client SET clientname = ?, ABN = ?, ACN = ?, BAddress = ?, BName = ?, BSBAccountNumber = ?, BSBName = ?, Contact = ?, TFN = ?, Type = ? WHERE AccountID = ?",[data.clientname, data.abn, data.acn, data.baddress, data.bname, data.bsbaccountn, data.bsbname, data.contact, data.tfn, data.type, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
