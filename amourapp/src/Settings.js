@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col'
 
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
-
+//add terms and conditions that are customisable
 var servicecheck =0;
 
 class App extends React.Component{
@@ -59,6 +59,7 @@ class App extends React.Component{
 						this.setState({Xero:item.XeroAccount})
 						this.setState({Dbill:item.DBill})
 						this.setState({SPrice:item.StandardPrice})
+						//0 or 10%
 						this.setState({TRate:item.TaxRate})
 					   
 		})
@@ -299,12 +300,15 @@ class App extends React.Component{
 			   <Form.Select  value={this.state.Dbill}
 					onChange={e => this.setState({ Dbill: e.target.value })}   >
 
-					<option value="At">At Acceptance</option>
-					<option value="End">End Of Month</option>
-					<option value="Start">Start Of Month</option>
+					<option value="At">On Completion</option>
+					<option value="End">On Sign</option>
+					<option value="Start">Recuring</option>
 					</Form.Select>
 				</Form.Group>		
-					
+					name
+				<br/>
+					description
+
 			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
 			  <Form.Label>Standard Price</Form.Label>
 			  <Form.Control  type="text" value={this.state.SPrice}
@@ -312,12 +316,14 @@ class App extends React.Component{
 			</Form.Group>
 
 			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
+				 0% or 10%
 			   <Form.Label>Tax Rate</Form.Label>
 			   <Form.Control  type="choice" value={this.state.TRate}
 					onChange={e => this.setState({ TRate: e.target.value })}   />
 				</Form.Group>		
 					
 			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
+				different xero account for each service if wanted
 			  <Form.Label>Xero Account</Form.Label>
 			  <Form.Control  type="text" value={this.state.Xero}
 				   onChange={e => this.setState({ Xero: e.target.value })}   />

@@ -263,8 +263,31 @@ router.post('/addcl', function(req, res, next) {
 	
 	
 	console.log(data)
-	var  addSql = 'INSERT INTO client(clientname, Contact, AccountID,ABN,ACN,BAddress,BSBAccountnumber, BSBName, TFN, Type, Handler) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)'; //need to set this last value to whatever your organisation id is in sql until we set up the system
-	var  addSqlParams = [data.clientname, data.contact, data.accountid, data.abn ,data.acn , data.baddress,data.bsbaccountn, data.bsbname, data.tfn, data.type];
+	var  addSql = 'INSERT INTO client(clientname, Contact, AccountID,ABN,ACN,BAddress,BSBAccountnumber, BSBName, TFN, Type, Handler) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; //need to set this last value to whatever your organisation id is in sql until we set up the system
+	var  addSqlParams = [data.clientname, data.contact, data.accountid, data.abn ,data.acn , data.baddress,data.bsbaccountn, data.bsbname, data.tfn, data.type, data.Handler];
+	db.query(addSql,addSqlParams,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
+router.post('/addclient', function(req, res, next) {
+	
+	
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	var  addSql = 'INSERT INTO client(clientname, Contact, AccountID,ABN,ACN,BAddress,BSBAccountnumber, BSBName, TFN, Type, Handler) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; //need to set this last value to whatever your organisation id is in sql until we set up the system
+	var  addSqlParams = [data.clientname, data.Contact, data.AccountID, data.ABN ,data.ACN , data.BAddress,data.BSBAccountNumber, data.BSBName, data.TFN, data.Type, data.Handler];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);

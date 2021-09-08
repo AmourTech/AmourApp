@@ -33,20 +33,80 @@ class App extends React.Component {
 		 contact:'',
 		 tfn:'',
 		 type:'',
+		 Handler:0,
 		//  Fname: '',
 		//  Lname: '',
 		//  email:'',
 		 viewdata:[],
+		 importer:[{}],
 	   };
 			
 	   this.setMenu = this.setMenu.bind(this);
 	   this.getList = this.getList.bind(this);
+	   this.create = this.create.bind(this);
+	   this.handleOnFileLoad = this.handleOnFileLoad.bind(this);
+	   this.handleOnRemoveFile = this.handleOnRemoveFile.bind(this);
+	   this.handleconfirm = this.handleconfirm.bind(this);
 	 }
 	 
 	 componentDidMount() {
 	     this.getList()
 	  }
-	 
+	  handleOpenDialog = (e) => {
+		if (buttonRef.current) {
+		  buttonRef.current.open(e);
+		}
+	  };
+	   handleOnFileLoad = (data) => {
+		console.log('-----onfileload----------------');
+		this.setState({importer: data})
+		console.log(data)
+		console.log('---------------------------');
+	  };
+	  handleRemoveFile = (e) => {
+		// Note that the ref is set async, so it might be null at some point
+		if (buttonRef.current) {
+		  buttonRef.current.removeFile(e);
+		}
+	  };
+	  handleOnError = (err, file, inputElem, reason) => {
+		console.log('-----------onerror---------');
+		console.log(err);
+		console.log('---------------------------');
+	  };
+	
+	  handleOnRemoveFile = (data) => {
+		console.log('-------onremove-------------');
+		this.setState({importer: data})
+		console.log('---------------------------');
+	  };
+	  handleconfirm(){
+		  //confirm1
+		var csv = this.state.importer
+		csv.forEach(csv => (
+			console.log(csv.data)
+			this.addnoalert(csv.data)
+		))
+		window.confirm('import confirmed')
+		console.log(csv.length)
+	  }
+	  addnoalert(data){
+		axios.post(this.$url+'/users/addclient',data)
+		.then(res => {
+						 
+						 
+			if(res.data==1){
+				
+			   this.getList();
+				
+			}else{
+				
+				
+			}
+			
+	
+	})
+}
 	 getList(){
 	 	
 	 	axios.get(this.$url+'/users/getcl',null)
@@ -95,7 +155,10 @@ class App extends React.Component {
 	 }
 	 
 	 create(){
-		 
+		let admin  = JSON.parse(localStorage.getItem('user'))[0]
+		console.log(admin.Organisation)
+		this.setState({Handler: admin.Organisation})
+
 		   var data  = this.state
 		 
 		   axios.post(this.$url+'/users/addcl',data)
@@ -353,7 +416,8 @@ render() {
     
   )}
 </CSVReader><button onClick={this.handleconfirm}>Confirm</button>
- 		
+
+<br/><br/><br/><br/>
  		<Nav fill variant="tabs" defaultActiveKey="link-1">
  		  <Nav.Item>
  		    <Nav.Link  onClick={() => this.setMenu(1)} eventKey="link-1" >Create new Client</Nav.Link>
