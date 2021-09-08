@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
-
+import ReactFileReader from 'react-file-reader';
 
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
@@ -11,6 +11,11 @@ import Col from 'react-bootstrap/Col'
 
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
+import data from './Comm';
+
+import { CSVLink} from "react-csv";
+import {readString, CSVReader} from 'react-papaparse';
+const buttonRef = React.createRef();
 
 class App extends React.Component{
 	
@@ -26,8 +31,9 @@ class App extends React.Component{
 			  client:"", 
 			  contact:"12 Month...",
 			  sdate:"", 
+			  followdate:"",
 			  edate:"", 
-			  clen:"12 Moth", 
+			  clen:"12 Month", 
 			  message:"", 
 			  acc:"0", 
 			  pay1:"Weekly...", 
@@ -36,7 +42,7 @@ class App extends React.Component{
 			  show1:false,
 			  mes:"",
 			  userid:'',
-			  
+			  importer:[{}],
 			};
 			
 			this.sub = this.sub.bind(this);
@@ -44,30 +50,53 @@ class App extends React.Component{
 			this.setShow1 = this.setShow1.bind(this);
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
+			this.duplicate = this.duplicate.bind(this);
+			this.handleOnFileLoad = this.handleOnFileLoad.bind(this);
+			this.handleOnRemoveFile = this.handleOnRemoveFile.bind(this);
+			this.handleconfirm = this.handleconfirm.bind(this);
 	  }
-	  
+
 	  componentDidMount() {
 	      this.getList()
-	   }
-	  
-	  
-	    componentWillMount(){
-			axios.get(this.$url+'/users/add',null)
-			  .then(res => {
-							 
-				 // this.setState({viewdata: res.data});
-				   console.log(res.data)
-			   
-			  })
-			  .catch(err => {
-			     console.log(err);
-			  })
-			  
-			  
-			  this.getClient();
 			
-	        
-	      }
+	   }
+	   handleOpenDialog = (e) => {
+		if (buttonRef.current) {
+		  buttonRef.current.open(e);
+		}
+	  };
+	   handleOnFileLoad = (data) => {
+		console.log('-----onfileload----------------');
+		this.setState({importer: data})
+		console.log(data)
+		console.log('---------------------------');
+	  };
+	  handleRemoveFile = (e) => {
+		// Note that the ref is set async, so it might be null at some point
+		if (buttonRef.current) {
+		  buttonRef.current.removeFile(e);
+		}
+	  };
+	  handleOnError = (err, file, inputElem, reason) => {
+		console.log('-----------onerror---------');
+		console.log(err);
+		console.log('---------------------------');
+	  };
+	
+	  handleOnRemoveFile = (data) => {
+		console.log('-------onremove-------------');
+		this.setState({importer: data})
+		console.log('---------------------------');
+	  };
+	  handleconfirm(){
+		  //confirm1
+		var csv = this.state.importer
+		csv.forEach(csv => (
+			this.addnoalert(csv.data)
+		))
+		window.confirm('import confirmed')
+		console.log(csv.length)
+	  }
 
 	
 	getClient(){
@@ -92,10 +121,10 @@ class App extends React.Component{
 		
 		console.log(localStorage.getItem("user"))
 		let view  = JSON.parse(localStorage.getItem("user"))[0]
-		let admin = localStorage.getItem("admin")
+		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
 		 let url = ''
-		if(admin == 1){
-			url = this.$url+'/users/find?id='+view.ContactID
+		if(admin === 1){
+			url = this.$url+'/users/find?id='+view.Organisation
 		}else{
 			url = this.$url+'/users/findus?id='+view.UserID
 		}
@@ -138,6 +167,62 @@ class App extends React.Component{
 		 
 		}
 		
+		
+	}
+	duplicate(id){
+		if (window.confirm("confirm duplicate?")) {
+		  axios.get(this.$url+'/users/findprop?id='+id,null)
+		    .then(res => {
+		  		//this.setState({viewdata: res.data});		 
+		  	  // this.state.viewdata =  res.data
+		  	   console.log(res.data)
+		  			
+		  	   this.getList();
+		     
+		    })
+		    .catch(err => {
+		       console.log(err);
+		    })
+		} else {
+			return 
+		 
+		}
+	}
+	addnoalert(data){
+		axios.post(this.$url+'/users/add',data)
+		.then(res => {
+						 
+						 
+			if(res.data==1){
+				
+			   this.getList();
+				
+			}else{
+				
+				
+			}
+			
+	
+	})
+}
+duplicateadd(data){
+	axios.post(this.$url+'/users/add',data)
+	.then(res => {
+					 
+					 
+		if(res.data==1){
+			
+			alert("Successful operation!")
+			
+		   this.getList();
+			
+		}else{
+			
+			
+		}
+		
+
+})
 		
 	}
 	
@@ -226,13 +311,14 @@ class App extends React.Component{
 	}
 	  render() {
 		  
-		  
-		 let admin = localStorage.getItem("admin")
-		 
+		console.log('startup');
+		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
+		 console.log(admin);
 		  
 		  if(admin == 1){
 		 	return (  <>
 		 	<div className="App">
+
 		 	  <header className="App-header1">
 		 	   
 		 		
@@ -355,21 +441,16 @@ class App extends React.Component{
 			 								      
 			 					  <Form.Group md="3" as={Col} controlId="formGridPassword">
 			 					    <Form.Label>Effective Start Date</Form.Label>
-			 					   <Form.Select value={this.state.sdate}
-			          onChange={e => this.setState({ sdate: e.target.value })} defaultValue="Choose...">
-			 		                 <option value="">Choose...</option>
-			 		                 <option value="3 months">3 months</option>
-			 					     <option value="6 months">6 months</option>
-			 					     <option value="12 months">12 months</option>
-			 					   </Form.Select>
+			 					   <Form.Control  type="date" value={this.state.sdate}
+									onChange={e => this.setState({ sdate: e.target.value })}  placeholder="Choose..." />
 			 					  </Form.Group>
 			 					</Row>
 			 					
 			 <Row className="mb-3">
 			   <Form.Group md="3"  as={Col} controlId="formGridAddress1">
-			     <Form.Label>Effiective Start Date</Form.Label>
-			     <Form.Control  type="date" value={this.state.edate}
-			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="1234 Main St" />
+			     <Form.Label>Effective end Date</Form.Label>
+			     <Form.Control  type="date" value={this.state.followdate}
+			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="Choose..." />
 			   </Form.Group>
 			 </Row>
 			 
@@ -378,7 +459,7 @@ class App extends React.Component{
 			     <Form.Label>Minimum Contract Length</Form.Label>
 			     <Form.Select value={this.state.clen}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
-			       <option value="12 Moth">12 Month...</option>
+			       <option value="12 Month">12 Month...</option>
 			       <option value="6 Month">6 Month...</option>
 			 	  <option value="3 Month">3 Month...</option>
 			     </Form.Select>
@@ -472,9 +553,8 @@ class App extends React.Component{
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a></td>
-								   
-								 
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
+		
 								   </tr>
 			                   })
 			               }
@@ -482,7 +562,11 @@ class App extends React.Component{
 			 </table> </>;
 		   }
   
-  
+		   const csvReport = {
+			filename: 'Report.csv',
+			//headers: headers,
+			data: this.state.viewdata
+		}
   
   
   
@@ -498,8 +582,33 @@ class App extends React.Component{
 	   
 		
 		<div className="body">
-		
-		
+		<CSVLink {...csvReport}> Export to CSV</CSVLink>
+		<CSVReader   ref={buttonRef}
+  onFileLoad={this.handleOnFileLoad}
+  onError={this.handleOnError}
+  noClick
+  noDrag
+  noProgressBar
+  config={{header: true}}
+  style={{}}
+  onRemoveFile={this.handleOnRemoveFile}
+  >
+  {({ file }) => (
+    <div>
+      <button
+        type='button'
+        onClick={this.handleOpenDialog}
+      >
+          Import CSV
+      </button>
+        {file && file.name}
+      <button onClick={this.handleRemoveFile}>Remove</button>
+	  </div>
+    
+  )}
+</CSVReader><button onClick={this.handleconfirm}>Confirm</button>
+
+<br/><br/><br/><br/>
 		<Nav fill variant="tabs" defaultActiveKey="link-1">
 		  <Nav.Item>
 		    <Nav.Link  onClick={() => this.setMenu(1)} eventKey="link-1" >Create new Proposals</Nav.Link>

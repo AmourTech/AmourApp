@@ -123,9 +123,8 @@ class App extends React.Component {
 render() {
 	
 	
-	let admin = localStorage.getItem("admin")
-	 
-	 if(admin == 1){
+	let admin  = JSON.parse(localStorage.getItem("admin"))[0]
+	 if(admin === 1){
 		return (  <>
  	<div className="App">
  	  <header className="App-header1">

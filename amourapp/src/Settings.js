@@ -12,14 +12,16 @@ import Col from 'react-bootstrap/Col'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
 
+var servicecheck =0;
 
 class App extends React.Component{
 	
 	constructor(props) {
 	   super(props);
+	   let organ  = (JSON.parse(localStorage.getItem("user"))[0])
 	   this.state = {
 		   			//test org
-		   		  org :2,
+		   		  org :organ.Organisation,
 				  Admin: false,
 				
 		          st :1,
@@ -28,17 +30,67 @@ class App extends React.Component{
 				  lname:'',
 				  password:'',
 				  viewdata:[],
+
+
+				  Dbill:'',
+				  SPrice:'',
+				  TRate:'',
+				  Xero:'',
 				};
+
 		this.handleAdmin = this.handleAdmin.bind(this);
 		this.adduser = this.adduser.bind(this);
 		this.getuser =   this.getuser.bind(this);
-		this.delete = this.delete.bind(this)
+		this.delete = this.delete.bind(this);
+		this.applyService = this.applyService.bind(this);
+		this.getService = this.getService.bind(this);
+		
+	 }
+
+	 componentDidMount() {
+		this.getService()
+	 }
+	 getService(){
+		var id = this.state.org
+		axios.get(this.$url+'/users/getservo?id='+id,null)
+		.then(res=>{
+					var item = (res.data)[0]
+					console.log(item)		 
+						this.setState({Xero:item.XeroAccount})
+						this.setState({Dbill:item.DBill})
+						this.setState({SPrice:item.StandardPrice})
+						this.setState({TRate:item.TaxRate})
+					   
+		})
+		.catch(err => {
+			console.log(err);
+		 })
+
 
 	 }
-	 
+
+	 applyService(){
+		 if(window.confirm("confirm apply"))
+		var data= this.state
+		axios.post(this.$url+'/users/applyservo',data)
+		.then(res=>{
+			if(res.data===1){
+			alert("Applied Settings Succesfuly!")
+			//this.setShow(false)
+
+			
+		}else{
+			 alert("failed")
+		   
+		}
+	})
+	this.getService();
+
+	 }
 	 setMenu(num){
 		  this.getuser()
 	 	  this.setState({st: num});
+			
 	 }
 	 
 	 setShow(flag){
@@ -105,7 +157,7 @@ class App extends React.Component{
 		 axios.post(this.$url+'/users/adduser',data)
 		   .then(res => {
 		 		 				 				 
-			 if(res.data==1){
+			 if(res.data===1){
 				 alert("Create  User successfully!")
 				 //this.setShow(false)
 				 
@@ -123,9 +175,8 @@ class App extends React.Component{
 	
  render() {	
 	 
-	 let admin = localStorage.getItem("admin")
-	 
-	 if(admin == 1){
+	let admin  = JSON.parse(localStorage.getItem("admin"))[0]
+	 if(admin === 0){
 		return (  <div className="App">
       <header className="App-header">
         <p>
@@ -134,11 +185,14 @@ class App extends React.Component{
       </header>
     </div>)
 	 }
-	 
-	 
+	 if(servicecheck === 0 ){
+		this.getService();
+		servicecheck=1;
+	}
+
 	 const isisd = this.state.st;
 	 let view;
-	 if (isisd == 1) {
+	 if (isisd === 1) {
 		 
 		 view = <> <Form>
 	 
@@ -201,7 +255,7 @@ class App extends React.Component{
 		  
 		  <tr className="table-tr">
 		    <td>email</td>
-		    <td>uesrname</td>
+		    <td>username</td>
 		    <td>password</td>
 			<td>create time</td>
 		 			
@@ -229,10 +283,58 @@ class App extends React.Component{
   
   <>
   <div className="App">
+
+	  
     <header className="App-header1">
     
   	<div className="body">
-	
+
+	<header><font size="12">Services</font></header>
+	<Form>
+
+		 
+		
+			 <Form.Group md="3"  as={Col} controlId="formGridAddress1">
+			   <Form.Label>Default Billing Type</Form.Label>
+			   <Form.Select  value={this.state.Dbill}
+					onChange={e => this.setState({ Dbill: e.target.value })}   >
+
+					<option value="At">At Acceptance</option>
+					<option value="End">End Of Month</option>
+					<option value="Start">Start Of Month</option>
+					</Form.Select>
+				</Form.Group>		
+					
+			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
+			  <Form.Label>Standard Price</Form.Label>
+			  <Form.Control  type="text" value={this.state.SPrice}
+				   onChange={e => this.setState({ SPrice: e.target.value })}   />
+			</Form.Group>
+
+			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
+			   <Form.Label>Tax Rate</Form.Label>
+			   <Form.Control  type="choice" value={this.state.TRate}
+					onChange={e => this.setState({ TRate: e.target.value })}   />
+				</Form.Group>		
+					
+			<Form.Group md="3"  as={Col} controlId="formGridAddress1">
+			  <Form.Label>Xero Account</Form.Label>
+			  <Form.Control  type="text" value={this.state.Xero}
+				   onChange={e => this.setState({ Xero: e.target.value })}   />
+			</Form.Group>
+			
+		 </Form>
+		 <Button onClick={() => this.applyService()} className="me-2" >
+             apply
+           
+           </Button>
+		<br></br>
+		<br></br>
+
+
+
+
+
 	
 	
 	<Nav fill variant="tabs" defaultActiveKey="link-1">
