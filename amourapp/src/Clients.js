@@ -12,6 +12,8 @@ import Col from 'react-bootstrap/Col'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'
 import { CSVLink, CSVDownload } from "react-csv";
+import {readString, CSVReader} from 'react-papaparse';
+const buttonRef = React.createRef();
 
 class App extends React.Component {
 	
@@ -327,6 +329,30 @@ render() {
  		
  		<div className="body">
  		<CSVLink {...csvReport}> Export to CSV</CSVLink>
+		 <CSVReader   ref={buttonRef}
+  onFileLoad={this.handleOnFileLoad}
+  onError={this.handleOnError}
+  noClick
+  noDrag
+  noProgressBar
+  config={{header: true}}
+  style={{}}
+  onRemoveFile={this.handleOnRemoveFile}
+  >
+  {({ file }) => (
+    <div>
+      <button
+        type='button'
+        onClick={this.handleOpenDialog}
+      >
+          Import CSV
+      </button>
+        {file && file.name}
+      <button onClick={this.handleRemoveFile}>Remove</button>
+	  </div>
+    
+  )}
+</CSVReader><button onClick={this.handleconfirm}>Confirm</button>
  		
  		<Nav fill variant="tabs" defaultActiveKey="link-1">
  		  <Nav.Item>

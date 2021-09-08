@@ -684,10 +684,10 @@ duplicateadd(data){
 		          onChange={e => this.setState({ na: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Start Date</Form.Label>
 							<Form.Control value={this.state.sda}
-		          onChange={e => this.setState({ type: e.target.value })} type="date" placeholder="" />
+		          onChange={e => this.setState({ sda: e.target.value })} type="date" placeholder="" />
 							<Form.Label>End Date</Form.Label>
 							<Form.Control value={this.state.eda}
-		          onChange={e => this.setState({ type: e.target.value })} type="date" placeholder="" />
+		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
 							<Form.Label>Contract Length</Form.Label>
 							<Form.Select value={this.state.cle}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
@@ -700,16 +700,16 @@ duplicateadd(data){
 		          onChange={e => this.setState({ mes: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Status</Form.Label>
 							<Form.Control value={this.state.ac}
-		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+		          onChange={e => this.setState({ ac: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Payment Timeline</Form.Label>
 							<Form.Control value={this.state.py1}
-		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+		          onChange={e => this.setState({ py1: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Payment Fulfilment</Form.Label>
 							<Form.Control value={this.state.py2}
-		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+		          onChange={e => this.setState({ py2: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Contact Details</Form.Label>
 							<Form.Control value={this.state.cont}
-		          onChange={e => this.setState({ type: e.target.value })} type="text" placeholder="" />
+		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
 							</Form.Group>
 							<Button className="me-2" onClick={() => this.update()}>
 					    Update
