@@ -183,7 +183,7 @@ class App extends React.Component{
 		 
 		var data  = this.state
 	
-		axios.post(this.$url+'/users/update',data)
+		axios.post(this.$url+'/users/updatepro',data)
 			.then(res => {
 					 
 					 

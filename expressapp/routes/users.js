@@ -76,11 +76,29 @@ router.post('/add', function (req, res, next) {
    //res.send('Hello POST'+data);
 })
 
-router.post('/update', function (req, res, next) {
+router.post('/updatepro', function (req, res, next) {
 	
 	var data = req.body
 	console.log(data.name)
 	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, pay1 = ?, pay2 = ?,contact = ? WHERE id = ?",[data.na, data.client, data.sda, data.eda, data.cle, data.mes, data.ac, data.py1, data.py2, data.cont, data.id],function (err, results) {
+					if(err){
+					 console.log('[INSERT ERROR] - ',err.message);
+		 res.send('0');
+					 return;
+					}        
+	 
+				res.send('1');
+				console.log(results)
+	});
+	
+	//res.send('Hello POST'+data);
+})
+
+router.post('/updateclient', function (req, res, next) {
+	
+	var data = req.body
+	console.log(data.name)
+	db.query("UPDATE client SET clientname = ?, ABN = ?, ACN = ?, BAddress = ?, BName = ?, BSBAccountNumber = ?, BSBName = ?, Contact = ?, TFN = ?, Type = ? WHERE AccountID = ?",[data.clientname, data.abn, data.acn, data.baddress, data.bsbname, data.bsbaccountn, data.contact, data.tfn, data.type, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
@@ -359,12 +377,12 @@ router.post('/login', function(req, res, next) {
 router.get('/udel', function(req, res, next) {
 	
 	console.log(req.query)
-	db.query('delete  from contact where ContactID = ?', [req.query.id],function (error, results, fields) {
+	db.query('DELETE from client WHERE AccountID = ?', [req.query.id],function (error, results, fields) {
 	  if (error) console.log("oops");
 	  //console.log('The solution is: ');
-	  res.send('1');
+	  res.send(fields);
+		console.log(fields);
 	});
-	
  // res.send('respond with a resource');
 });
 

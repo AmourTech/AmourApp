@@ -33,6 +33,7 @@ class App extends React.Component {
 		 contact:'',
 		 tfn:'',
 		 type:'',
+		 id:'',
 		//  Fname: '',
 		//  Lname: '',
 		//  email:'',
@@ -120,6 +121,40 @@ class App extends React.Component {
 		     })
 		 
 	 }
+
+	 update(){
+		 
+		var data  = this.state
+	
+		axios.post(this.$url+'/users/updateclient',data)
+			.then(res => {
+					 
+					 
+					 if(res.data==1){
+						 
+						 alert("Updated successfully!")
+						 
+						 //this.setShow(false)
+						 
+					 }else{
+						 
+						 
+					 }
+					 
+			 
+			})
+			.catch(err => {
+				 console.log(err);
+			})
+
+		
+	
+}
+
+setShow2(flag,clientname, abn, acn, baddress, bsbname, bsbaccountn, contact, tfn, type, id){
+		 
+	this.setState({show1: flag,clientname:clientname, abn:abn, acn:acn, baddress:baddress, bsbname:bsbname, bsbaccountn:bsbaccountn, contact:contact, tfn:tfn, type:type, id:id});
+}
 	
 render() {
 	
@@ -292,7 +327,9 @@ render() {
 					return <tr>
 				   <td >{item.clientname}</td>
 				   <td >{item.Contact}</td>
-					<td ><a href="javascript:;" onClick={() => this.delete(item.ContactID)}>delete</a></td>
+					<td ><a href="javascript:;" onClick={() => this.delete(item.AccountID)}>delete</a>
+					<a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit client</a></td>
 				   
 				 
 				   </tr>
@@ -366,6 +403,57 @@ render() {
  		
 		
 		 {view}
+
+		 <Modal show={this.state.show1} fullscreen={true} onHide={() => this.setShow1(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Proposal Edit</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Edit Proposal Information</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>Proposal Name</Form.Label>
+							<Form.Control value={this.state.na}
+		          onChange={e => this.setState({ na: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Start Date</Form.Label>
+							<Form.Control value={this.state.sda}
+		          onChange={e => this.setState({ sda: e.target.value })} type="date" placeholder="" />
+							<Form.Label>End Date</Form.Label>
+							<Form.Control value={this.state.eda}
+		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
+							<Form.Label>Contract Length</Form.Label>
+							<Form.Select value={this.state.cle}
+			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
+			       		<option value="12 Month">12 Month...</option>
+			       		<option value="6 Month">6 Month...</option>
+			 	  			<option value="3 Month">3 Month...</option>
+			     </Form.Select>
+							<Form.Label>Message</Form.Label>
+							<Form.Control value={this.state.mes}
+		          onChange={e => this.setState({ mes: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Status</Form.Label>
+							<Form.Control value={this.state.ac}
+		          onChange={e => this.setState({ ac: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Timeline</Form.Label>
+							<Form.Control value={this.state.py1}
+		          onChange={e => this.setState({ py1: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Fulfilment</Form.Label>
+							<Form.Control value={this.state.py2}
+		          onChange={e => this.setState({ py2: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Contact Details</Form.Label>
+							<Form.Control value={this.state.cont}
+		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
+							</Form.Group>
+							<Button className="me-2" onClick={() => this.update()}>
+					    Update
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal>
  		
  		</div>
  		
