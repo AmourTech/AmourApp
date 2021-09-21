@@ -27,15 +27,36 @@ router.get('/getservo',function(req,res,next){
 		
 });
 })
-router.post('/applyservo', function(req, res, next) {
+router.post('/updateservo', function(req, res, next) {
 	var data = req.body
 	
 	
 	
 	console.log(data)
-	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, StandardPrice =? where Organisation=?', [data.Dbill,data.TRate,data.Xero,data.SPrice,data.org],function (err, result) {
+	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.Xero,data.Spay,Cpay,Rpay,Sname,SDesc,data.ID],function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
+router.post('/addservo', function(req, res, next) {
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc) VALUES (?,?,?,?,?,?,?,?,?)' ;
+	var addSqlParam = [data.org, data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
+	db.query(addSql, addSqlParam,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ', err.message);
 			 res.send('0');
 	         return;
 	        }
@@ -331,7 +352,17 @@ router.get('/deuser', function(req, res, next) {
 	
  // res.send('respond with a resource');
 });
-
+router.get('/deservo', function(req, res, next) {
+	
+	console.log(req.query)
+	db.query('delete  from service where ID = ?', [req.query.id],function (error, results, fields) {
+	  if (error) console.log("oops");
+	  //console.log('The solution is: ');
+	  res.send('1');
+	});
+	
+ // res.send('respond with a resource');
+});
 router.get('/del', function(req, res, next) {
 	
 	
