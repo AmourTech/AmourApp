@@ -25,6 +25,8 @@ class App extends React.Component{
 				  Admin: false,
 					show:false,
 					show2:false,
+					show3:false,
+					show4:false,
 		          st :1,
 				  email:'',
 				  fname:'',
@@ -32,7 +34,8 @@ class App extends React.Component{
 				  password:'',
 				  viewdata:[],
 				  ServiceData:[],
-
+					TermData:[],
+				message:'',
 				Sname:'',
 				SDesc:'',
 				Spay:'',
@@ -42,7 +45,10 @@ class App extends React.Component{
 				During:false,
 				End:false,
 
-
+				TName:'',
+				TDesc:'',
+				Terms:'',
+				Tid:'',
 				  Dbill:'',
 				  TRate:'',
 				  Xero:'',
@@ -54,20 +60,27 @@ class App extends React.Component{
 		this.getuser =   this.getuser.bind(this);
 		this.delete = this.delete.bind(this);
 		this.Sdelete = this.Sdelete.bind(this);
+		this.Tdelete = this.Tdelete.bind(this);
 		this.applyService = this.applyService.bind(this);
+		this.updateService = this.updateService.bind(this);
+		this.updateTerm = this.updateTerm.bind(this);
+		this.applyTerm = this.applyTerm.bind(this);
 		this.getService = this.getService.bind(this);
+		this.getTerm = this.getTerm.bind(this);
 		this.setShow = this.setShow.bind(this);
 		this.setShow2 = this.setShow2.bind(this);
+		this.setShow3 = this.setShow3.bind(this);
+		this.setShow4 = this.setShow4.bind(this);
 		this.BillHandler = this.BillHandler.bind(this);
 	 }
 
 	 componentDidMount() {
 		this.getService()
+		this.getTerm()
 	 }
 	 BillHandler(DBill){
 		 this.setState({Dbill:DBill})
 		if (DBill==="End"){
-			this.setState({Cpay:0})
 			this.setState({Spay:0})
 			this.setState({Rpay:0})
 			this.setState({During:false})
@@ -75,22 +88,17 @@ class App extends React.Component{
 			this.setState({End:true})
 		}else if(DBill==="Begin"){
 			this.setState({Cpay:0})
-			this.setState({Spay:0})
 			this.setState({Rpay:0})
 			this.setState({During:false})
 			this.setState({Begin:true})
 			this.setState({End:false})
 		}else if(DBill==="During"){
-			this.setState({Cpay:0})
 			this.setState({Spay:0})
-			this.setState({Rpay:0})
+			this.setState({Cpay:0})
 			this.setState({During:true})
 			this.setState({Begin:false})
 			this.setState({End:false})
 		}else if(DBill==="Mixed"){
-			this.setState({Cpay:0})
-			this.setState({Spay:0})
-			this.setState({Rpay:0})
 			this.setState({During:true})
 			this.setState({Begin:true})
 			this.setState({End:true})
@@ -117,6 +125,20 @@ class App extends React.Component{
 
 
 	 }
+	 getTerm(){
+		var id = this.state.org
+		axios.get(this.$url+'/users/getterm?id='+id,null)
+		.then(res=>{
+					var item = (res.data)
+					console.log(item)		 
+					this.setState({TermData:res.data})
+		})
+		.catch(err => {
+			console.log(err);
+		 })
+
+
+	 }
 
 	 applyService(){
 		 if(window.confirm("confirm apply"))
@@ -133,6 +155,23 @@ class App extends React.Component{
 		}
 	})
 	this.getService();
+
+}
+applyTerm(){
+	if(window.confirm("confirm apply"))
+   var data= this.state
+   axios.post(this.$url+'/users/addterm',data)
+   .then(res=>{
+	   if(res.data===1){
+	   alert("Applied Settings Succesfuly!")
+
+	   
+   }else{
+		alert("failed")
+	  
+   }
+})
+this.getTerm();
 
 }
 	updateService(){
@@ -152,6 +191,23 @@ class App extends React.Component{
 	this.getService();
 
 	 }
+	 updateTerm(){
+		if(window.confirm("confirm update"))
+	   var data= this.state
+	   axios.post(this.$url+'/users/updateterm',data)
+	   .then(res=>{
+		   if(res.data===1){
+		   alert("Applied Settings Succesfuly!")
+
+		   
+	   }else{
+			alert("failed")
+		  
+	   }
+   })
+	this.getTerm();
+
+	 }
 
 	 setMenu(num){
 		  this.getuser()
@@ -161,12 +217,20 @@ class App extends React.Component{
 	setShow2(flag, Sname, SDesc, Spay, Rpay, Cpay, Dbill, TRate, Xero,id){
 		 
 		 this.setState({show2: flag, Sname:Sname, SDesc:SDesc, Spay:Spay, Rpay:Rpay, Cpay:Cpay, Dbill:Dbill, TRate:TRate, Xero:Xero, id:id});
-		 this.BillHandler(this.state.Dbill)
+		 this.BillHandler(Dbill)
 	 }
+	 setShow3(flag, TName, TDesc, Terms, Tid){
+		 
+		this.setState({show3: flag, TName:TName, TDesc:TDesc,Terms:Terms,Tid:Tid});
+	}
 	 setShow(flag){
 		 
 		this.setState({show: flag	})
 		this.BillHandler(this.state.Dbill)
+	 }
+	 setShow4(flag){
+		 
+		this.setState({show4: flag	})
 	 }
 
 	 getuser(){
@@ -214,6 +278,29 @@ class App extends React.Component{
 	 	
 		if (window.confirm("confirm delete?")) {
 		  axios.get(this.$url+'/users/deservo?id='+id,null)
+			.then(res => {
+				  
+				  //this.setState({viewdata: res.data});		 
+				// this.state.viewdata =  res.data
+				 console.log(res.data)
+					  
+				 this.getService();
+			 
+			})
+			.catch(err => {
+			   console.log(err);
+			})
+		} else {
+			return 
+		 
+		}
+		
+		
+	}
+	Tdelete(id){
+	 	
+		if (window.confirm("confirm delete?")) {
+		  axios.get(this.$url+'/users/determ?id='+id,null)
 			.then(res => {
 				  
 				  //this.setState({viewdata: res.data});		 
@@ -339,7 +426,9 @@ class App extends React.Component{
              add user
            
            </Button>
-		  </>
+		  </>	
+
+
 	 }else{
 		 
 		 
@@ -373,6 +462,7 @@ class App extends React.Component{
 		 
 		 
 	 }
+	 
   return (
   
   <>
@@ -410,7 +500,7 @@ class App extends React.Component{
 						   <td >{item.Rpay}</td>
 						   <td >{item.TaxRate}</td>
 						   <td >{item.XeroAccount}</td>
-						   <td ><a href="javascript:;" onClick={() => this.setShow2(true,item.Sname,item.SDesc,item.Spay,item.Rpay,item.Cpay,item.Dbill,item.TRate,item.Xero,item.id)}>Edit</a></td>
+						   <td ><a href="javascript:;" onClick={() => this.setShow2(true,item.Sname,item.SDesc,item.Spay,item.Rpay,item.Cpay,item.DBill,item.TaxRate,item.Xero,item.ID)}>Edit</a></td>
 						   <td ><a href="javascript:;" onClick={() => this.Sdelete(item.ID)}>Delete</a></td>
 
 
@@ -428,7 +518,7 @@ class App extends React.Component{
 
 
 
-
+		   	
 
 	
 	
@@ -523,9 +613,9 @@ class App extends React.Component{
 							<Form.Control value={this.state.SDesc}
 		          onChange={e => this.setState({ SDesc: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Payment Type</Form.Label>
+							
 							<Form.Select value={this.state.Dbill}
-			          onChange={e =>this.BillHandler(e.target.value) }  defaultValue="default">
-					<option value="default" hidden> Choose...</option>
+			          onChange={e =>this.BillHandler(e.target.value) }>
 					<option value="Begin">On Sign</option>
 					<option value="During">Recuring</option>
 					<option value="End">On Completion</option>
@@ -560,7 +650,7 @@ class App extends React.Component{
 							<Form.Control value={this.state.Xero}
 		          onChange={e => this.setState({ Xero: e.target.value })} type="text" placeholder="" />
 						</Form.Group>
-							<Button className="me-2" onClick={() => this.applyService()}>
+							<Button className="me-2" onClick={() => this.updateTerm()}>
 					    Update
 					  
 					  </Button>
@@ -568,8 +658,115 @@ class App extends React.Component{
 						
 					</Modal.Body>
 		</Modal>
+		<Modal show={this.state.show3} fullscreen={true} onHide={() => this.setShow3(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Update Service</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Update Service Information</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>Term Name</Form.Label>
+							<Form.Control value={this.state.TName}
+		          onChange={e => this.setState({ TName: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Term Description</Form.Label>
+							<Form.Control value={this.state.TDesc}
+		          onChange={e => this.setState({ TDesc: e.target.value })} type="text" placeholder="" />
+	<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+
+
+<Form.Label>Terms and Conditions</Form.Label>
+<Form.Control value={this.state.Terms}
+onChange={e => this.setState({ Terms: e.target.value })} as="textarea" rows={10} />
+</Form.Group>
+						</Form.Group>
+							<Button className="me-2" onClick={() => this.updateTerm()}>
+					    Update
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal>
+
+
+
+
+		<Modal show={this.state.show4} fullscreen={true} onHide={() => this.setShow4(false)}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Add new Terms And Conditions</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Add new Terms And Conditions</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>Term Name</Form.Label>
+							<Form.Control value={this.state.TName}
+		          onChange={e => this.setState({ TName: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Term Description</Form.Label>
+							<Form.Control value={this.state.TDesc}
+		          onChange={e => this.setState({ TDesc: e.target.value })} type="text" placeholder="" />
+	<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+
+
+<Form.Label>Terms and Conditions</Form.Label>
+<Form.Control value={this.state.Terms}
+onChange={e => this.setState({ Terms: e.target.value })} as="textarea" rows={10} />
+</Form.Group>
+						</Form.Group>
+							<Button className="me-2" onClick={() => this.applyTerm()}>
+					    Add
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal>
      </div>
-	 
+	<div className="body"><br/><br/><br/><header> <font size = "12">Terms and condition</font></header>
+	
+			  <table className="table">
+		  
+		  <tr className="table-tr">
+		    <td>Term Name</td>
+		    <td>Term Description</td>
+			<td>Edit?</td>
+			<td>Delete?</td>
+		 			
+		  </tr>
+		  
+
+		 {
+		 				this.state.TermData.map((item, index) => {
+		 					return <tr>
+		 				   <td >{item.TermName}</td>
+		 				   <td >{item.TermDesc}</td>
+		 				   <td >{item.Terms}</td>
+						   <td ><a href="javascript:;" onClick={() => this.setShow3(true,item.TermName,item.TermDesc,item.Terms,item.TermID)}>Edit</a></td>
+						   <td ><a href="javascript:;" onClick={() => this.Tdelete(item.Tid)}>Delete</a></td>
+
+
+							</tr>
+		 				})
+					}
+						 </table>
+	
+	
+	
+
+						 <Button onClick={() => this.setShow4(true)} className="me-2" >
+             add new
+           </Button>
+	
+	
+	
+	
+	
+	</div>
 	 </header>
   </div>
   	</>

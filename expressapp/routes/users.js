@@ -27,13 +27,26 @@ router.get('/getservo',function(req,res,next){
 		
 });
 })
+router.get('/getterm',function(req,res,next){
+
+	db.query('SELECT * FROM terms WHERE Organisation = ?', [req.query.id],function (error, results, fields) {
+		if(error){
+			console.log('[INSERT ERROR] - ',error.message);
+			res.send('0');
+			return;
+		   }
+	
+		res.send(results)
+	
+});
+})
 router.post('/updateservo', function(req, res, next) {
 	var data = req.body
 	
 	
 	
 	console.log(data)
-	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.Xero,data.Spay,Cpay,Rpay,Sname,SDesc,data.ID],function (err, result) {
+	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,data.id],function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
 			 res.send('0');
@@ -45,6 +58,27 @@ router.post('/updateservo', function(req, res, next) {
 	      res.send('1');
 	});
 	
+	
+});
+router.post('/updateterm', function(req, res, next) {
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	db.query('UPDATE `terms` SET Terms = ?, TermName = ?, TermDesc = ? where TermID=?', [data.Terms,data.TName,data.TDesc,data.Tid],function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+	
 });
 router.post('/addservo', function(req, res, next) {
 	var data = req.body
@@ -54,6 +88,27 @@ router.post('/addservo', function(req, res, next) {
 	console.log(data)
 	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc) VALUES (?,?,?,?,?,?,?,?,?)' ;
 	var addSqlParam = [data.org, data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
+	db.query(addSql, addSqlParam,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ', err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
+router.post('/addterm', function(req, res, next) {
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	var addSql ='INSERT INTO terms(Organisation, Terms, TermName,TermDesc) VALUES (?,?,?,?)' ;
+	var addSqlParam = [data.org, data.TName,data.TDesc,data.Terms];
 	db.query(addSql, addSqlParam,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ', err.message);
@@ -356,6 +411,17 @@ router.get('/deservo', function(req, res, next) {
 	
 	console.log(req.query)
 	db.query('delete  from service where ID = ?', [req.query.id],function (error, results, fields) {
+	  if (error) console.log("oops");
+	  //console.log('The solution is: ');
+	  res.send('1');
+	});
+	
+ // res.send('respond with a resource');
+});
+router.get('/determ', function(req, res, next) {
+	
+	console.log(req.query)
+	db.query('delete  from terms where ID = ?', [req.query.id],function (error, results, fields) {
 	  if (error) console.log("oops");
 	  //console.log('The solution is: ');
 	  res.send('1');
