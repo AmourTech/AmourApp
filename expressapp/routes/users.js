@@ -152,6 +152,28 @@ router.post('/add', function (req, res, next) {
    //res.send('Hello POST'+data);
 })
 
+
+
+
+router.post('/addprophelp', function (req, res, next) {
+	
+	var data = req.body
+	console.log(data.name)
+	var  addSql = 'INSERT INTO pro(ProposalID,ServiceID) VALUES ( req.ProposalID, req.ServiceID)';
+	var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.contact,data.userid];
+	db.query(addSql,addSqlParams,function (err, result) {
+			if(err){
+			 console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+			 return;
+			}        
+	 
+		  res.send('1');
+	});
+	
+	//res.send('Hello POST'+data);
+ })
+
 router.post('/updatepro', function (req, res, next) {
 	
 	var data = req.body

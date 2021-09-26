@@ -45,6 +45,13 @@ class App extends React.Component{
 				During:false,
 				End:false,
 
+				ProposalID:'',
+				ServiceID:[],
+
+
+
+
+
 				TName:'',
 				TDesc:'',
 				Terms:'',
