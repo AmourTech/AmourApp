@@ -7,6 +7,58 @@ var app = express();
 var router = express.Router();
 var db = require( "../database/db.js" );
 
+var crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+
+router.post('/customerportal',function(req,res,next){
+
+	if (req.body.email == '') {
+		res.status(400).send('no email')
+	}
+	const token = crypto.randomBytes(20).toString('hex');
+	const expires = Date.now() + 3600000;
+	
+	db.query('UPDATE pro SET token = ?, expiry = ? where id=?', [token, expires, req.query.id],function (err, result) {
+		if(err){
+		 console.log('[INSERT ERROR] - ',err.message);
+ res.send('0');
+		 return;
+		}
+	console.log(result)
+	res.send('1');
+	});
+
+	const transporter = nodemailer.createTransport({
+		service:'gmail',
+		auth: {
+			user: "emaileramapp@gmail.com",
+			pass: "amourapp1!",
+		},
+	});
+	const mailOptions = {
+		from: 'emaileramapp@gmail.com',
+		to: req.body.email,
+		subject: 'Link to Accept or Refuse proposal',
+		text:
+		"You are receiving this because you've been sent a proposal. \n\n"
+		+'Please click the following link, or past into your browser within one hour of receiving it: \n\n'
+		+'http://localhost:3001/viewproposal/' + token + '\n\n',
+	};
+	transporter.sendMail(mailOptions, (err, response) => {
+		if (err) {
+			console.error('there was an error');
+		}
+		else {
+			console.log('res:', response);
+			res.status(200).json('email sent');
+		}
+	});
+})
+
+
+
+
 
 
 /* GET users listing. */
@@ -192,6 +244,24 @@ router.post('/updatepro', function (req, res, next) {
 	//res.send('Hello POST'+data);
 })
 
+router.post('/answerpro', function (req, res, next) {
+	
+	var data = req.body
+	console.log(data.name)
+	db.query("UPDATE pro SET acc = ? WHERE id = ?",[data.ac, data.id],function (err, results) {
+					if(err){
+					 console.log('[INSERT ERROR] - ',err.message);
+		 res.send('0');
+					 return;
+					}        
+	 
+				res.send('1');
+				console.log(results)
+	});
+	
+	//res.send('Hello POST'+data);
+})
+
 router.post('/updateclient', function (req, res, next) {
 	
 	var data = req.body
@@ -266,10 +336,10 @@ router.get('/findcont', function(req, res, next) {
 	});
 });
 
-router.get('/findcustomerus', function(req, res, next) {
+router.get('/viewproposal', function(req, res, next) {
 	
-	//console.log(db)
-	db.query('SELECT * from pro where client IN (SELECT AccountID FROM client WHERE AccountID = ?)', [req.query.id],function (error, results, fields) {
+	console.log(token)
+	db.query('SELECT * from pro where token = ? AND expiry < ?', [req.query.token, Date.now()],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
 	  res.send(results);

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
@@ -16,7 +17,7 @@ import data from './Comm';
 import { CSVLink} from "react-csv";
 import {readString, CSVReader} from 'react-papaparse';
 import{ init, send } from 'emailjs-com';
-init("user_rWil2YAmTwqksmYOlnout");
+//init("user_rWil2YAmTwqksmYOlnout");
 
 const buttonRef = React.createRef();
 
@@ -354,11 +355,28 @@ duplicateadd(data){
 		console.log(this.state)
 		
 	}
-	// email(email){
-	// 	var subject = "You have a new proposal to look at";
-	// 	var subjectEncoded = encodeURIComponent(subject);
-	// 	document.href = ("mailto:"+ "abrad117@y7mail.com" + "?subject=" + subjectEncoded);
-	// }
+
+
+	sendemail(id){
+			// console.log(localStorage.getItem("user"))
+			let view  = JSON.parse(localStorage.getItem("user"))[0]
+			// this.state.userid = view.UserID
+			//data['userid'] = view.UserID
+
+
+				axios.post(this.$url+'/users/customerportal?id='+id, {email: "abrad117@y7mail.com"})
+					.then(res => {	
+					if(res.data==1){
+						alert("email sent successfully!")	
+						this.setShow(false)		
+					}else{				
+					}			 
+					})
+					.catch(err => {
+						 console.log(err);
+					})
+		 console.log(this.state)
+	}
 
 	templateParams = {
     to_name: this.g,
@@ -613,23 +631,9 @@ duplicateadd(data){
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
-										
-										<a href="javascript:;" onClick={() => send("default_service", "template_ej8r9p5", this.templateParams = {to_name: item.name, message: item.contact})
-										.then(
-											function(response) {
-													console.log("Your message has successfully sent!", {
-													});
-													console.log("SUCCESS!", response.status, response.text);
-											},
-											function(err) {
-												console.log("Your message was not able to be sent");
-											}
-										)}>send</a> </td>
-										
-										{/* <a onClick={() => this.send(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-											item.contact, item.clen, item.acc, item.id)} href="javascript:;" >send Proposal</a></td> */}
-										
-		
+
+										<a href="javascript:;" onClick={() => this.sendemail(item.id)}>send</a>								
+										</td>
 								   </tr>
 			                   })
 			               }

@@ -21,7 +21,7 @@ ReactDOM.render(
 	
 	<Route path="/index" component={Login}>
 	</Route>
-  <Route path="/Customer" component={Customer}>
+  <Route path="/viewproposal" component={Customer}>
 	</Route>
   </Router>
    

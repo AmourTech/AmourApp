@@ -16,8 +16,11 @@ import data from './Comm';
 import { CSVLink} from "react-csv";
 import {readString, CSVReader} from 'react-papaparse';
 import{ init, send } from 'emailjs-com';
-init("user_rWil2YAmTwqksmYOlnout");
+import crypto from 'crypto';
 
+//init("user_rWil2YAmTwqksmYOlnout");
+
+const nodemailer = require('nodemailer');
 const buttonRef = React.createRef();
 
 class App extends React.Component{
@@ -71,7 +74,8 @@ class App extends React.Component{
 	  }
 
 	  componentDidMount() {
-	      this.getList()
+      //console.log(this.props.match.params.token);
+	    this.getList();
 			
 	   }
 	   handleOpenDialog = (e) => {
@@ -136,14 +140,14 @@ class App extends React.Component{
 		console.log(localStorage.getItem("user"))
 		let view  = JSON.parse(localStorage.getItem("user"))[0]
 		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
-		 let url = ''
-		if(admin === 1){
-			url = this.$url+'/users/findcont?id='+view.Organisation
-		}else{
-			url = this.$url+'/users/findcustomerus?id='+13
-		}
-		
-		axios.get(url,null)
+
+	 
+		axios.get(this.$url+"/users/viewproposal", { params: {
+      //token: this.props.match.params.token,
+      token: "95307ce8ffcaa535a364a83db42361fb3cfdfb61"
+
+    },
+  })
 		  .then(res => {
 				
 				  this.setState({viewdata: res.data});		 
@@ -188,7 +192,7 @@ class App extends React.Component{
 		 
 		var data  = this.state
 	
-		axios.post(this.$url+'/users/updatepro',data)
+		axios.post(this.$url+'/users/answerpro',data)
 			.then(res => {
 					 
 					 
