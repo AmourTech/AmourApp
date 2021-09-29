@@ -143,8 +143,8 @@ class App extends React.Component{
 
 	 
 		axios.get(this.$url+"/users/viewproposal", { params: {
-      //token: this.props.match.params.token,
-      token: "95307ce8ffcaa535a364a83db42361fb3cfdfb61"
+      token: this.props.match.params.token
+      //token: "95307ce8ffcaa535a364a83db42361fb3cfdfb61"
 
     },
   })

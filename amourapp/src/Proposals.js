@@ -60,6 +60,7 @@ class App extends React.Component{
 			};
 			
 			this.sub = this.sub.bind(this);
+			this.sendemail = this.sendemail.bind(this);
 			this.setShow = this.setShow.bind(this);
 			this.setShow1 = this.setShow1.bind(this);
 			this.setShow2 = this.setShow2.bind(this);
@@ -356,14 +357,19 @@ duplicateadd(data){
 		
 	}
 
+	sendemail(id, clientid){
+			const email = axios.get(this.$url+'/users/findcont?id='+clientid)
+			.then(res => {
+				this.setState({contacts: res.data});				
+				})
+				.catch(err => {
+					 console.log(err);
+				})
 
-	sendemail(id){
 			// console.log(localStorage.getItem("user"))
 			let view  = JSON.parse(localStorage.getItem("user"))[0]
 			// this.state.userid = view.UserID
 			//data['userid'] = view.UserID
-
-
 				axios.post(this.$url+'/users/customerportal?id='+id, {email: "abrad117@y7mail.com"})
 					.then(res => {	
 					if(res.data==1){
@@ -377,14 +383,6 @@ duplicateadd(data){
 					})
 		 console.log(this.state)
 	}
-
-	templateParams = {
-    to_name: this.g,
-    message: 'Check this out!'
-	};
- 
-
-
 	  render() {
 		  
 		console.log('startup');
@@ -632,7 +630,7 @@ duplicateadd(data){
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 
-										<a href="javascript:;" onClick={() => this.sendemail(item.id)}>send</a>								
+										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.client)}>send</a>								
 										</td>
 								   </tr>
 			                   })

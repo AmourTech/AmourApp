@@ -47,7 +47,7 @@ router.post('/customerportal',function(req,res,next){
 	};
 	transporter.sendMail(mailOptions, (err, response) => {
 		if (err) {
-			console.error('there was an error');
+			console.error('there was an error\n' + req.body.email);
 		}
 		else {
 			console.log('res:', response);
@@ -329,17 +329,17 @@ router.get('/findus', function(req, res, next) {
 router.get('/findcont', function(req, res, next) {
 	
 	//console.log(db)
-	db.query('SELECT * from contact WHERE organ IN (SELECT userid FROM pro WHERE userid = ?)', [req.query.id],function (error, results, fields) {
+	db.query('SELECT email from contact WHERE organ = 13', [req.query.id],function (error, results, fields) {
 	  if (error) throw error;
-	  //console.log('The solution is: ');
+	  console.log('The solution is: ');
 	  res.send(results);
 	});
 });
 
 router.get('/viewproposal', function(req, res, next) {
 	
-	console.log(token)
-	db.query('SELECT * from pro where token = ? AND expiry < ?', [req.query.token, Date.now()],function (error, results, fields) {
+	//console.log(token)
+	db.query('SELECT * from pro where token = ? AND expiry > ?', [req.query.token, Date.now()],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
 	  res.send(results);
