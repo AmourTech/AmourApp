@@ -15,6 +15,9 @@ import data from './Comm';
 
 import { CSVLink} from "react-csv";
 import {readString, CSVReader} from 'react-papaparse';
+import{ init, send } from 'emailjs-com';
+init("user_rWil2YAmTwqksmYOlnout");
+
 const buttonRef = React.createRef();
 
 class App extends React.Component{
@@ -40,6 +43,7 @@ class App extends React.Component{
 			  pay2:"On Acceptance...",
 			  show:false,
 			  show1:false,
+				show2:false,
 			  mes:"",
 				na:"", 
 				sda:"",
@@ -57,6 +61,7 @@ class App extends React.Component{
 			this.sub = this.sub.bind(this);
 			this.setShow = this.setShow.bind(this);
 			this.setShow1 = this.setShow1.bind(this);
+			this.setShow2 = this.setShow2.bind(this);
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
 			this.duplicate = this.duplicate.bind(this);
@@ -348,9 +353,20 @@ duplicateadd(data){
 		
 		console.log(this.state)
 		
-		
-		
 	}
+	// email(email){
+	// 	var subject = "You have a new proposal to look at";
+	// 	var subjectEncoded = encodeURIComponent(subject);
+	// 	document.href = ("mailto:"+ "abrad117@y7mail.com" + "?subject=" + subjectEncoded);
+	// }
+
+	templateParams = {
+    to_name: this.g,
+    message: 'Check this out!'
+	};
+ 
+
+
 	  render() {
 		  
 		console.log('startup');
@@ -596,7 +612,23 @@ duplicateadd(data){
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit Proposal</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
+										
+										<a href="javascript:;" onClick={() => send("default_service", "template_ej8r9p5", this.templateParams = {to_name: item.name, message: item.contact})
+										.then(
+											function(response) {
+													console.log("Your message has successfully sent!", {
+													});
+													console.log("SUCCESS!", response.status, response.text);
+											},
+											function(err) {
+												console.log("Your message was not able to be sent");
+											}
+										)}>send</a> </td>
+										
+										{/* <a onClick={() => this.send(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
+											item.contact, item.clen, item.acc, item.id)} href="javascript:;" >send Proposal</a></td> */}
+										
 		
 								   </tr>
 			                   })
@@ -721,20 +753,49 @@ duplicateadd(data){
 					</Modal.Body>
 		</Modal>
 		
+
+		{/* {view}
+
+		<Modal show={this.state.show2} fullscreen={true} onHide={() => this.setShow2(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Send proposal to client</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Select email to send to</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>Email</Form.Label>
+							<Form.Control value={this.state.email}
+		          onChange={e => this.setState({ email: e.target.value })} type="text" placeholder="" />
+
+						</Form.Group>
+
+						
+						
+						<Button className="me-2" onClick={() => send("default_service", "template_ej8r9p5", this.templateParams)
+      			.then(
+        			function(response) {
+          				console.log("Your message has successfully sent!", {
+          				});
+          				console.log("SUCCESS!", response.status, response.text);
+        			},
+        			function(err) {
+          			console.log("Your message was not able to be sent");
+        			}
+      			)}>
+					    Send email
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal> */}
+
+
 		
 		</div>
-		
-				
-		   
-	    
-	 
-		
-		
-		
-		
-	     
-	    
-	  
 	  </header>
 	</div>
   

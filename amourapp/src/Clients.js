@@ -219,9 +219,9 @@ setShow1(flag,mes){
 	this.setState({show1: flag,mes:mes});
 }
 
-setShow2(flag,clientname, abn, acn, baddress, bsbname, bsbaccountn, contact, tfn, type, id){
+setShow2(flag,clientname, abn, acn, baddress, bsbaccountn, bsbname, contact, tfn, type, id){
 		 
-	this.setState({show1: flag,clientname:clientname, abn:abn, acn:acn, baddress:baddress, bsbname:bsbname, bsbaccountn:bsbaccountn, contact:contact, tfn:tfn, type:type, id:id});
+	this.setState({show1: flag,clientname:clientname, abn:abn, acn:acn, baddress:baddress, bsbaccountn:bsbaccountn, bsbname:bsbname, contact:contact, tfn:tfn, type:type, id:id});
 }
 	
 render() {
@@ -396,8 +396,8 @@ render() {
 				   <td >{item.clientname}</td>
 				   <td >{item.Contact}</td>
 					<td ><a href="javascript:;" onClick={() => this.delete(item.AccountID)}>delete</a>
-					<a href="javascript:;" onClick={() => this.setShow2(true,item.clientname, item.ABN, item.ACN, item.BAddress, item.BName, item.BSBName, 
-										item.Contact, item.TFN, item.Type, item.AccountID)} href="javascript:;" >edit client</a></td>
+					<a href="javascript:;" onClick={() => this.setShow2(true,item.clientname, item.ABN, item.ACN, item.BAddress, item.BName, item.BSBAccountNumber, /*item.BSBName*/ item.Contact,
+						item.TFN, item.Type, item.AccountID)} href="javascript:;" >edit client</a></td>
 				 
 				   </tr>
 				})
@@ -500,10 +500,10 @@ render() {
 							<Form.Label>BSB Account Number</Form.Label>
 							<Form.Control value={this.state.bsbaccountn}
 		          onChange={e => this.setState({ bsbaccountn: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Contact Details</Form.Label>
+							<Form.Label>BSB Name</Form.Label>
 							<Form.Control value={this.state.bsbname}
 		          onChange={e => this.setState({ bsbname: e.target.value })} type="text" placeholder="" />
-							<Form.Label>BSB Account Number</Form.Label>
+							<Form.Label>Contact Details</Form.Label>
 							<Form.Control value={this.state.contact}
 		          onChange={e => this.setState({ contact: e.target.value })} type="text" placeholder="" />
 							<Form.Label>TFN</Form.Label>

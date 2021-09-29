@@ -10,6 +10,7 @@ import Proposals from './Proposals'
 import Services from './Services'
 import Library from './Library'
 import Settings from './Settings'
+import Customer from './Customer'
 import Login from './Login'
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -120,6 +121,7 @@ class App extends React.Component{
               </SubMenu> */}
               <MenuItem><Link to={'/Proposals'}>Proposals</Link></MenuItem>
               <MenuItem><Link to={'/Settings'}>Settings</Link></MenuItem>
+              {/* <MenuItem><Link to={'/Customer'}>Customer</Link></MenuItem> */}
             </Menu>
           </ProSidebar>
         </aside>
@@ -130,6 +132,7 @@ class App extends React.Component{
           <Route path="/Clients" component={Clients} />
           <Route path="/Proposals" component={Proposals} />
           <Route path="/Settings" component={Settings} />
+          {/* <Route path="/Customer" component={Customer} /> */}
         </main>
     </Router>
     </div>

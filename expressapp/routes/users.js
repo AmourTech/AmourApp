@@ -223,6 +223,8 @@ router.get('/find', function(req, res, next) {
 });
 
 
+
+
 router.get('/findprop', function(req, res, next) {
 	
 	db.query('SELECT * from pro where id = ?', [req.query.id],function (error, results, fields) {
@@ -253,6 +255,27 @@ router.get('/findus', function(req, res, next) {
 	  res.send(results);
 	});
 });
+
+router.get('/findcont', function(req, res, next) {
+	
+	//console.log(db)
+	db.query('SELECT * from contact WHERE organ IN (SELECT userid FROM pro WHERE userid = ?)', [req.query.id],function (error, results, fields) {
+	  if (error) throw error;
+	  //console.log('The solution is: ');
+	  res.send(results);
+	});
+});
+
+router.get('/findcustomerus', function(req, res, next) {
+	
+	//console.log(db)
+	db.query('SELECT * from pro where client IN (SELECT AccountID FROM client WHERE AccountID = ?)', [req.query.id],function (error, results, fields) {
+	  if (error) throw error;
+	  //console.log('The solution is: ');
+	  res.send(results);
+	});
+});
+
 
 // router.get('/add', function(req, res, next) {
 	
@@ -286,6 +309,8 @@ router.get('/getcl', function(req, res, next) {
 	});
 	
 });
+
+
 
 
 router.post('/acc', function(req, res, next) {
