@@ -10,7 +10,6 @@ import Proposals from './Proposals'
 import Services from './Services'
 import Library from './Library'
 import Settings from './Settings'
-import Customer from './Customer'
 import Login from './Login'
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -49,8 +48,8 @@ class App extends React.Component{
     axios.get(this.$url+'/users/OrgName?id='+organ,null)
     .then(res=>{
       console.log(res.data)
-    this.setState({orgname: ((res.data)[0]).organisationName})
-    console.log(this.state.orgname)
+    //this.setState({orgname: ((res.data)[0]).organisationName})
+    //console.log(this.state.orgname)
     })
   } 
    render() {
@@ -79,7 +78,7 @@ class App extends React.Component{
   return (
     <div className="App1">
       
-    <Navbar expand="lg" variant = 'dark'>
+    <Navbar expand="lg">
       <Navbar.Brand>{this.state.orgname}</Navbar.Brand>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />
@@ -99,7 +98,7 @@ class App extends React.Component{
       <Navbar.Collapse id="basic-navbar-nav">
         {/* <Nav className="ml-auto">
           <Nav.Item>Username</Nav.Item>
-        </Nav> */}0
+        </Nav> */}
       </Navbar.Collapse>
     </Navbar>
 
@@ -120,8 +119,9 @@ class App extends React.Component{
                 <MenuItem>View Proposals</MenuItem>
               </SubMenu> */}
               <MenuItem><Link to={'/Proposals'}>Proposals</Link></MenuItem>
+              <MenuItem><Link to={'/Services'}>Services</Link></MenuItem>
+              <MenuItem><Link to={'/Library'}>Library</Link></MenuItem>
               <MenuItem><Link to={'/Settings'}>Settings</Link></MenuItem>
-              {/* <MenuItem><Link to={'/Customer'}>Customer</Link></MenuItem> */}
             </Menu>
           </ProSidebar>
         </aside>
@@ -131,8 +131,9 @@ class App extends React.Component{
           <Route  path="/Home" component={Home} />
           <Route path="/Clients" component={Clients} />
           <Route path="/Proposals" component={Proposals} />
+          <Route path="/Services" component={Services} />
+          <Route path="/Library" component={Library} />
           <Route path="/Settings" component={Settings} />
-          {/* <Route path="/Customer" component={Customer} /> */}
         </main>
     </Router>
     </div>
