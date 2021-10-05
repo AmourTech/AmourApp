@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Login from './Login';
+import Customer from './Customer';
 import Comm from './Comm';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
@@ -19,6 +20,8 @@ ReactDOM.render(
     </Route>
 	
 	<Route path="/index" component={Login}>
+	</Route>
+  <Route path="/viewproposal/:token" component={Customer}>
 	</Route>
   </Router>
    
