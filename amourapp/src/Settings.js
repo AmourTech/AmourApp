@@ -596,7 +596,7 @@ this.getTerm();
 		          onChange={e => this.setState({ Xero: e.target.value })} type="text" placeholder="" />
 						</Form.Group>
 							<Button className="me-2" onClick={() => this.applyService()}>
-					    Update
+					    Add
 					  
 					  </Button>
 						</Form>
@@ -657,7 +657,7 @@ this.getTerm();
 							<Form.Control value={this.state.Xero}
 		          onChange={e => this.setState({ Xero: e.target.value })} type="text" placeholder="" />
 						</Form.Group>
-							<Button className="me-2" onClick={() => this.updateTerm()}>
+							<Button className="me-2" onClick={() => this.updateService()}>
 					    Update
 					  
 					  </Button>

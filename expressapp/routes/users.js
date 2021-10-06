@@ -97,7 +97,7 @@ router.post('/updateservo', function(req, res, next) {
 	
 	
 	
-	console.log(data)
+	console.log(data.id)
 	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,data.id],function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
