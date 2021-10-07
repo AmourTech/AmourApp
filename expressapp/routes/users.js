@@ -684,4 +684,98 @@ router.get('/udelcl', function(req, res, next) {
  // res.send('respond with a resource');
 });
 
+
+//重置密码
+router.post('/respassword', function(req, res, next) {
+	
+	var data = req.body
+	var type = data.atype
+	
+	if(type == 1){
+		
+		db.query('UPDATE user SET  password = ? where email = ?', [data.rcpassword,data.remail],function (error, results, fields) {
+		  if (error){
+			  
+			  console.log("oops")
+			  res.send('0');
+			  return;
+		  } 
+		  
+		     res.send(results);
+		  
+		 
+		
+	})
+	
+	}else{
+		
+		db.query('UPDATE contact SET  password = ? where Email = ?', [data.rcpassword,data.remail],function (error, results, fields) {
+			console.log(results)
+			if(results.length == 0){
+				res.send('0');
+			}else{
+				res.send(results);
+			}
+		})
+	}
+	
+	  //console.log('The solution is: ');
+	
+	
+	
+ // res.send('respond with a resource');
+});
+
+router.get('/sendEmail', function(req, res, next) {
+	
+	
+	var num="";
+	for(var i=0;i<4;i++){
+		num+=Math.floor(Math.random()*10)
+	}
+
+	
+	 nodemailer.createTestAccount((err, account) => {
+		 
+	        //密钥
+	        let transporter = nodemailer.createTransport({
+	            host: 'smtp.163.com',
+				secure: true, // 
+	            port: 465,
+	            auth: {
+	                user: "wuhuairlinee@163.com", //
+	                pass: "FNMYOYSIXJWNVXLD" //
+	            }
+	        });
+	        let mailOptions = {
+	            //
+	            from: 'wuhuairlinee@163.com',
+	            to:  [req.query.email],
+	            subject: 'Verification code',
+	            text: '',
+	            html: '<b>Your verification code is:' + num + '</b>',
+	
+	        };
+	
+	        //
+	        transporter.sendMail(mailOptions, (error, info) => {
+				let fa = true;
+	            if (error) {
+	                return console.log(error);
+					     res.send('{"code":'+0+',"mes":'+num+'}');
+						 fa = false;
+					
+	            }
+				if(fa){
+					res.send('{"code":'+1+',"mes":'+num+'}');
+				}
+	        
+	        });
+	    });
+
+	 // res.send('1')
+   
+});
+
+
 module.exports = router;

@@ -22,16 +22,24 @@ class App extends React.Component{
 	   this.state = {
 		     show:false,
 			  show1:false,
+			   show2:false,
 		     index:0,
 			 email:'',
+			 remail:'',
+			 code:'',
+			 ccode:'',
 			 oname:'',
 			 cfname:'',
 			 clname:'',
 			 cnumber:'',
 			 password:'',
 			 cpassword:'',
+			 rpassword:'',
+			 rcpassword:'',
 			 name:'adsf',
 			 Org:"",
+			 atype:'1',
+			 
 				};
 				
      this.handleSelect = this.handleSelect.bind(this);
@@ -47,7 +55,13 @@ class App extends React.Component{
 	 
 	 setShow1(flag){
 	 		 this.setState({show1:flag})
-	 } 
+	 }
+	 
+	 setShow2(flag){
+	 		 this.setState({show2:flag})
+	 }
+	  
+	  
 	 
 	 
 	 sigup(){
@@ -147,6 +161,109 @@ class App extends React.Component{
 		 
 	 }
 	 
+	 sendCode(){
+		 
+		  var tv = this.state.remail;
+		 var reg = /^\w+\@+[0-9a-zA-Z]+\.(com|com.cn|edu|hk|cn|net)$/;
+		 if(reg.test(tv)){
+			 //alert('邮箱格式正确');
+		 }else{
+			 alert('E-mail format is incorrect')
+		 }
+		 
+		 
+		 axios.get(this.$url+'/users/sendEmail'+"?email="+this.state.remail)
+		   .then(res => {
+		 		 				 
+		 				
+		 					 //this.$login.login  = true;
+							// console.log(res);
+		 					var jsonObj = res.data;
+                            console.log(jsonObj);
+                            if(jsonObj.code == 1){
+								    this.state.ccode = jsonObj.mes
+									alert("Verification code sent, please check")
+									 
+							}else{
+								
+								alert("Failed to send verification code")
+							}
+		 					
+		 
+		 			
+		   })
+		   .catch(err => {
+		      console.log(err);
+		   })
+		 
+		 
+		 
+
+	 }
+	 
+	 //重置密码
+	 res(){
+	 		 
+	 		 if(!this.state.remail){
+	 			 alert("E-mail can not be empty")
+	 			 return
+	 		 }
+	 		 
+	 		 if(!this.state.rpassword){
+	 		 			 alert("Password can not be empty")
+	 		 			 return
+	 		 }
+			 
+			 if(!this.state.code){
+			 			 alert("verification code must be filled")
+			 			 return
+			 }
+			 
+			 if(this.state.rpassword != this.state.rcpassword ){
+			 			 
+			 			  alert("The two passwords entered are inconsistent")
+			 			  return
+			 }
+			 
+			 if(this.state.code != this.state.ccode){
+			 			 alert("Incorrect verification code")
+			 			 return
+			 }
+	 		 
+	 		 var data  = this.state
+	 		 		 
+	 		 axios.post(this.$url+'/users/respassword',data)
+	 		   .then(res => {
+	 		 		 				 
+	 				 if(res.data.affectedRows>0){
+	 					 alert("reset Password successfully!")
+						 this.setState({
+							show2:false,
+							remail:'',
+							code:'',
+							ccode:'',
+							cpassword:'',
+							rpassword:'',
+							rcpassword:'',
+							atype:'1',
+							 })
+	 					 //this.$login.login  = true;
+	 					
+	 					
+	 				   //	this.props.history.push('/admin');
+	 
+	 				 }else{
+	 					  alert("Password reset failed")
+	 					  
+	 				 }
+	 		   })
+	 		   .catch(err => {
+	 		      console.log(err);
+	 		   })
+	 		 
+	 		 
+	 }
+	 
 	
 	
  render() {	
@@ -205,6 +322,9 @@ class App extends React.Component{
 							      <Form.Check type="checkbox" label="Remember me" />
 							    </Form.Group>
 								
+								<Form.Group className="mb-3" controlId="formBasicCheckbox">
+								  <Button onClick={() => this.setShow2(true)} variant="link">forget password?</Button>
+								</Form.Group>
 								  
 					     </Form>
 						 
@@ -216,6 +336,82 @@ class App extends React.Component{
 						 
 					   </Modal.Body>
 			         </Modal>
+					 
+					 
+					 <Modal
+					    size="sm"
+					    show={this.state.show2}
+					    onHide={() => this.setShow2(false)}
+					    aria-labelledby="example-modal-sizes-title-sm"
+					  >
+					    <Modal.Header closeButton>
+					      <Modal.Title id="example-modal-sizes-title-sm">
+					       Reset Password
+					      </Modal.Title>
+					    </Modal.Header>
+					    <Modal.Body>
+					    
+					      <Form>
+					           <Form.Group className="mb-3" controlId="formBasicEmail">
+					             <Form.Label>Email</Form.Label>
+					             <Form.Control type="text" value={this.state.remail}
+					  					onChange={e => this.setState({ remail: e.target.value })} placeholder="Enter email" />
+										
+								<Col xs="auto" className="my-1">
+									  <Button  onClick={() => this.sendCode()} type="button">Send the verification code</Button>
+								</Col>
+					      
+					           </Form.Group>
+					 		  
+					 		  <Form.Group className="mb-3" controlId="formBasicEmail">
+					 		    <Form.Label>Code</Form.Label>
+					 		    <Form.Control type="text" value={this.state.code}
+					  					onChange={e => this.setState({ code: e.target.value })} placeholder="Enter Code" />
+					 		  					     
+					 		  </Form.Group>
+					 		  
+					 		<Form.Group as={Col}  className="mb-3" controlId="formGridEmail">
+					 						 <Form.Label>New Password</Form.Label>
+					 									 
+					 						 <Form.Control     value={this.state.rpassword}
+					 							onChange={e => this.setState({ rpassword: e.target.value })} type="text" placeholder="" />
+					 								
+					 		</Form.Group>
+					 		
+					 		<Form.Group as={Col}  className="mb-3" controlId="formGridEmail">
+					 						 <Form.Label>Conifm New Password</Form.Label>
+					 									 
+					 						 <Form.Control     value={this.state.rcpassword}
+					 							onChange={e => this.setState({ rcpassword: e.target.value })} type="text" placeholder="" />
+					 								
+					 		</Form.Group>
+							
+							<Form.Group as={Col}  className="mb-3" controlId="formGridEmail">
+							
+								 <Form.Label>Type</Form.Label>
+							   <Form.Select value={this.state.atype} onChange={e => this.setState({ atype: e.target.value })} >
+							    <option value="1">User</option>
+								 <option value="2">Customer</option>
+							  </Form.Select>
+							
+							
+							</Form.Group>
+							
+							
+							 
+								
+								
+					 			  
+					      </Form>
+					 	 
+					 <div className="d-grid gap-2" onClick={() => this.res()}>
+					   <Button variant="primary" size="sm">
+					     Reset
+					   </Button>
+					 </div>
+					 	 
+					    </Modal.Body>
+					  </Modal>
 					 
 					 
 					 <Modal
