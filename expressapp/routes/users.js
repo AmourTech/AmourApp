@@ -372,7 +372,7 @@ router.get('/get', function(req, res, next) {
 router.get('/getcl', function(req, res, next) {
 	
 	console.log(db)
-	db.query('SELECT *  from client INNER JOIN contact ON Handler = organ', function (error, results, fields) {
+	db.query('SELECT *  from client where Handler = ?',[req.query.id], function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
 	  res.send(results);

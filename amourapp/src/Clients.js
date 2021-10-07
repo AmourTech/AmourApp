@@ -21,8 +21,9 @@ class App extends React.Component {
 	
 	constructor(props) {
 	   super(props);
+	   let organ  = (JSON.parse(localStorage.getItem("user"))[0])
 	   this.state = { 
-		   
+		   org: organ.Organisation,
 		 st :1,
 		 clients:[],
 		 clientname:'',
@@ -111,7 +112,7 @@ class App extends React.Component {
 }
 	 getList(){
 	 	
-	 	axios.get(this.$url+'/users/getcl',null)
+	 	axios.get(this.$url+'/users/getcl?id='+this.state.org,null)
 	 	  .then(res => {
 	 			
 	 		   this.setState({viewdata: res.data});		 
