@@ -3,14 +3,14 @@ const connection = mysql.createConnection({
  host     : 'localhost',
  
  //Boyi//
- user     : 'root',
- password : 'Qwer77df88',
- database : 'clients'
+ //user     : 'root',
+ //password : 'Qwer77df88',
+ //database : 'clients'
 
  //Yaza//
-//user        : 'newuser',
-//password    : 'pass1',
-//database    : 'amourapp'
+user        : 'newuser',
+password    : 'pass1',
+database    : 'amourapp'
 });
 
 connection.connect(function (err) {

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
@@ -15,6 +16,9 @@ import data from './Comm';
 
 import { CSVLink} from "react-csv";
 import {readString, CSVReader} from 'react-papaparse';
+import{ init, send } from 'emailjs-com';
+//init("user_rWil2YAmTwqksmYOlnout");
+
 const buttonRef = React.createRef();
 
 class App extends React.Component{
@@ -40,14 +44,26 @@ class App extends React.Component{
 			  pay2:"On Acceptance...",
 			  show:false,
 			  show1:false,
+				show2:false,
 			  mes:"",
+				na:"", 
+				sda:"",
+				eda:"",
+				py1: "",
+				py2:"", 
+				cont:"",
+				cle:"", 
+				ac:"", 
 			  userid:'',
+				id:'',
 			  importer:[{}],
 			};
 			
 			this.sub = this.sub.bind(this);
+			this.sendemail = this.sendemail.bind(this);
 			this.setShow = this.setShow.bind(this);
 			this.setShow1 = this.setShow1.bind(this);
+			this.setShow2 = this.setShow2.bind(this);
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
 			this.duplicate = this.duplicate.bind(this);
@@ -169,6 +185,34 @@ class App extends React.Component{
 		
 		
 	}
+
+	update(){
+		 
+		var data  = this.state
+	
+		axios.post(this.$url+'/users/updatepro',data)
+			.then(res => {
+					 
+					 
+					 if(res.data==1){
+						 
+						 alert("Updated successfully!")
+						 
+						 //this.setShow(false)
+						 
+					 }else{
+						 
+						 
+					 }
+					 
+			 
+			})
+			.catch(err => {
+				 console.log(err);
+			})
+	
+}
+
 	duplicate(id){
 		if (window.confirm("confirm duplicate?")) {
 		  axios.get(this.$url+'/users/findprop?id='+id,null)
@@ -241,6 +285,11 @@ duplicateadd(data){
 		 
 		  this.setState({show1: flag,mes:mes});
 	}
+
+	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac, id){
+		 
+		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac, id:id});
+}
 	
 	acc(id,value){
 		
@@ -306,8 +355,33 @@ duplicateadd(data){
 		
 		console.log(this.state)
 		
-		
-		
+	}
+
+	sendemail(id, clientid){
+			const email = axios.get(this.$url+'/users/findcont?id='+clientid)
+			.then(res => {
+				this.setState({contacts: res.data});				
+				})
+				.catch(err => {
+					 console.log(err);
+				})
+
+			// console.log(localStorage.getItem("user"))
+			let view  = JSON.parse(localStorage.getItem("user"))[0]
+			// this.state.userid = view.UserID
+			//data['userid'] = view.UserID
+				axios.post(this.$url+'/users/customerportal?id='+id, {email: "abrad117@y7mail.com"})
+					.then(res => {	
+					if(res.data==1){
+						alert("email sent successfully!")	
+						this.setShow(false)		
+					}else{				
+					}			 
+					})
+					.catch(err => {
+						 console.log(err);
+					})
+		 console.log(this.state)
 	}
 	  render() {
 		  
@@ -321,7 +395,7 @@ duplicateadd(data){
 
 		 	  <header className="App-header1">
 		 	   
-		 		
+		 		when client accepts they pay with stripe before signing
 		 		<div className="body">
 		 		 		
 		 		
@@ -553,8 +627,11 @@ duplicateadd(data){
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a></td>
-		
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
+
+										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.client)}>send</a>								
+										</td>
 								   </tr>
 			                   })
 			               }
@@ -633,31 +710,94 @@ duplicateadd(data){
 		  </Modal.Header>
 		  <Modal.Body>
 						<Form>
-								
+						<Form.Label>Edit Proposal Information</Form.Label>
 								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-									<Form.Label>content</Form.Label>
-									<Form.Control value={this.state.mes}
-		          as="textarea" rows={10} />
-								  </Form.Group>
+							
+							
+							<Form.Label>Proposal Name</Form.Label>
+							<Form.Control value={this.state.na}
+		          onChange={e => this.setState({ na: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Start Date</Form.Label>
+							<Form.Control value={this.state.sda}
+		          onChange={e => this.setState({ sda: e.target.value })} type="date" placeholder="" />
+							<Form.Label>End Date</Form.Label>
+							<Form.Control value={this.state.eda}
+		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
+							<Form.Label>Contract Length</Form.Label>
+							<Form.Select value={this.state.cle}
+			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
+			       		<option value="12 Month">12 Month...</option>
+			       		<option value="6 Month">6 Month...</option>
+			 	  			<option value="3 Month">3 Month...</option>
+			     </Form.Select>
+							<Form.Label>Message</Form.Label>
+							<Form.Control value={this.state.mes}
+		          onChange={e => this.setState({ mes: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Status</Form.Label>
+							<Form.Control value={this.state.ac}
+		          onChange={e => this.setState({ ac: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Timeline</Form.Label>
+							<Form.Control value={this.state.py1}
+		          onChange={e => this.setState({ py1: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Payment Fulfilment</Form.Label>
+							<Form.Control value={this.state.py2}
+		          onChange={e => this.setState({ py2: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Contact Details</Form.Label>
+							<Form.Control value={this.state.cont}
+		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
+							</Form.Group>
+							<Button className="me-2" onClick={() => this.update()}>
+					    Update
+					  
+					  </Button>
 						</Form>
 						
 					</Modal.Body>
 		</Modal>
 		
+
+		{/* {view}
+
+		<Modal show={this.state.show2} fullscreen={true} onHide={() => this.setShow2(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Send proposal to client</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Select email to send to</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>Email</Form.Label>
+							<Form.Control value={this.state.email}
+		          onChange={e => this.setState({ email: e.target.value })} type="text" placeholder="" />
+
+						</Form.Group>
+
+						
+						
+						<Button className="me-2" onClick={() => send("default_service", "template_ej8r9p5", this.templateParams)
+      			.then(
+        			function(response) {
+          				console.log("Your message has successfully sent!", {
+          				});
+          				console.log("SUCCESS!", response.status, response.text);
+        			},
+        			function(err) {
+          			console.log("Your message was not able to be sent");
+        			}
+      			)}>
+					    Send email
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal> */}
+
+
 		
 		</div>
-		
-				
-		   
-	    
-	 
-		
-		
-		
-		
-	     
-	    
-	  
 	  </header>
 	</div>
   
