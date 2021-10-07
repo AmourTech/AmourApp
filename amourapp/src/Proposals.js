@@ -31,6 +31,7 @@ class App extends React.Component{
 			   viewdata1:[],
 			   viewdata2:[],
 			    clients:[],
+				contactemail:'',
 			   name:"", 
 			  client:"", 
 			  contact:"12 Month...",
@@ -56,6 +57,7 @@ class App extends React.Component{
 				ac:"", 
 			  userid:'',
 				id:'',
+				contactid:'',
 			  importer:[{}],
 			};
 			
@@ -357,31 +359,34 @@ duplicateadd(data){
 		
 	}
 
-	sendemail(id, clientid){
-			const email = axios.get(this.$url+'/users/findcont?id='+clientid)
+	sendemail(id, contactid){
+			
+			axios.get(this.$url+'/users/findcont?id='+contactid)
 			.then(res => {
-				this.setState({contacts: res.data});				
-				})
+
+				this.setState({contactemail: res.data[0].Email});				
+				console.log(this.state.contactemail)
+				// console.log(localStorage.getItem("user"))
+				let view  = JSON.parse(localStorage.getItem("user"))[0]
+				// this.state.userid = view.UserID
+				//data['userid'] = view.UserID
+					axios.post(this.$url+'/users/customerportal?id='+id, {email: this.state.contactemail})
+						.then(res => {	
+						if(res.data==1){
+							alert("email sent successfully!")	
+							this.setShow(false)		
+						}else{				
+						}			 
+						})
+						.catch(err => {
+							 console.log(err);
+						})
+			 console.log(this.state)
+			})
 				.catch(err => {
 					 console.log(err);
 				})
 
-			// console.log(localStorage.getItem("user"))
-			let view  = JSON.parse(localStorage.getItem("user"))[0]
-			// this.state.userid = view.UserID
-			//data['userid'] = view.UserID
-				axios.post(this.$url+'/users/customerportal?id='+id, {email: "abrad117@y7mail.com"})
-					.then(res => {	
-					if(res.data==1){
-						alert("email sent successfully!")	
-						this.setShow(false)		
-					}else{				
-					}			 
-					})
-					.catch(err => {
-						 console.log(err);
-					})
-		 console.log(this.state)
 	}
 	  render() {
 		  
@@ -630,7 +635,7 @@ duplicateadd(data){
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 
-										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.client)}>send</a>								
+										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.contact)}>send</a>								
 										</td>
 								   </tr>
 			                   })

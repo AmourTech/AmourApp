@@ -108,8 +108,8 @@ class App extends React.Component{
 	 
 	 login(){
 		 
-		 if(!this.state.email){
-			 alert("E-mail can not be empty")
+		 if(!this.state.username){
+			 alert("Username can not be empty")
 			 return
 		 }
 		 

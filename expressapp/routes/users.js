@@ -12,7 +12,7 @@ const nodemailer = require('nodemailer');
 
 
 router.post('/customerportal',function(req,res,next){
-
+	console.log(req.body.email)
 	if (req.body.email == '') {
 		res.status(400).send('no email')
 	}
@@ -329,9 +329,9 @@ router.get('/findus', function(req, res, next) {
 router.get('/findcont', function(req, res, next) {
 	
 	//console.log(db)
-	db.query('SELECT email from contact WHERE organ = 13', [req.query.id],function (error, results, fields) {
-	  if (error) throw error;
-	  console.log('The solution is: ');
+	db.query('SELECT Email from contact WHERE ContactID = ?', [req.query.id],function (error, results, fields) {
+		if (error) throw error;
+	  console.log('The solution is: ')
 	  res.send(results);
 	});
 });
@@ -403,11 +403,8 @@ router.post('/acc', function(req, res, next) {
 
 router.get('/getuser', function(req, res, next) {
 	
-	
-	var data = req.body
-	
-	
-	db.query('SELECT * from user', function (error, results, fields) {
+
+	db.query('SELECT * from user where Organisation = ?',[req.query.id], function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
 	  res.send(results);
@@ -503,7 +500,7 @@ router.post('/addcontact', function(req, res, next) {
 	
 	console.log(data)
 	var  addSql = 'INSERT INTO contact(Fname, Lname, Email,PhoneNbr,Organ,Address) VALUES ( ?, ?, ?, ?, ?, ?)';
-	var  addSqlParams = [data.cfname, data.clname, data.email, data.cnumber ,data.oname , data.mail];
+	var  addSqlParams = [data.cfname, data.clname, data.email, data.PhoneNbr ,data.org , data.Address];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
@@ -632,7 +629,7 @@ router.post('/login', function(req, res, next) {
 	
 	var data = req.body
 	
-	db.query(' select  * from user where email = ? and password = ?', [data.email,data.password],function (error, results, fields) {
+	db.query(' select  * from user where username = ? and password = ?', [data.username,data.password],function (error, results, fields) {
 	  if (error){
 		  
 		  console.log("oops")

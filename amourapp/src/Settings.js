@@ -242,8 +242,7 @@ this.getTerm();
 
 	 getuser(){
 		 
-		 
-		axios.get(this.$url+'/users/getuser',null)
+		axios.get(this.$url+'/users/getuser?id='+this.state.org,null)
 		
 		
 		
