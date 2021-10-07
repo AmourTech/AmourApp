@@ -24,6 +24,10 @@ class App extends React.Component {
 	   let organ  = (JSON.parse(localStorage.getItem("user"))[0])
 	   this.state = { 
 		   org: organ.Organisation,
+		   show1:"",
+		   show2:"",
+		   show3:"",
+
 		 st :1,
 		 clients:[],
 		 clientname:'',
@@ -43,6 +47,12 @@ class App extends React.Component {
 		//  email:'',
 		 viewdata:[],
 		 importer:[{}],
+		 cfname:'',
+		 clname:'',
+		 email:'',
+		 cnumber:'',
+		 oname:'',
+		 password:''
 	   };
 			
 	   this.setMenu = this.setMenu.bind(this);
@@ -216,16 +226,21 @@ class App extends React.Component {
 	
 }
 
-setShow1(flag,mes){
+setShow1(flag){
 		 
-	this.setState({show1: flag,mes:mes});
+	this.setState({show2: flag});
 }
 
 setShow2(flag,clientname, abn, acn, baddress, bsbaccountn, bsbname, contact, tfn, type, id){
 		 
 	this.setState({show1: flag,clientname:clientname, abn:abn, acn:acn, baddress:baddress, bsbaccountn:bsbaccountn, bsbname:bsbname, contact:contact, tfn:tfn, type:type, id:id});
 }
-	
+
+
+setShow3(flag, Fname, Lname, Email, Address, PhoneNbr,ContactID){
+		 
+	this.setState({show3: flag,Fname:Fname, Lname:Lname, Email:Email, Address:Address, PhoneNbr:PhoneNbr,ContactID:ContactID});
+}	
 render() {
 	
 	
@@ -377,6 +392,11 @@ render() {
 					    Create
 					  
 					  </Button>
+
+					  <Button className="me-2" onClick={() => this.setShow2(true)}>
+					    Create
+					  
+					  </Button>
 					 
 					 </Form>
 		 
@@ -504,7 +524,7 @@ render() {
 		
 		 {view}
 
-		 <Modal show={this.state.show1} fullscreen={true} onHide={() => this.setShow1(false,'')}>
+		 <Modal show={this.state.show2} fullscreen={true} onHide={() => this.setShow1(false,'')}>
 		  <Modal.Header closeButton>
 		    <Modal.Title>Client Edit</Modal.Title>
 		  </Modal.Header>
@@ -562,7 +582,74 @@ render() {
 						
 					</Modal.Body>
 		</Modal>
- 		
+		<Modal show={this.state.show1} fullscreen={true} onHide={() => this.setShow2(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Add Contact</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Add Contact Information</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>First Name</Form.Label>
+							<Form.Control value={this.state.Fname}
+		          onChange={e => this.setState({ Fname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Last Name</Form.Label>
+							<Form.Control value={this.state.Lname}
+		          onChange={e => this.setState({ Lname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Email</Form.Label>
+							<Form.Control value={this.state.Email}
+		          onChange={e => this.setState({ Email: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Address</Form.Label>
+							<Form.Control value={this.state.Address}
+		          onChange={e => this.setState({ Address: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Phone Number</Form.Label>
+							<Form.Control value={this.state.PhoneNbr}
+		          onChange={e => this.setState({ PhoneNbr: e.target.value })} type="text" placeholder="" />
+							</Form.Group>
+							<Button className="me-2" onClick={() => this.update()}>
+					    Update
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal>
+		<Modal show={this.state.show3} fullscreen={true} onHide={() => this.setShow3(false,'')}>
+		  <Modal.Header closeButton>
+		    <Modal.Title>Edit Contact</Modal.Title>
+		  </Modal.Header>
+		  <Modal.Body>
+						<Form>
+						<Form.Label>Edit Contact Information</Form.Label>
+								  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+							
+							
+							<Form.Label>First Name</Form.Label>
+							<Form.Control value={this.state.Fname}
+		          onChange={e => this.setState({ Fname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Last Name</Form.Label>
+							<Form.Control value={this.state.Lname}
+		          onChange={e => this.setState({ Lname: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Email</Form.Label>
+							<Form.Control value={this.state.Email}
+		          onChange={e => this.setState({ Email: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Address</Form.Label>
+							<Form.Control value={this.state.Address}
+		          onChange={e => this.setState({ Address: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Phone Number</Form.Label>
+							<Form.Control value={this.state.PhoneNbr}
+		          onChange={e => this.setState({ PhoneNbr: e.target.value })} type="text" placeholder="" />
+							</Form.Group>
+							<Button className="me-2" onClick={() => this.update()}>
+					    Update
+					  
+					  </Button>
+						</Form>
+						
+					</Modal.Body>
+		</Modal>
  		</div>
  		
  	  

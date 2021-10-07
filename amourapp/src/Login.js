@@ -31,12 +31,12 @@ class App extends React.Component{
 			 password:'',
 			 cpassword:'',
 			 name:'adsf',
-			 
+			 Org:"",
 				};
 				
      this.handleSelect = this.handleSelect.bind(this);
 	 this.setShow = this.setShow.bind(this);
-	 
+	 this.sigup = this.sigup.bind(this);
 	 console.log(this.$url)
 	 }
 	 
@@ -65,7 +65,17 @@ class App extends React.Component{
 		 }
 		 
 		 var data  = this.state
-		 		 
+		 axios.post(this.$url+'/users/addOrg',data)
+		 .then(res => {			
+			console.log("insertId" in res.data)		
+			 console.log(res.data.insertId)			 
+			 
+			this.setState({Org: (res.data.insertId)})
+		   
+		 })
+		 .catch(err => {
+			console.log(err);
+		 })
 		 axios.post(this.$url+'/users/addc',data)
 		   .then(res => {
 		 		 				 
@@ -177,10 +187,10 @@ class App extends React.Component{
 			           <Modal.Body>
 					   
 					     <Form>
-					          <Form.Group className="mb-3" controlId="formBasicEmail">
-					            <Form.Label>Email</Form.Label>
-					            <Form.Control type="text" value={this.state.email}
-					 					onChange={e => this.setState({ email: e.target.value })} placeholder="Enter email" />
+							  <Form.Group className="mb-3" controlId="formBasicEmail">
+					            <Form.Label>Username</Form.Label>
+					            <Form.Control type="text" value={this.state.username}
+					 					onChange={e => this.setState({ username: e.target.value })} placeholder="Enter username" />
 					     
 					          </Form.Group>
 							  
@@ -266,6 +276,12 @@ class App extends React.Component{
 													onChange={e => this.setState({ cnumber: e.target.value })} type="text" placeholder="" />
 														
 								</Form.Group>
+								<Form.Group className="mb-3" controlId="formBasicEmail">
+					            <Form.Label>Username</Form.Label>
+					            <Form.Control type="text" value={this.state.username}
+					 					onChange={e => this.setState({ username: e.target.value })} placeholder="Enter username" />
+					     
+					          </Form.Group>
 								
 								<Form.Group as={Col}  className="mb-3" controlId="formGridEmail">
 												 <Form.Label>Password</Form.Label>

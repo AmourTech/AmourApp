@@ -441,7 +441,6 @@ router.post('/adduser', function(req, res, next) {
 	      res.send('1');
 	});
 });
-
 router.post('/addc', function(req, res, next) {
 	
 	
@@ -450,8 +449,61 @@ router.post('/addc', function(req, res, next) {
 	
 	
 	console.log(data)
-	var  addSql = 'INSERT INTO contact(Fname, Lname, Email,PhoneNbr,organ,name,password) VALUES ( ?, ?, ?, ?, ?, ?, ?)';
-	var  addSqlParams = [data.cfname, data.clname, data.email, data.cnumber ,data.oname , data.name,data.password];
+	var  addSql = 'INSERT INTO user(username,email,password,Admin,Organisation,FirstName,LastName) VALUES ( ?, ?, ?, ?, ?, ?, ?)';
+	var  addSqlParams = [data.username, data.email, data.password, 1 ,data.Org , data.FirstName,data.LastName];
+	db.query(addSql,addSqlParams,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+	 
+	      res.send('1');
+	});
+	
+});
+router.post('/addOrg', function(req, res, next) {
+	
+	
+	var data = req.body
+	console.log(data)
+	var  addSql = 'INSERT INTO organisation(organisationName) VALUES ( ?)';
+	var  addSqlParams = [data.oname];
+	db.query(addSql,addSqlParams,function (err, result) {
+	        if(err){
+	         console.log('[INSERT ERROR] - ',err.message);
+			 res.send('0');
+	         return;
+	        }
+					
+		  console.log(result)
+		// 	db.query('SELECT LAST_INSERT_ID();',function (error,Resulting){
+		// 		if(err){
+		// 			console.log('[INSERT ERROR] - ',err.message);
+		// 			res.send('0');
+		// 			return;
+		// 		   }
+		// 		res.send(Resulting);
+		
+		// })
+		res.send(result)
+
+	});
+	
+});
+
+router.post('/addcontact', function(req, res, next) {
+	
+	
+	var data = req.body
+	
+	
+	
+	console.log(data)
+	var  addSql = 'INSERT INTO contact(Fname, Lname, Email,PhoneNbr,Organ,Address) VALUES ( ?, ?, ?, ?, ?, ?)';
+	var  addSqlParams = [data.cfname, data.clname, data.email, data.cnumber ,data.oname , data.mail];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
