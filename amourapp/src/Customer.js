@@ -469,7 +469,6 @@ duplicateadd(data){
 							<Form.Label>Status</Form.Label>
               <Form.Select value={this.state.ac}
 			          onChange={e => this.setState({ ac: e.target.value })}  defaultValue="Choose...">
-			       		{/* <option value="Pending">Pending</option> */}
 			       		<option value="Accept">Accept</option>
 			 	  			<option value="Refuse">Refuse</option>
 			        </Form.Select>
