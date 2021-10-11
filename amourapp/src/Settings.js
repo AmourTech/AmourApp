@@ -10,10 +10,14 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 import Modal from 'react-bootstrap/Modal'
-import axios from 'axios'; 
+import axios from 'axios';
+
+require('dotenv').config()
 //add terms and conditions that are customisable
 var servicecheck =0;
 
+
+  
 class App extends React.Component{
 	
 	constructor(props) {
@@ -335,7 +339,9 @@ this.getTerm();
 			})
 	 }
 	 
-	 
+	 authenticate(){
+
+		  }	 
 	 
 
 	 
@@ -540,6 +546,11 @@ this.getTerm();
 	
 	
 	{view}
+	
+		   <Button onClick={()=> this.authenticate}>		   Add Xero Account
+</Button>
+
+
 	<Modal show={this.state.show} fullscreen={true} onHide={() => this.setShow(false,'')}>
 		  <Modal.Header closeButton>
 		    <Modal.Title>Add Service</Modal.Title>
@@ -775,7 +786,10 @@ onChange={e => this.setState({ Terms: e.target.value })} as="textarea" rows={10}
 	</div>
 	 </header>
   </div>
+
   	</>
+	  
+
   );
   }
 }

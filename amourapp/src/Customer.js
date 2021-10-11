@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
 import ReactFileReader from 'react-file-reader';
-
+import {Elements} from "@stripe/react-stripe-js"
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
@@ -12,19 +12,19 @@ import Col from 'react-bootstrap/Col'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'; 
 import data from './Comm';
-
 import { CSVLink} from "react-csv";
 import {readString, CSVReader} from 'react-papaparse';
 import{ init, send } from 'emailjs-com';
 import crypto from 'crypto';
+import StripeContainer from './StripeContainer';
 
 //init("user_rWil2YAmTwqksmYOlnout");
 
 const nodemailer = require('nodemailer');
 const buttonRef = React.createRef();
-
 class App extends React.Component{
-	
+
+
 	 constructor(props) {
 	    super(props);
 	    this.state = {
@@ -59,6 +59,7 @@ class App extends React.Component{
 			  userid:'',
 				id:'',
 			  importer:[{}],
+			  showItem:false,
 			};
 			
 			this.sub = this.sub.bind(this);
@@ -132,8 +133,16 @@ class App extends React.Component{
 			   })
 			 
 	}
-	
+ secret = async () => {
+		try{
+			const resp = await axios.post(this.$url+"/payments/secret")
+		 }
+		catch (err) {
 
+			console.error(err);
+		}
+	 
+	 }
    
     getList(){
 		
@@ -191,14 +200,12 @@ class App extends React.Component{
 	update(){
 		 
 		var data  = this.state
-	
+
 		axios.post(this.$url+'/users/answerpro',data)
 			.then(res => {
 					 
 					 
 					 if(res.data==1){
-						 
-						 alert("Updated successfully!")
 						 
 						 //this.setShow(false)
 						 
@@ -212,7 +219,7 @@ class App extends React.Component{
 			.catch(err => {
 				 console.log(err);
 			})
-	
+		
 }
 
 	duplicate(id){
@@ -359,9 +366,8 @@ duplicateadd(data){
 		
 	}
 	  render() {
-		  
 		console.log('startup');
-		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
+		let admin  = 0
 		 console.log(admin);
          
            const isisd = this.state.st;
@@ -411,54 +417,36 @@ duplicateadd(data){
 			
 			 </table> </>;
 		   }
+		   
   
 		   const csvReport = {
 			filename: 'Report.csv',
 			data: this.state.viewdata
 		}
   
-  
-  
+
+
+ 
   return (
 		<>
 
-    
 
       
 	
 	<div className="App">
+		
 	  <header className="App-header1">
 	   
-		
 		<div className="body">
-		<CSVLink {...csvReport}> Export to CSV</CSVLink>
-		<CSVReader   ref={buttonRef}
-  onFileLoad={this.handleOnFileLoad}
-  onError={this.handleOnError}
-  noClick
-  noDrag
-  noProgressBar
-  config={{header: true}}
-  style={{}}
-  onRemoveFile={this.handleOnRemoveFile}
-  >
-  {({ file }) => (
-    <div>
-      <button
-        type='button'
-        onClick={this.handleOpenDialog}
-      >
-          Import CSV
-      </button>
-        {file && file.name}
-      <button onClick={this.handleRemoveFile}>Remove</button>
-	  </div>
-    
-  )}
-</CSVReader><button onClick={this.handleconfirm}>Confirm</button>
+	
 
-<br/><br/><br/><br/>
+
 		{view}
+		{}
+			<Form>
+		<Button type="submit" onClick={() => this.secret()}>Checkout</Button>
+    </Form>
+  
 		<Modal show={this.state.show1} fullscreen={false} onHide={() => this.setShow1(false,'')}>
 		  <Modal.Header closeButton>
 		    <Modal.Title>Accept or refuse proposal</Modal.Title>
@@ -481,15 +469,18 @@ duplicateadd(data){
 						
 					</Modal.Body>
 		</Modal>
-
-
+		{this.state.showItem ? <StripeContainer/> : <> <h3>$10.00</h3><button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
 		
 		</div>
 	  </header>
 	</div>
-  
+
 		</>
+		
   )};
+
+ 
+  
 }
 
 export default App

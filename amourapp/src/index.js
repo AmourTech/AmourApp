@@ -14,7 +14,7 @@ React.Component.prototype.$url = 'http://localhost:3000';
 
 ReactDOM.render(
   <React.StrictMode>
-  
+
   <Router >
     <Route path="/admin" component={App}>
     </Route>
