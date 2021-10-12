@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var paymentsRouter = require('./routes/payments');
+var xeroRouter = require('./routes/xero')
 const { env } = require('process');
 const { Console } = require('console');
 
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/payments', paymentsRouter);
+app.use('/xero', xeroRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

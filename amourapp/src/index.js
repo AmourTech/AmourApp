@@ -20,7 +20,18 @@ ReactDOM.render(
     </Route>
 	
 	<Route path="/index" component={Login}>
+  
 	</Route>
+  <Route path="/Settings" component={App}>
+    </Route>
+    <Route path="/Clients" component={App}>
+    </Route>
+    <Route path="/Home" component={App}>
+    </Route>
+    <Route path="/Proposals" component={App}>
+    </Route>
+    <Route path="/Settings" component={App}>
+    </Route>
   <Route path="/viewproposal/:token" component={Customer}>
 	</Route>
   </Router>

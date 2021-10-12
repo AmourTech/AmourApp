@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-
+import Home from './Home'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios';
 
@@ -17,7 +17,6 @@ require('dotenv').config()
 var servicecheck =0;
 
 
-  
 class App extends React.Component{
 	
 	constructor(props) {
@@ -340,7 +339,35 @@ this.getTerm();
 	 }
 	 
 	 authenticate(){
+		 console.log("jews")
+		axios.get(this.$url+'/xero/connect',null)
+		.then(res => {
+			
+				  
 
+			window.open(res.data);
+			axios.get(this.$url+'/xero/callback',null)
+			.then(res =>{
+				axios.get(this.$url+'/xero/organisation',null)
+
+
+
+
+			}
+				
+				
+				)
+	   
+	  })
+	  .catch(err => {
+		 console.log(err);
+	  })
+			
+
+
+
+
+		
 		  }	 
 	 
 
@@ -547,7 +574,7 @@ this.getTerm();
 	
 	{view}
 	
-		   <Button onClick={()=> this.authenticate}>		   Add Xero Account
+		   <Button onClick={()=> this.authenticate()}>		   Add Xero Account
 </Button>
 
 
