@@ -30,8 +30,7 @@ ReactDOM.render(
     </Route>
     <Route path="/Proposals" component={App}>
     </Route>
-    <Route path="/Settings" component={App}>
-    </Route>
+
   <Route path="/viewproposal/:token" component={Customer}>
 	</Route>
   </Router>

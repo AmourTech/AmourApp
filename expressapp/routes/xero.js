@@ -50,7 +50,7 @@ router.get('/connect', async (req, res) => {
 });
 router.get('/callback', async (req, res) => {
 	try {
-		var tokenSet = await xero.apiCallback(req.url);
+		var tokenSet = await xero.apiCallback(req.body.url);
 		await xero.updateTenants();
 
 		var decodedIdToken = jwtDecode(tokenSet.id_token);

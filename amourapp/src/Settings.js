@@ -339,14 +339,13 @@ this.getTerm();
 	 }
 	 
 	 authenticate(){
-		 console.log("jews")
-		axios.get(this.$url+'/xero/connect',null)
+		 const response = await axios.get(this.$url+'/xero/connect',null)
 		.then(res => {
 			
 				  
 
 			window.open(res.data);
-			axios.get(this.$url+'/xero/callback',null)
+			axios.get(this.$url+'/xero/callback',res.data)
 			.then(res =>{
 				axios.get(this.$url+'/xero/organisation',null)
 
