@@ -443,9 +443,7 @@ duplicateadd(data){
 
 		{view}
 		{}
-			<Form>
-		<Button type="submit" onClick={() => this.secret()}>Checkout</Button>
-    </Form>
+
   
 		<Modal show={this.state.show1} fullscreen={false} onHide={() => this.setShow1(false,'')}>
 		  <Modal.Header closeButton>
