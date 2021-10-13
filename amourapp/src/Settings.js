@@ -339,7 +339,7 @@ this.getTerm();
 	 }
 	 
 	 authenticate(){
-		 axios.get(this.$url+'/xero/connect',null)
+		 const response = await axios.get(this.$url+'/xero/connect',null)
 		.then(res => {
 			
 				  
