@@ -196,7 +196,7 @@ class App extends React.Component{
 			.then(res => {
 					 
 					 
-					 if(res.data==1){
+					 if(res.data===1){
 						 
 						 alert("Updated successfully!")
 						 
@@ -239,7 +239,7 @@ class App extends React.Component{
 		.then(res => {
 						 
 						 
-			if(res.data==1){
+			if(res.data===1){
 				
 			   this.getList();
 				
@@ -256,7 +256,7 @@ duplicateadd(data){
 	.then(res => {
 					 
 					 
-		if(res.data==1){
+		if(res.data===1){
 			
 			alert("Successful operation!")
 			
@@ -304,7 +304,7 @@ duplicateadd(data){
 		  .then(res => {
 						 
 						 
-						 if(res.data==1){
+						 if(res.data===1){
 							 
 							 alert("Successful operation!")
 							 
@@ -329,7 +329,7 @@ duplicateadd(data){
 		 
 		 console.log(localStorage.getItem("user"))
 		 let view  = JSON.parse(localStorage.getItem("user"))[0]
-		 this.state.userid = view.UserID
+		 this.setState({userid: view.UserID})
 		 var data  = this.state
 		
 		 data['userid'] = view.UserID
@@ -337,7 +337,7 @@ duplicateadd(data){
 		     .then(res => {
 				 
 				 
-				 if(res.data==1){
+				 if(res.data===1){
 					 
 					 alert("Proposal sent successfully!")
 					 
@@ -372,7 +372,7 @@ duplicateadd(data){
 				//data['userid'] = view.UserID
 					axios.post(this.$url+'/users/customerportal?id='+id, {email: this.state.contactemail})
 						.then(res => {	
-						if(res.data==1){
+						if(res.data===1){
 							alert("email sent successfully!")	
 							this.setShow(false)		
 						}else{				
@@ -394,7 +394,7 @@ duplicateadd(data){
 		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
 		 console.log(admin);
 		  
-		  if(admin == 1){
+		  if(admin === 1){
 		 	return (  <>
 		 	<div className="App">
 
@@ -430,7 +430,7 @@ duplicateadd(data){
 		 		 					   <td >{item.clen}</td>
 		 		 					   <td >{item.pay1}</td>
 		 		 					   <td >{item.pay2}</td>
-		 		 					   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
+		 		 					   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
 		 		 					   <td ><a href="javascript:;" onClick={() => this.acc(item.id,'Agree')}>Agree</a><a href="javascript:;" onClick={() => this.acc(item.id,'Refuse')}>Refuse</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a></td>
 		 		 					   
 		 		 					 
@@ -467,7 +467,7 @@ duplicateadd(data){
            const isisd = this.state.st;
 		   let view;
 
-		   if (isisd == 1) {
+		   if (isisd === 1) {
 			 view =<>
 			 
 			 <Form>
@@ -612,7 +612,7 @@ duplicateadd(data){
 			   <td>Client</td>
 			   <td>Contact</td>
 				<td>Start Date</td>
-				<td>Start Date</td>
+				<td>End Date</td>
 				<td>Minimun Contract Length</td>
 				<td>Recurring Billing</td>
 				<td>One time Billing</td>
@@ -631,8 +631,8 @@ duplicateadd(data){
 								   <td >{item.clen}</td>
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
-								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
+								   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.name, item.sdate, item.edate, item.pay1, item.pay2, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 
 										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.contact)}>send</a>								
