@@ -366,9 +366,7 @@ duplicateadd(data){
 		
 	}
 	  render() {
-		console.log('startup');
 		let admin  = 0
-		 console.log(admin);
          
            const isisd = this.state.st;
 		   let view;

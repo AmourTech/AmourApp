@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "transpile": "babel ./routes --out-dir dist-server"
+    "transpile": "babel ./routes/Convert.js --out-dir dist-server"
   },
   "babel": {
     "presets": ["@babel/preset-env"]

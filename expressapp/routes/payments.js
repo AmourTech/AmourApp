@@ -4,7 +4,7 @@ var app = express();
 app.use(cors());
 
 require("dotenv").config()
-
+console.log(process.env)
 var router = express.Router();
 var db = require( "../database/db.js" );
 
