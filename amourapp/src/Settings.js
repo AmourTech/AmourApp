@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal'
 import axios from 'axios';
 
 require('dotenv').config()
+
 //add terms and conditions that are customisable
 var servicecheck =0;
 
@@ -344,7 +345,7 @@ this.getTerm();
 			
 				  
 
-			window.open(res.data);
+			window.location.href=res.data;
 			axios.get(this.$url+'/xero/callback',res.data)
 			.then(res =>{
 				axios.get(this.$url+'/xero/organisation',null)

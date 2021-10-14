@@ -3,6 +3,7 @@ var express = require('express');
 var cors = require("cors")
 var app = express();
 app.use(cors());
+var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -29,7 +30,12 @@ const { Console } = require('console');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.use(session({
+	secret: 'something crazy',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: false },
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

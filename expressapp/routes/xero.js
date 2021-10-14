@@ -1,22 +1,21 @@
 
+require("dotenv").config()
 var express = require('express');
 var cors = require("cors")
 var app = express();
-var jwtDecode = _interopRequireDefault(require("jwt-decode"));
-
+var jwtDecode = require("jwt-decode");
+var session = require('express-session');
 var openidClient = require("openid-client");
 
 var xero = require("xero-node");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 app.use(cors());
-
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var redirectUrl = process.env.REDIRECT_URI;
 var scopes = 'openid profile email accounting.settings accounting.reports.read accounting.journals.read accounting.contacts accounting.attachments accounting.transactions offline_access';
 
-require("dotenv").config()
+
 
 var router = express.Router();
 var db = require( "../database/db.js" );
@@ -26,6 +25,8 @@ var xero = new xero.XeroClient({
 	redirectUris: [redirectUrl],
 	scopes: scopes.split(' '),
 });
+
+
 var authenticationData = (req, res) => {
 	return {
 		decodedIdToken: req.session.decodedIdToken,
@@ -50,12 +51,12 @@ router.get('/connect', async (req, res) => {
 });
 router.get('/callback', async (req, res) => {
 	try {
-		var tokenSet = await xero.apiCallback(req.body.url);
+
+		var tokenSet = await xero.apiCallback(req.url);
 		await xero.updateTenants();
 
 		var decodedIdToken = jwtDecode(tokenSet.id_token);
 		var decodedAccessToken = jwtDecode(tokenSet.access_token);
-
 		req.session.decodedIdToken = decodedIdToken;
 		req.session.decodedAccessToken = decodedAccessToken;
 		req.session.tokenSet = tokenSet;
@@ -65,11 +66,12 @@ router.get('/callback', async (req, res) => {
 
 		var authData = authenticationData(req, res);
 
-		console.log(authData);
+		//console.log(authData);
 
-		res.send('/organisation');
+		res.redirect('organisation');
 	} catch (err) {
         console.log(err)
+		console.log("callbackerr")
 		res.send('Sorry, something went wrong');
 	}
 });
@@ -77,15 +79,20 @@ router.get('/callback', async (req, res) => {
 router.get('/organisation', async (req, res) => {
 	try {
 		var tokenSet = await xero.readTokenSet();
+		console.log("1")
 		console.log(tokenSet.expired() ? 'expired' : 'valid');
 		var response = await xero.accountingApi.getOrganisations(req.session.activeTenant.tenantId);
-		res.send(`Hello, ${response.body.organisations[0].name}`);
+		res.redirect('http://localhost:3001/settings');
+
+		
 	} catch (err) {
         console.log(err)
+		console.log("Orgerr")
 		res.send('Sorry, something went wrong');
 	}
+	
 });
-
+router.get('/close')
 router.get('/invoice', async (req, res) => {
 	try {
 		var contacts = await xero.accountingApi.getContacts(req.session.activeTenant.tenantId);
