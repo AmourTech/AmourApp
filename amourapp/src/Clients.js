@@ -479,7 +479,7 @@ render() {
 				reader.onload = () => {
 				// Do whatever you want with the file contents
 					const binaryStr = reader.result
-					axios.post('localhost:3000'+'/users/addcl',binaryStr)
+					axios.post(this.$url+'/users/addcl',binaryStr)
 						.then(res => {		 
 								 if(res.data==1){
 									 alert("Created successfully!")

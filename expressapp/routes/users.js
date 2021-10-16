@@ -43,7 +43,7 @@ router.post('/customerportal',function(req,res,next){
 		text:
 		"You are receiving this because you've been sent a proposal. \n\n"
 		+'Please click the following link, or past into your browser within one hour of receiving it: \n\n'
-		+'http://localhost:3001/viewproposal/' + token + '\n\n',
+		+'http://localhost:3000/viewproposal/' + token + '\n\n',
 	};
 	transporter.sendMail(mailOptions, (err, response) => {
 		if (err) {

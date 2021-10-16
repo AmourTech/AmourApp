@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下
 }));
 
 
-
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var paymentsRouter = require('./routes/payments');

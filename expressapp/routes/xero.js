@@ -82,7 +82,7 @@ router.get('/organisation', async (req, res) => {
 		console.log("1")
 		console.log(tokenSet.expired() ? 'expired' : 'valid');
 		var response = await xero.accountingApi.getOrganisations(req.session.activeTenant.tenantId);
-		res.redirect('http://localhost:3001/settings');
+		res.redirect('http://localhost:3000/settings');
 
 		
 	} catch (err) {

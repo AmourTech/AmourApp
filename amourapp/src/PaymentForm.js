@@ -43,7 +43,7 @@ export default function PaymentForm() {
     if(!error){
         try{
         const {id} = paymentMethod
-        const response = await axios.post('http://localhost:3000/payments/secret', {
+        const response = await axios.post(this.$url+'/payments/secret', {
 
             amount: 1000,
             id
