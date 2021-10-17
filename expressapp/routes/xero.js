@@ -6,9 +6,8 @@ var app = express();
 var jwtDecode = require("jwt-decode");
 var session = require('express-session');
 var openidClient = require("openid-client");
-
 var xero = require("xero-node");
-
+var querystring = require('querystring');    
 app.use(cors());
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
@@ -19,6 +18,7 @@ var scopes = 'openid profile email accounting.settings accounting.reports.read a
 
 var router = express.Router();
 var db = require( "../database/db.js" );
+const { JSONCookies } = require("cookie-parser");
 var xero = new xero.XeroClient({
 	clientId: client_id,
 	clientSecret: client_secret,
@@ -51,9 +51,10 @@ router.get('/connect', async (req, res) => {
 });
 router.get('/callback', async (req, res) => {
 	try {
-
 		var tokenSet = await xero.apiCallback(req.url);
+		console.log(tokenSet)
 		await xero.updateTenants();
+		xero.setTokenSet(tokenSet);
 
 		var decodedIdToken = jwtDecode(tokenSet.id_token);
 		var decodedAccessToken = jwtDecode(tokenSet.access_token);
@@ -64,25 +65,80 @@ router.get('/callback', async (req, res) => {
 		// XeroClient is sorting tenants behind the scenes so that most recent / active connection is at index 0
 		req.session.activeTenant = xero.tenants[0];
 
-		var authData = authenticationData(req, res);
-
+		var authData = authenticationData(req, res)
+		this.setItem;
 		//console.log(authData);
-
-		res.redirect('organisation');
+		res.send(authData)
+		
 	} catch (err) {
         console.log(err)
 		console.log("callbackerr")
 		res.send('Sorry, something went wrong');
 	}
 });
+router.post('/storeToken',async(req,res) =>{
+	var tokenSet = await xero.readTokenSet();
+
+db.query('UPDATE organisation SET tokenSet = ? where OrganisationID=?', [JSON.stringify(tokenSet), req.query.id],function (err, result) {
+	if(err){
+	 console.log('[INSERT ERROR] - ',err.message);
+res.send('0');
+	 return;
+	}
+	console.log(result.message)
+
+
+
+})
+});
+
+router.get('/update', async (req, res) => {
+	try{
+	await xero.updateTenants();
+	const activeTenantId = xero.tenants[0].tenantId;
+	}
+	catch(err) {
+
+	}
+})
+
+router.get('/retrieve', async (req, res) => {
+	db.query('SELECT tokenSet FROM organisation WHERE OrganisationID=?',  [req.query.id],function (err, result) {
+		if(err){
+		 console.log('[INSERT ERROR] - ',err.message);
+	res.send('0');
+		 return;
+		}
+		if(result.length===0){
+			res.send('0')
+			res.end()
+			return;
+		}
+		console.log(result.length)
+		var tokenSet = result
+		console.log(tokenSet)
+		xero.setTokenSet(tokenSet);
+		res.redirect('update')
+
+	
+});
+})
+
+router
 
 router.get('/organisation', async (req, res) => {
 	try {
+
+		console.log(req.query.data)
+
 		var tokenSet = await xero.readTokenSet();
+		await xero.updateTenants();
+		const activeTenantId = xero.tenants[0].tenantId;
+		console.log(tokenSet)
 		console.log("1")
 		console.log(tokenSet.expired() ? 'expired' : 'valid');
-		var response = await xero.accountingApi.getOrganisations(req.session.activeTenant.tenantId);
-		res.redirect('http://localhost:3000/settings');
+		var response = await xero.accountingApi.getOrganisations(activeTenantId);
+		res.send(response);
 
 		
 	} catch (err) {

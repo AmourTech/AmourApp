@@ -11,6 +11,8 @@ import Col from 'react-bootstrap/Col'
 import Home from './Home'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios';
+var url = require('url')
+
 
 require('dotenv').config()
 
@@ -31,6 +33,7 @@ class App extends React.Component{
 					show2:false,
 					show3:false,
 					show4:false,
+					xeroData:[],
 		          st :1,
 				  email:'',
 				  fname:'',
@@ -83,11 +86,15 @@ class App extends React.Component{
 		this.setShow3 = this.setShow3.bind(this);
 		this.setShow4 = this.setShow4.bind(this);
 		this.BillHandler = this.BillHandler.bind(this);
+		this.storeData = this.storeData.bind(this);
 	 }
 
 	 componentDidMount() {
 		this.getService()
 		this.getTerm()
+
+		this.storeData()
+		
 	 }
 	 BillHandler(DBill){
 		 this.setState({Dbill:DBill})
@@ -122,6 +129,45 @@ class App extends React.Component{
 
 
 	 }
+	 Org(){
+		axios.get(this.$url+'/xero/organisation',null)
+
+
+	 }
+	 storeData(){
+		 
+		axios.get(this.$url+'/xero/retrieve?='+this.state.org,null)
+		.then(res=>{
+
+			if (res.data === 0&&window.location.search.length!==0){
+				axios.get(this.$url+'/xero/callback'+window.location.search,null)
+
+				.then(res =>{
+					
+					console.log(res.data)
+					axios.post(this.$url+'/xero/storeToken?id='+this.state.org,null)
+		
+		
+				}
+					
+					
+					)
+
+			}
+
+		})
+	
+
+
+
+				
+			
+		}
+
+	
+
+
+	 
 	 getService(){
 		var id = this.state.org
 		axios.get(this.$url+'/users/getservo?id='+id,null)
@@ -346,17 +392,7 @@ this.getTerm();
 				  
 
 			window.location.href=res.data;
-			axios.get(this.$url+'/xero/callback',res.data)
-			.then(res =>{
-				axios.get(this.$url+'/xero/organisation',null)
 
-
-
-
-			}
-				
-				
-				)
 	   
 	  })
 	  .catch(err => {
@@ -554,7 +590,10 @@ this.getTerm();
            </Button>
 		<br></br>
 		<br></br>
-
+		<Button onClick={() => this.Org()} className="me-2" >
+             Org
+           
+           </Button>
 
 
 		   	
