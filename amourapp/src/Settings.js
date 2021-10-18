@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import React, {useState} from 'react'
 
-
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
@@ -27,13 +26,15 @@ class App extends React.Component{
 	   let organ  = (JSON.parse(localStorage.getItem("user"))[0])
 	   this.state = {
 		   			//test org
+					   accounts:JSON,
 		   		  org :organ.Organisation,
 				  Admin: false,
 					show:false,
 					show2:false,
 					show3:false,
 					show4:false,
-					xeroData:[],
+					xeroData:JSON,
+					optionItems:JSON,
 		          st :1,
 				  email:'',
 				  fname:'',
@@ -53,8 +54,8 @@ class App extends React.Component{
 				End:false,
 
 				ProposalID:'',
-				ServiceID:[],
-
+				ServiceID:'',
+				Service:{},
 
 
 
@@ -87,7 +88,10 @@ class App extends React.Component{
 		this.setShow4 = this.setShow4.bind(this);
 		this.BillHandler = this.BillHandler.bind(this);
 		this.storeData = this.storeData.bind(this);
+		this.account = this.account.bind(this);
+
 	 }
+
 
 	 componentDidMount() {
 		this.getService()
@@ -96,6 +100,7 @@ class App extends React.Component{
 		this.storeData()
 		
 	 }
+
 	 BillHandler(DBill){
 		 this.setState({Dbill:DBill})
 		if (DBill==="End"){
@@ -130,42 +135,55 @@ class App extends React.Component{
 
 	 }
 	 Org(){
-		axios.get(this.$url+'/xero/organisation',null)
+		axios.get(this.$url+'/xero/organisation',null).then(res=>{
+
+			console.log(res.data)
+				})
+
+	 }
+	 async account(){
+		await axios.get(this.$url+'/xero/accounts',null).then(res=>{
+
+			this.setState({accounts:(res.data.body.accounts)})
+				})
+				console.log("Accounts")
+				console.log(this.state.accounts)
+				this.state.accounts.map((item, index) => {
+				return console.log(item)
+				})
+				let optionsItems = this.state.accounts.map((item, index) => 
+				<option value= {index} label= {item.name}></option>
+	)	
+	this.setState({optionItems:optionsItems})
+				
+
+	
+
+
 
 
 	 }
 	 storeData(){
 		 
-		axios.get(this.$url+'/xero/retrieve?='+this.state.org,null)
-		.then(res=>{
+		//axios.get(this.$url+'/xero/retrieve?id='+this.state.org,null)
+		//.then(res=>{
 
-			if (res.data === 0&&window.location.search.length!==0){
+			if (window.location.search.length!==0){
 				axios.get(this.$url+'/xero/callback'+window.location.search,null)
 
 				.then(res =>{
 					
 					console.log(res.data)
 					axios.post(this.$url+'/xero/storeToken?id='+this.state.org,null)
-		
-		
 				}
-					
-					
 					)
-
 			}
-
-		})
-	
-
-
-
-				
-			
 		}
+		//)			
+	//	}
 
 	
-
+		
 
 	 
 	 getService(){
@@ -199,6 +217,8 @@ class App extends React.Component{
 
 	 applyService(){
 		 if(window.confirm("confirm apply"))
+		 this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
+		 console.log(this.state.xeroData)
 		var data= this.state
 		axios.post(this.$url+'/users/addservo',data)
 		.then(res=>{
@@ -280,8 +300,10 @@ this.getTerm();
 		 
 		this.setState({show3: flag, TName:TName, TDesc:TDesc,Terms:Terms,Tid:Tid});
 	}
-	 setShow(flag){
-		 
+	 async setShow(flag){
+		if(flag===true){
+		await this.account()}
+
 		this.setState({show: flag	})
 		this.BillHandler(this.state.Dbill)
 	 }
@@ -428,9 +450,17 @@ this.getTerm();
 		      console.log(err);
 		   })
 	 }
-	
+
+
+		
+					   	
  render() {	
-	 
+
+		
+	
+				 
+			   
+		    
 	let admin  = JSON.parse(localStorage.getItem("admin"))[0]
 	 if(admin === 0){
 		return (  <div className="App">
@@ -448,6 +478,8 @@ this.getTerm();
 
 	 const isisd = this.state.st;
 	 let view;
+	 let serviceDropbox;
+
 	 if (isisd === 1) {
 		 
 		 view = <> <Form>
@@ -505,8 +537,8 @@ this.getTerm();
 
 
 	 }else{
-		 
-		 
+
+
 		 view=
 		  <>
 		  <table className="table">
@@ -537,7 +569,7 @@ this.getTerm();
 		 
 		 
 	 }
-	 
+
   return (
   
   <>
@@ -574,7 +606,7 @@ this.getTerm();
 		 				   <td >{item.Cpay}</td>
 						   <td >{item.Rpay}</td>
 						   <td >{item.TaxRate}</td>
-						   <td >{item.XeroAccount}</td>
+						   <td >{JSON.parse(item.XeroAccount).name}</td>
 						   <td ><a href="javascript:;" onClick={() => this.setShow2(true,item.Sname,item.SDesc,item.Spay,item.Rpay,item.Cpay,item.DBill,item.TaxRate,item.Xero,item.ID)}>Edit</a></td>
 						   <td ><a href="javascript:;" onClick={() => this.Sdelete(item.ID)}>Delete</a></td>
 
@@ -590,7 +622,7 @@ this.getTerm();
            </Button>
 		<br></br>
 		<br></br>
-		<Button onClick={() => this.Org()} className="me-2" >
+		<Button onClick={() => this.account()} className="me-2" >
              Org
            
            </Button>
@@ -667,10 +699,15 @@ this.getTerm();
 										<option value="0">0%</option>
 										</Form.Select>
 								</Form.Group>	
-							<Form.Label>Xero</Form.Label>
-							<Form.Control value={this.state.Xero}
-		          onChange={e => this.setState({ Xero: e.target.value })} type="text" placeholder="" />
-						</Form.Group>
+								<Form.Group md="2"  as={Col} controlId="formGridAddress1">
+								   <Form.Label>Xero Account</Form.Label>
+								   <Form.Select  value={this.state.ServiceID}
+										   onChange={e => this.setState({ ServiceID: e.target.value })}   >
+											{this.state.optionItems}
+				</Form.Select>
+					   
+					   </Form.Group>
+					   </Form.Group>
 							<Button className="me-2" onClick={() => this.applyService()}>
 					    Add
 					  

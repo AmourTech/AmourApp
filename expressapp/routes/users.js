@@ -98,7 +98,7 @@ router.post('/updateservo', function(req, res, next) {
 	
 	
 	console.log(data.id)
-	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,data.id],function (err, result) {
+	db.query('UPDATE service SET DBill = ?, TaxRate = ?, XeroAccount=?, Spay =?, Cpay =?, Rpay =?, Sname = ?, SDesc = ? where ID=?', [data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,data.id],function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
 			 res.send('0');
@@ -139,7 +139,7 @@ router.post('/addservo', function(req, res, next) {
 	
 	console.log(data)
 	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc) VALUES (?,?,?,?,?,?,?,?,?)' ;
-	var addSqlParam = [data.org, data.Dbill,data.TRate,data.Xero,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
+	var addSqlParam = [data.org, data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
 	db.query(addSql, addSqlParam,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ', err.message);

@@ -117,6 +117,10 @@ router.get('/retrieve', async (req, res) => {
 		console.log(result.length)
 		var tokenSet = result
 		console.log(tokenSet)
+		//if(tokenSet.expired()){
+	//		const validTokenSet = await xero.refreshToken();
+			// save the new tokenset
+//		  }
 		xero.setTokenSet(tokenSet);
 		res.redirect('update')
 
@@ -124,7 +128,30 @@ router.get('/retrieve', async (req, res) => {
 });
 })
 
-router
+router.get('/accounts', async(req,res)=>{
+	try{
+		var tokenSet = await xero.readTokenSet();
+		await xero.updateTenants();
+		const activeTenantId = xero.tenants[0].tenantId;
+		console.log(tokenSet)
+		console.log("1")
+		console.log(tokenSet.expired() ? 'expired' : 'valid');
+	var getAccountsResponse = await xero.accountingApi.getAccounts(activeTenantId);
+	console.log(getAccountsResponse)
+	res.send(getAccountsResponse)
+	}
+	catch(err){
+		console.log("Account Error")
+		console.log(err.message)
+		res.end()
+	}
+
+
+
+
+
+
+})
 
 router.get('/organisation', async (req, res) => {
 	try {
