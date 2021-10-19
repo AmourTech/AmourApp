@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
 import ReactFileReader from 'react-file-reader';
-
+import { Multiselect } from 'multiselect-react-dropdown';
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
@@ -20,18 +20,40 @@ import{ init, send } from 'emailjs-com';
 //init("user_rWil2YAmTwqksmYOlnout");
 
 const buttonRef = React.createRef();
-
+// const handleInputChange = (e, index) => {
+//     const { name, value } = e.target;
+//     const list = [...inputList];
+//     list[index][name] = value;
+//     setInputList(list);
+//   };
+ 
+//   // handle click event of the Remove button
+//   const handleRemoveClick = index => {
+//     const list = [...inputList];
+//     list.splice(index, 1);
+//     setInputList(list);
+//   };
+ 
+//   // handle click event of the Add button
+//   const handleAddClick = () => {
+//     setInputList([...inputList, { firstName: "", lastName: "" }]);
+//   };
+ 
 class App extends React.Component{
 	
 	 constructor(props) {
-	    super(props);
+
+		super(props);
 	    this.state = {
+			 serviceSend:JSON,
 			   st :1,
+			   options:[],
 			   viewdata:[],
 			   viewdata1:[],
 			   viewdata2:[],
 			    clients:[],
 					terms:[],
+				serviceData:[],
 				contactemail:'',
 			   name:"", 
 			  client:"", 
@@ -74,17 +96,24 @@ class App extends React.Component{
 			this.handleOnFileLoad = this.handleOnFileLoad.bind(this);
 			this.handleOnRemoveFile = this.handleOnRemoveFile.bind(this);
 			this.handleconfirm = this.handleconfirm.bind(this);
+			this.getClient = this.getClient.bind(this);
+			this.getService = this.getService.bind(this);
+			this.multiselectRef = React.createRef();
 	  }
 
 	  componentDidMount() {
 	      this.getList()
-			
+		  this.setMenu(1)			
 	   }
 	   handleOpenDialog = (e) => {
 		if (buttonRef.current) {
 		  buttonRef.current.open(e);
 		}
 	  };
+	  resetValues() {
+		// By calling the belowe method will reset the selected values programatically
+		this.multiselectRef.current.resetSelectedValues();
+	  }
 	   handleOnFileLoad = (data) => {
 		console.log('-----onfileload----------------');
 		this.setState({importer: data})
@@ -117,21 +146,48 @@ class App extends React.Component{
 		window.confirm('import confirmed')
 		console.log(csv.length)
 	  }
+	  getService(){
+		let view  = JSON.parse(localStorage.getItem("user"))[0]
+		axios.get(this.$url+'/users/getservo?id='+view.Organisation,null)
+		.then(res=>{
+					var item = (res.data)
+					console.log(item)		 
+					this.setState({serviceData:res.data})
+					let options =
+					this.state.serviceData.map((item, index) =>
+					
+						
+							{return {id: item.ID, key: item.Sname}}
+						
+					);
+					console.log(options)
+					this.setState({options:options})
+					console.log(this.state.options)
+		})
+		.catch(err => {
+			console.log(err);
+		 })
 
-	
-	getClient(){
-			 
-			 axios.get(this.$url+'/users/get',null)
-			   .then(res => {
-			 		
-			 	   this.setState({clients: res.data});		 
-			 	   console.log(res.data)
-			    
-			   })
-			   
-			   .catch(err => {
-			      console.log(err);
-			   })
+
+	 }
+async	getClient(){
+		let view  = JSON.parse(localStorage.getItem("user"))[0]
+await		axios.get(this.$url+'/users/getcl?id='+view.Organisation,null)
+			.then(res => 
+				{
+					console.log(res.data)
+					this.setState({clients: res.data});	
+
+
+					
+				}
+			)
+				
+			.catch(err =>
+				{
+				console.log(err);
+				}	
+			)
 			 
 	}
 	
@@ -180,7 +236,15 @@ class App extends React.Component{
 
 	 }
 
-	
+async	checkboxes(){
+		var test =this.multiselectRef.current.getSelectedItems()
+	console.log(test)
+
+		await this.setState({serviceSend:JSON.stringify(test)})
+
+		console.log(this.state.serviceSend)
+
+	}
 	delete(id){
 		
 		if (window.confirm("confirm delete?")) {
@@ -289,8 +353,9 @@ duplicateadd(data){
 		
 	}
 	
-	setMenu(num){
-		  this.getClient();
+async	setMenu(num){
+		this.getService();
+await		  this.getClient();
 		   this.getList();
 			 this.getTerm();
 		  this.setState({st: num});
@@ -306,14 +371,14 @@ duplicateadd(data){
 		  this.setState({show1: flag,mes:mes});
 	}
 
-	setShow2(flag, na, sda, eda, cle, mes, ac, py1, py2, cont, id){
-		 
-		this.setState({show1: flag,na:na, sda:sda, sda:sda, eda:eda, cle:cle, mes:mes, ac:ac, py1:py1, py2:py2, cont:cont, id:id});
-}
 
 setShow3(flag, TName, TDesc, Terms, Tid){
 		 
 	this.setState({show3: flag, TName:TName, TDesc:TDesc,Terms:Terms,Tid:Tid});
+}
+	setShow2(flag,mes, na, sda, eda, services, cont, cle, ac, id){
+		 console.log(services)
+		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, serviceSend:services, cont:cont, cle:cle, ac:ac, id:id});
 }
 	
 	acc(id,value){
@@ -348,8 +413,8 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 			
 		}
 	}
-	 sub(){
-		 
+async	 sub(){
+		await this.checkboxes()
 		 console.log(localStorage.getItem("user"))
 		 let view  = JSON.parse(localStorage.getItem("user"))[0]
 		 this.setState({userid: view.UserID})
@@ -436,8 +501,6 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 		 		 	<td>Start Date</td>
 		 		 	<td>Start Date</td>
 		 		 	<td>Minimun Contract Length</td>
-		 		 	<td>Recurring Billing</td>
-		 		 	<td>One time Billing</td>
 		 		 	<td>Proposal status</td>
 		 		 	<td>operate</td>
 		 		  </tr>
@@ -451,8 +514,7 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 		 		 					   <td >{item.sdate}</td>
 		 		 					   <td >{item.edate}</td>
 		 		 					   <td >{item.clen}</td>
-		 		 					   <td >{item.pay1}</td>
-		 		 					   <td >{item.pay2}</td>
+
 		 		 					   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
 		 		 					   <td ><a href="javascript:;" onClick={() => this.acc(item.id,'Agree')}>Agree</a><a href="javascript:;" onClick={() => this.acc(item.id,'Refuse')}>Refuse</a><a onClick={() => this.setShow1(true,item.message)} href="javascript:;" >Proposal content</a></td>
 		 		 					   
@@ -512,7 +574,7 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 			         <option value="">Choose...</option>
 					{
 						   this.state.clients.map((item, index) => {
-							   return  <option value={item.ContactID} >{item.organ}</option>
+							   return  <option value={item.AccountID} >{item.clientname}</option>
 						   })
 					 }
 					
@@ -526,18 +588,37 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 			 					
 			 					<Row className="mb-3">
 			 					  <Form.Group  md="3" as={Col} controlId="formGridEmail">
-			 					    <Form.Label>Contact</Form.Label>
-			 					  <Form.Select value={this.state.contact}
-			          onChange={e => this.setState({ contact: e.target.value })} defaultValue="Choose...">
-			 					    <option value="1">Choose an option...</option>
+			 					    <Form.Label>Services</Form.Label>
+
 									
-			 					  {
-			 					  	   this.state.clients.map((item, index) => {
-			 					  		   return  <option value={item.ContactID} >{item.Fname} {item.Lname}</option>
-			 					  	   })
-			 					   }
-								   
-			 					  </Form.Select>
+									<Multiselect
+									options={this.state.options}
+									displayValue="key"
+									showCheckbox={true}
+									closeOnSelect={false}
+									ref={this.multiselectRef}
+									placeholder="Services"
+									avoidHighlightFirstOption={true}
+									style={{
+									  chips: {
+										background: 'black'
+									  },
+									  multiselectContainer: {
+										color: 'black',
+										background:'white'
+									  },
+									  searchBox: {
+										border: 'none',
+										'border-bottom': '1px solid blue',
+										'border-radius': '0px'
+									  }
+									}}
+									/>
+			 					  	  
+									
+			 					   
+
+	
 			 					  
 			 					  </Form.Group>
 			 								      
@@ -582,30 +663,14 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 			   
 			   </Row>
 			 
-			   <Row className="mb-3">
-			 			 
-			 
-			     <Form.Group md="2" as={Col} controlId="formGridState">
-			       <Form.Label>Recurring Billing</Form.Label>
-			       <Form.Select value={this.state.pay1}
-			          onChange={e => this.setState({ pay1: e.target.value })}  defaultValue="Weekly...">
-			         <option value="Weekly">Weekly...</option>
-			         <option value="Month">Month...</option>
-			       </Form.Select>
-			     </Form.Group>
-			 
-			     <Form.Group md="2" as={Col} controlId="formGridState">
-			       <Form.Label>One time Billing</Form.Label>
-			       <Form.Select value={this.state.pay2}
-			          onChange={e => this.setState({ pay2: e.target.value })} defaultValue="Choose...">
-			         <option value="On Acceptance">On Acceptance...</option>
-			        
-			       </Form.Select>
-			     </Form.Group>
-			   </Row>
+
 			   
 			   <Button className="me-2" onClick={() => this.setShow(true)}>
 			     Next
+			   
+			   </Button>
+			   <Button className="me-2" onClick={() => this.checkboxes()}>
+			     check
 			   
 			   </Button>
 			   
@@ -650,8 +715,7 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 				<td>Start Date</td>
 				<td>End Date</td>
 				<td>Minimun Contract Length</td>
-				<td>Recurring Billing</td>
-				<td>One time Billing</td>
+				<td>Service Data</td>
 				<td>Proposal status</td>
 				<td>operate</td>
 			 </tr>
@@ -665,12 +729,10 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 								   <td >{item.sdate}</td>
 								   <td >{item.edate}</td>
 								   <td >{item.clen}</td>
-								   <td >{item.pay1}</td>
-								   <td >{item.pay2}</td>
+								   <td >{item.services}</td>
 								   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.name, item.sdate, item.edate, item.clen, item.message, item.acc, item.pay1, item.pay2, 
-										item.contact, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
-
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message,item.name, item.sdate, item.edate, item.services, 
+										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.contact)}>send</a>								
 										</td>
 								   </tr>
@@ -777,12 +839,6 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 							<Form.Label>Status</Form.Label>
 							<Form.Control value={this.state.ac}
 		          onChange={e => this.setState({ ac: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Payment Timeline</Form.Label>
-							<Form.Control value={this.state.py1}
-		          onChange={e => this.setState({ py1: e.target.value })} type="text" placeholder="" />
-							<Form.Label>Payment Fulfilment</Form.Label>
-							<Form.Control value={this.state.py2}
-		          onChange={e => this.setState({ py2: e.target.value })} type="text" placeholder="" />
 							<Form.Label>Contact Details</Form.Label>
 							<Form.Control value={this.state.cont}
 		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
@@ -794,6 +850,9 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 									return <option value={item.Organisation} >{item.TermName}</option>
 								})}
 							</Form.Select>
+							<Form.Label>Services Provided</Form.Label>
+							<Form.Control value={this.state.serviceSend}
+		          onChange={e => this.setState({ serviceSend: e.target.value })} type="text" placeholder="" />
 							</Form.Group>
 							
 							<Button className="me-2" onClick={() => this.update()}>

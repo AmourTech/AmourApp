@@ -189,11 +189,13 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,contact,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? , ?,?)';
-   var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, data.pay1, data.pay2, data.contact,data.userid];
+   var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, services,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?,? ,?)';
+   var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);
+			console.log(addSql)
+			console.log(addSqlParams)
 			res.send('0');
             return;
            }        
@@ -225,12 +227,12 @@ router.post('/addprophelp', function (req, res, next) {
 	
 	//res.send('Hello POST'+data);
  })
-
+// #UPDATE PROPOSAL
 router.post('/updatepro', function (req, res, next) {
 	
 	var data = req.body
 	console.log(data.name)
-	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, pay1 = ?, pay2 = ?,contact = ? WHERE id = ?",[data.na, data.client, data.sda, data.eda, data.cle, data.mes, data.ac, data.py1, data.py2, data.cont, data.id],function (err, results) {
+	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, ,contact = ?, services = ? WHERE id = ?",[data.na, data.client, data.sda, data.eda, data.cle, data.mes, data.ac, data.cont, data.serviceSend, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
@@ -303,8 +305,8 @@ router.get('/findprop', function(req, res, next) {
 		temp = JSON.parse(json)
 		console.log(temp)
 		console.log(temp[0].name)
-	  var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, pay1, pay2,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-	  var  addSqlParams = [temp[0].name, temp[0].client, temp[0].sdate, temp[0].edate, temp[0].clen, temp[0].message, temp[0].acc, temp[0].pay1, temp[0].pay2, temp[0].userid];
+	  var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, services, userid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+	  var  addSqlParams = [temp[0].name, temp[0].client, temp[0].sdate, temp[0].edate, temp[0].clen, temp[0].message, temp[0].acc, temp[0].services, temp[0].userid];
 	  db.query(addSql,addSqlParams,function (err, result) {
 			  if(err){
 			   console.log('[INSERT ERROR] - ',err.message);
@@ -322,6 +324,7 @@ router.get('/findus', function(req, res, next) {
 	db.query('SELECT * from pro where  userid = ?', [req.query.id],function (error, results, fields) {
 	  if (error) throw error;
 	  //console.log('The solution is: ');
+
 	  res.send(results);
 	});
 });
@@ -382,7 +385,7 @@ router.get('/getcl', function(req, res, next) {
 
 
 
-
+// #UPDATE PROPOSAL
 router.post('/acc', function(req, res, next) {
 	
 	var data = req.body

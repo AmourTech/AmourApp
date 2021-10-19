@@ -40,7 +40,7 @@ class App extends React.Component{
 				  fname:'',
 				  lname:'',
 				  password:'',
-				  viewdata:[],
+				  viewdata:JSON,
 				  ServiceData:[],
 					TermData:[],
 				message:'',
@@ -154,7 +154,7 @@ class App extends React.Component{
 				let optionsItems = this.state.accounts.map((item, index) => 
 				<option value= {index} label= {item.name}></option>
 	)	
-	this.setState({optionItems:optionsItems})
+	await this.setState({optionItems:optionsItems})
 				
 
 	
@@ -215,9 +215,9 @@ class App extends React.Component{
 
 	 }
 
-	 applyService(){
+async	applyService(){
 		 if(window.confirm("confirm apply"))
-		 this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
+	await this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
 		 console.log(this.state.xeroData)
 		var data= this.state
 		axios.post(this.$url+'/users/addservo',data)
