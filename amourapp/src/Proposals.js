@@ -306,9 +306,9 @@ duplicateadd(data){
 		  this.setState({show1: flag,mes:mes});
 	}
 
-	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac, id){
+	setShow2(flag, na, sda, eda, cle, mes, ac, py1, py2, cont, id){
 		 
-		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac, id:id});
+		this.setState({show1: flag,na:na, sda:sda, sda:sda, eda:eda, cle:cle, mes:mes, ac:ac, py1:py1, py2:py2, cont:cont, id:id});
 }
 
 setShow3(flag, TName, TDesc, Terms, Tid){
@@ -668,8 +668,8 @@ setShow3(flag, TName, TDesc, Terms, Tid){
 								   <td >{item.pay1}</td>
 								   <td >{item.pay2}</td>
 								   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
-								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
+								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.name, item.sdate, item.edate, item.clen, item.message, item.acc, item.pay1, item.pay2, 
+										item.contact, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 
 										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.contact)}>send</a>								
 										</td>
