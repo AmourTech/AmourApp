@@ -847,13 +847,14 @@ onChange={e => this.setState({ Terms: e.target.value })} as="textarea" rows={10}
 					</Modal.Body>
 		</Modal>
      </div>
-	<div className="body"><br/><br/><br/><header> <font size = "12">Terms and condition</font></header>
+	<div className="body"><br/><br/><br/><header> <font size = "12">Terms and conditions</font></header>
 	
 			  <table className="table">
 		  
 		  <tr className="table-tr">
 		    <td>Term Name</td>
 		    <td>Term Description</td>
+				<td>Terms</td>
 			<td>Edit?</td>
 			<td>Delete?</td>
 		 			

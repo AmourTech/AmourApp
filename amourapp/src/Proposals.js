@@ -31,6 +31,7 @@ class App extends React.Component{
 			   viewdata1:[],
 			   viewdata2:[],
 			    clients:[],
+					terms:[],
 				contactemail:'',
 			   name:"", 
 			  client:"", 
@@ -66,6 +67,7 @@ class App extends React.Component{
 			this.setShow = this.setShow.bind(this);
 			this.setShow1 = this.setShow1.bind(this);
 			this.setShow2 = this.setShow2.bind(this);
+			this.setShow3 = this.setShow3.bind(this);
 			this.setMenu = this.setMenu.bind(this);
 			this.delete = this.delete.bind(this);
 			this.duplicate = this.duplicate.bind(this);
@@ -162,6 +164,21 @@ class App extends React.Component{
 		  })
 	}
 	
+	getTerm(){
+		let view  = JSON.parse(localStorage.getItem("user"))[0];
+		var id = view.Organisation;
+		axios.get(this.$url+'/users/getterm?id='+id,null)
+		.then(res=>{
+					var item = (res.data)
+					console.log(item)		 
+					this.setState({terms:res.data})
+		})
+		.catch(err => {
+			console.log(err);
+		 })
+
+
+	 }
 
 	
 	delete(id){
@@ -275,6 +292,7 @@ duplicateadd(data){
 	setMenu(num){
 		  this.getClient();
 		   this.getList();
+			 this.getTerm();
 		  this.setState({st: num});
 	}
 	
@@ -291,6 +309,11 @@ duplicateadd(data){
 	setShow2(flag,mes, na, sda, eda, py1, py2, cont, cle, ac, id){
 		 
 		this.setState({show1: flag,na:na, mes:mes, sda:sda, eda:eda, py1:py1, py2:py2, cont:cont, cle:cle, ac:ac, id:id});
+}
+
+setShow3(flag, TName, TDesc, Terms, Tid){
+		 
+	this.setState({show3: flag, TName:TName, TDesc:TDesc,Terms:Terms,Tid:Tid});
 }
 	
 	acc(id,value){
@@ -531,6 +554,19 @@ duplicateadd(data){
 			     <Form.Control  type="date" value={this.state.followdate}
 			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="Choose..." />
 			   </Form.Group>
+
+				 <Form.Group md="3"  as={Col} controlId="formGridAddress1">
+					<Form.Label>Terms</Form.Label>
+					<Form.Select value={this.state.TName}
+						onChange={e => this.setState({ TName: e.target.value })} defaultValue="Choose...">
+						<option value="">Choose...</option>
+						{
+							this.state.terms.map((item, index) => {
+								return <option value={item.Organisation} >{item.TermName}</option>
+							})
+						}
+					</Form.Select>
+				</Form.Group>
 			 </Row>
 			 
 			 <Row className="mb-3">
@@ -750,7 +786,16 @@ duplicateadd(data){
 							<Form.Label>Contact Details</Form.Label>
 							<Form.Control value={this.state.cont}
 		          onChange={e => this.setState({ cont: e.target.value })} type="text" placeholder="" />
+							<Form.Label>Terms</Form.Label>
+							<Form.Select value={this.state.TName}
+								onChange={e => this.setState({ TName: e.target.value })} defaultValue="Choose...">
+								<option value="">Choose...</option> {
+								this.state.terms.map((item, index) => {
+									return <option value={item.Organisation} >{item.TermName}</option>
+								})}
+							</Form.Select>
 							</Form.Group>
+							
 							<Button className="me-2" onClick={() => this.update()}>
 					    Update
 					  

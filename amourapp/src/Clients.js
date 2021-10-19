@@ -137,6 +137,7 @@ class App extends React.Component {
 	 }
 	 
 	 
+	 
 	 delete(id){
 	 	
 	 	if (window.confirm("confirm delete?")) {
@@ -441,8 +442,8 @@ render() {
 		  
 		  <tr className="table-tr">
 		    <td>Client</td>
-		    <td>Contact Name</td>
-				<td>Contact Email</td>
+		    <td>Contact Email</td>
+				<td>operate</td>
 		  </tr>
 		  
 		 {
