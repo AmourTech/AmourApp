@@ -17,6 +17,7 @@ import {readString, CSVReader} from 'react-papaparse';
 import{ init, send } from 'emailjs-com';
 import crypto from 'crypto';
 import StripeContainer from './StripeContainer';
+import internal from 'stream';
 
 //init("user_rWil2YAmTwqksmYOlnout");
 
@@ -28,7 +29,18 @@ class App extends React.Component{
 	 constructor(props) {
 	    super(props);
 	    this.state = {
+			holder:JSON,
+			accounts:JSON,
+			payments:[],
+				Spay:0,
+				Cpay:0,
+				Rpay:0,
+				TaxRate:[],
+				DBill:[],
+				Sname:[],
+
 			   st :1,
+			   Services:JSON,
 			   viewdata:[],
 			   viewdata1:[],
 			   viewdata2:[],
@@ -72,6 +84,7 @@ class App extends React.Component{
 			this.handleOnFileLoad = this.handleOnFileLoad.bind(this);
 			this.handleOnRemoveFile = this.handleOnRemoveFile.bind(this);
 			this.handleconfirm = this.handleconfirm.bind(this);
+			this.getServices = this.getServices.bind(this);
 	  }
 
 	  componentDidMount() {
@@ -116,8 +129,64 @@ class App extends React.Component{
 		window.confirm('import confirmed')
 		console.log(csv.length)
 	  }
+async checkcosts(){
+
+	var a = this.state.holder
+let payment = a.map((item, index)=>{item.then(res =>{
+	if (index === 0){	this.setState({Spay:0})
+	this.setState({Cpay:0})
+	this.setState({Rpay:0})}
+		this.setState({Spay:this.state.Spay+res.Spay})
+		this.setState({Cpay:this.state.Cpay+res.Cpay})
+		this.setState({Rpay:this.state.Rpay+res.Rpay})
+	}
+	)})
+	console.log(payment)
+	console.log(this.state.Spay)
+	console.log(this.state.Cpay)
+	console.log(this.state.Rpay)
+
+
+}
+async getstuff(){
+		await this.getServices();
+		this.checkcosts()
+
+
+	  }
+
+	  getServices(){
+		var services = JSON.parse(JSON.parse(this.state.viewdata[0].services))
+		console.log(services[0])
+		
+	let a = services.map((item)=>{
+	return parseInt(item.id)
+	})
+
 
 	
+
+let b = 	a.map((item, index)=>
+	axios.get(this.$url+'/users/getservowith?id='+item)
+		.then( res=> {
+			return res.data[0]
+			
+	}
+	
+			)
+
+			
+	)
+
+	//how to access promisdata
+	// b.map((item, index) => { 
+	// 	item.then(res=>console.log(res))
+
+
+	// } )
+	this.setState({holder:(b)})
+}
+
 	getClient(){
 			 
 			 axios.get(this.$url+'/users/get',null)
@@ -466,7 +535,7 @@ duplicateadd(data){
 					</Modal.Body>
 		</Modal>
 		{this.state.showItem ? <StripeContainer/> : <> <h3>$10.00</h3><button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
-		
+		<button onClick = {()=> this.getstuff()}/>		
 		</div>
 	  </header>
 	</div>

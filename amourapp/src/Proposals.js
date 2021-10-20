@@ -57,7 +57,7 @@ class App extends React.Component{
 				contactemail:'',
 			   name:"", 
 			  client:"", 
-			  contact:"12 Month...",
+			  contact:"",
 			  sdate:"", 
 			  followdate:"",
 			  edate:"", 
@@ -177,7 +177,7 @@ await		axios.get(this.$url+'/users/getcl?id='+view.Organisation,null)
 				{
 					console.log(res.data)
 					this.setState({clients: res.data});	
-
+					console.log(this.state.clients)
 
 					
 				}
@@ -419,30 +419,35 @@ async	 sub(){
 		 let view  = JSON.parse(localStorage.getItem("user"))[0]
 		 this.setState({userid: view.UserID})
 		 var data  = this.state
+		axios.get(this.$url+'/users/getcont?id='+data.client,null).then(
+			res=>{
+				data['contactid'] = res.data[0].Contact
+
+
 		
-		 data['userid'] = view.UserID
-		   axios.post(this.$url+'/users/add',data)
-		     .then(res => {
-				 
-				 
-				 if(res.data===1){
-					 
-					 alert("Proposal sent successfully!")
-					 
-					 this.setShow(false)
-					 
-				 }else{
-					 
-					 
-				 }
-				 
-		      
-		     })
-		     .catch(err => {
-		        console.log(err);
-		     })
-		
-		
+			data['userid'] = view.UserID
+			axios.post(this.$url+'/users/add',data)
+				.then(res => {
+					
+					
+					if(res.data===1){
+						
+						alert("Proposal sent successfully!")
+						
+						this.setShow(false)
+						
+					}else{
+						
+						
+					}
+					
+				
+				})
+				.catch(err => {
+					console.log(err);
+				})
+			
+			})
 		console.log(this.state)
 		
 	}

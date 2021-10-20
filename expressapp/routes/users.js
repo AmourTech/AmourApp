@@ -79,6 +79,21 @@ router.get('/getservo',function(req,res,next){
 		
 });
 })
+router.get('/getservowith',function(req,res,next){
+
+	db.query('SELECT * FROM service WHERE ID = ?', [(req.query.id)],function (error, results, fields) {
+		if(error){
+			console.log('[INSERT ERROR] - ',error.message);
+			console.log(req.query.id)
+			res.send('0');
+			return;
+		   }
+		   console.log(parseInt(req.query.id))
+		   console.log(results)
+		res.send(results)
+	
+});
+})
 router.get('/getterm',function(req,res,next){
 
 	db.query('SELECT * FROM terms WHERE Organisation = ?', [req.query.id],function (error, results, fields) {
@@ -189,8 +204,8 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client, sdate, edate, clen, message, acc, services,userid) VALUES ( ?, ?, ?, ?, ?, ?, ?,? ,?)';
-   var  addSqlParams = [data.name, data.client, data.sdate, data.edate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
+   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, edate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,? ,?)';
+   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.edate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);
@@ -232,7 +247,7 @@ router.post('/updatepro', function (req, res, next) {
 	
 	var data = req.body
 	console.log(data.name)
-	db.query("UPDATE pro SET name = ?, client = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, ,contact = ?, services = ? WHERE id = ?",[data.na, data.client, data.sda, data.eda, data.cle, data.mes, data.ac, data.cont, data.serviceSend, data.id],function (err, results) {
+	db.query("UPDATE pro SET name = ?, client = ?,contact = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, ,contact = ?, services = ? WHERE id = ?",[data.na, data.client,data.contactid, data.sda, data.eda, data.cle, data.mes, data.ac, data.cont, data.serviceSend, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
@@ -338,7 +353,15 @@ router.get('/findcont', function(req, res, next) {
 	  res.send(results);
 	});
 });
-
+router.get('/getcont', function(req, res, next) {
+	
+	//console.log(db)
+	db.query('SELECT Contact from client WHERE AccountID = ?', [req.query.id],function (error, results, fields) {
+		if (error) throw error;
+	  console.log('The solution is: ')
+	  res.send(results);
+	});
+});
 router.get('/viewproposal', function(req, res, next) {
 	
 	//console.log(token)

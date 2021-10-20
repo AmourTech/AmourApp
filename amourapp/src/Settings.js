@@ -40,7 +40,7 @@ class App extends React.Component{
 				  fname:'',
 				  lname:'',
 				  password:'',
-				  viewdata:JSON,
+				  viewdata:[],
 				  ServiceData:[],
 					TermData:[],
 				message:'',
