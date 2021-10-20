@@ -12,7 +12,8 @@ import { HashRouter,Route } from 'react-router-dom'
 
 import Home from './App'
 import Modal from 'react-bootstrap/Modal'
-import axios from 'axios'; 
+import axios from 'axios';
+var NodeRSA = require('node-rsa');
 
 
 class App extends React.Component{
@@ -140,7 +141,8 @@ class App extends React.Component{
 				 if(res.data!=0){
 					 alert("Login successfully!")
 					 //this.$login.login  = true;
-					
+					 // priKey = new NodeRSA(privateKey,'pkcs8-private');
+					 // var decrypted = priKey.decrypt(buffer, 'utf8');
 					 if('Admin' in res.data[0]){
 						  localStorage.setItem("admin", 1)
 					 }else{
@@ -201,7 +203,7 @@ class App extends React.Component{
 
 	 }
 	 
-	 //重置密码
+	 //reset password
 	 res(){
 	 		 
 	 		 if(!this.state.remail){
