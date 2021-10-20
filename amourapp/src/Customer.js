@@ -534,7 +534,7 @@ duplicateadd(data){
 						
 					</Modal.Body>
 		</Modal>
-		{this.state.showItem ? <StripeContainer/> : <> <h3>$10.00</h3><button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
+		{this.state.showItem ? <StripeContainer/> : <> <h3>This Much on Startup: ${this.state.Spay}<br/> This Much Monthly: ${this.state.Rpay}<br/> This Much on Completion: ${this.state.Cpay}</h3><button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
 		<button onClick = {()=> this.getstuff()}/>		
 		</div>
 	  </header>
