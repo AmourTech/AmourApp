@@ -93,7 +93,7 @@ class App extends React.Component{
 	 }
 
 
-	 componentDidMount() {
+	componentDidMount() {
 		this.getService()
 		this.getTerm()
 
@@ -126,10 +126,6 @@ class App extends React.Component{
 			this.setState({Begin:true})
 			this.setState({End:true})
 		}
-		console.log(this.state.Dbill)
-		console.log(this.state.During)
-		console.log(this.state.Begin)
-		console.log(this.state.End)
 
 
 
@@ -168,7 +164,7 @@ class App extends React.Component{
 		//axios.get(this.$url+'/xero/retrieve?id='+this.state.org,null)
 		//.then(res=>{
 
-			if (window.location.search.length!==0){
+			if ((window.location.search.length!==0)&&(window.location.search.indexOf('code') >-1)){
 				axios.get(this.$url+'/xero/callback'+window.location.search,null)
 
 				.then(res =>{

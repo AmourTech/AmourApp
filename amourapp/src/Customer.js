@@ -31,6 +31,7 @@ class App extends React.Component{
 	    this.state = {
 			holder:JSON,
 			accounts:JSON,
+			backlog:0,
 			payments:[],
 				Spay:0,
 				Cpay:0,
@@ -38,7 +39,8 @@ class App extends React.Component{
 				TaxRate:[],
 				DBill:[],
 				Sname:[],
-
+				Sdate:Date,
+				Edate:Date,
 			   st :1,
 			   Services:JSON,
 			   viewdata:[],
@@ -87,10 +89,10 @@ class App extends React.Component{
 			this.getServices = this.getServices.bind(this);
 	  }
 
-	  componentDidMount() {
+ componentDidMount() {
       //console.log(this.props.match.params.token);
-	    this.getList();
-			
+ this.getList();
+
 	   }
 	   handleOpenDialog = (e) => {
 		if (buttonRef.current) {
@@ -132,30 +134,84 @@ class App extends React.Component{
 async checkcosts(){
 
 	var a = this.state.holder
-let payment = a.map((item, index)=>{item.then(res =>{
-	if (index === 0){	this.setState({Spay:0})
-	this.setState({Cpay:0})
-	this.setState({Rpay:0})}
-		this.setState({Spay:this.state.Spay+res.Spay})
-		this.setState({Cpay:this.state.Cpay+res.Cpay})
-		this.setState({Rpay:this.state.Rpay+res.Rpay})
+	this.setState({Spay:0,Cpay:0,Rpay:0})
+	
+a.forEach( (item, index)=>{
+		item.then(res =>{
+			this.setState({Spay:this.state.Spay+res.Spay,Cpay:this.state.Cpay+res.Cpay,Rpay:this.state.Rpay+res.Rpay})
+			if(index===a.length-1){
+
+				var backpay = this.state.backlog*this.state.Rpay
+				this.setState({Spay: this.state.Spay+backpay})
+				
+				console.log("this is the backpay"+backpay)
+			}
+		
+			
 	}
 	)})
-	console.log(payment)
-	console.log(this.state.Spay)
-	console.log(this.state.Cpay)
-	console.log(this.state.Rpay)
+
 
 
 }
+getbackpay(){
+	var backpay = this.state.backlog*this.state.Rpay
+	this.setState({Spay: this.state.Spay+backpay})
+	
+	console.log(backpay)
+
+
+
+}
+async getTime(){
+	var date = new Date()
+	var Cday = date.getDate()+9
+	var Cmonth = date.getMonth()+2
+	var Cyear = date.getFullYear()
+	console.log( this.state.viewdata[0])
+	var Sdate = this.state.viewdata[0].sdate
+	var Edate = this.state.viewdata[0].edate
+	Sdate = Sdate.replace(/-/g,', ').replace(/T.*$/g,'')
+	Edate = Edate.replace(/-/g,', ').replace(/T.*$/g,'')
+	var Sdate = new Date(Sdate)
+	var Edate = new Date(Edate)
+	console.log(Cday)
+	console.log(Sdate.getDate())
+	var mDiff = Cmonth-Sdate.getMonth()
+	var dDiff = Cday-Sdate.getDate()
+	console.log(dDiff)
+	console.log(Sdate.getMonth())
+	var backlog = 0;
+	if(	( mDiff === 0)
+		|| (	( mDiff ===1)&&(dDiff <0) ) )
+			{console.log("No backlog")}
+		else {
+			if(	( mDiff >1)&&(dDiff >=0) )
+				{backlog = mDiff+1;console.log("dDiff")	}
+			else{backlog = mDiff}
+			
+			{console.log("backlog of:"+backlog+" months")}
+		}
+
+	await this.setState({Sdate:Sdate.toDateString(), Edate:Edate.toDateString(), backlog:backlog})
+	
+
+	
+}
 async getstuff(){
-		await this.getServices();
-		this.checkcosts()
+		this.getServices().then(()=>{
+			return this.getTime().then(()=>{
+
+				return this.checkcosts()
 
 
-	  }
+}).catch()
 
-	  getServices(){
+}).catch()
+
+}
+
+async	  getServices(){
 		var services = JSON.parse(JSON.parse(this.state.viewdata[0].services))
 		console.log(services[0])
 		
@@ -214,10 +270,6 @@ let b = 	a.map((item, index)=>
 	 }
    
     getList(){
-		
-		console.log(localStorage.getItem("user"))
-		let view  = JSON.parse(localStorage.getItem("user"))[0]
-		let admin  = JSON.parse(localStorage.getItem("admin"))[0]
 
 	 
 		axios.get(this.$url+"/users/viewproposal", { params: {
@@ -226,19 +278,21 @@ let b = 	a.map((item, index)=>
 
     },
   })
-		  .then(res => {
+		  .then(async res => { 
 				
-				  this.setState({viewdata: res.data});		 
+				await  this.setState({viewdata: res.data});		 
 			  // this.state.viewdata =  res.data
 			   console.log(res.data)
+			   await this.getstuff();
 					
-						 
+			   this.getbackpay()
 		   
 		  })
 		  .catch(err => {
 		     console.log(err);
 		  })
-	}
+	
+		}
 	
 
 	
@@ -454,8 +508,9 @@ duplicateadd(data){
 				<td>Start Date</td>
 				<td>Start Date</td>
 				<td>Minimun Contract Length</td>
+				<td>Initial Payment</td>
 				<td>Recurring Billing</td>
-				<td>One time Billing</td>
+				<td>Payment on Completion</td>
 				<td>Proposal status</td>
 				<td>operate</td>
 			 </tr>
@@ -466,11 +521,12 @@ duplicateadd(data){
 								   <td >{item.name}</td>
 								   <td >{item.client}</td>
 								   <td >{item.contact}</td>
-								   <td >{item.sdate}</td>
-								   <td >{item.edate}</td>
+								   <td >{this.state.Sdate}</td>
+								   <td >{this.state.Edate}</td>
 								   <td >{item.clen}</td>
-								   <td >{item.pay1}</td>
-								   <td >{item.pay2}</td>
+								   <td >${this.state.Spay}</td>
+								   <td >${this.state.Rpay}</td>
+								   <td >${this.state.Cpay}</td>
 								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
 								   <td ><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >Accept or Refuse</a>
@@ -534,7 +590,18 @@ duplicateadd(data){
 						
 					</Modal.Body>
 		</Modal>
-		{this.state.showItem ? <StripeContainer/> : <> <h3>This Much on Startup: ${this.state.Spay}<br/> This Much Monthly: ${this.state.Rpay}<br/> This Much on Completion: ${this.state.Cpay}</h3><button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
+		{this.state.showItem ? <StripeContainer/> : <> <h3>
+			<br/>
+			This is the Start Date {this.state.Sdate}<br/>
+			this is the End Date {this.state.Edate}<br/>
+			
+			
+			
+			
+			This Much on Startup: ${this.state.Spay}<br/>
+			This Much Monthly: ${this.state.Rpay}<br/>
+			This Much on Completion: ${this.state.Cpay}</h3>
+			<button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
 		<button onClick = {()=> this.getstuff()}>Check Cost</button>		
 		</div>
 	  </header>
