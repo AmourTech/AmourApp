@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 
+var NodeRSA = require('node-rsa');
 
 
 
@@ -651,10 +652,27 @@ router.get('/OrgName', function(req, res, next) {
 		res.send(results);
 	})
 })
+let rsaKey={
+	public: '-----BEGIN PUBLIC KEY-----\n' +
+	'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ68xlK6vzY23Q6cx/MupFrFXJGea6a9\n' +
+	'6qJvrPNF6hZ3jEVWGDr3ZX9OvpQKD+04wcvHsaX2BLXqM+ySQgwZEckCAwEAAQ==\n' +
+	'-----END PUBLIC KEY-----',
+	private: '-----BEGIN PRIVATE KEY-----\n' +
+	'MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAnrzGUrq/NjbdDpzH\n' +
+	'8y6kWsVckZ5rpr3qom+s80XqFneMRVYYOvdlf06+lAoP7TjBy8expfYEteoz7JJC\n' +
+	'DBkRyQIDAQABAkB/3iED01rkGR3I/5Ix2oiadhEzXCHrl2DCqKLw9Ii0vyE9e4uu\n' +
+	'vDx07bIWX5nGyXSZJ13wSgc3pmtsiDvGQwOBAiEA4tp3OHKNjJQ2SXwqjVNjA2z/\n' +
+	'AerB4R9Cq96oGnZQ/U0CIQCzIeBXuNuJTtLnq5duPfSlVetzNvS2r7AXCKjm7FYY\n' +
+	'bQIgUpHN/x/C4b44nDqzikklquOLVflKpFQqgkBC047pH6kCIHbLcoH6X+0RTyDA\n' +
+	'VO6RO9shvcFsoqE8peTAo3JxLS+JAiEAlAlr2mkt3WiiZSKhdIzsphANIPZ+78q/\n' +
+	'pPR/hDuR2r0=\n' +
+	'-----END PRIVATE KEY-----'
+}
+
 router.post('/login', function(req, res, next) {
 	
 	var data = req.body
-	
+
 	db.query(' select  * from user where username = ? and password = ?', [data.username,data.password],function (error, results, fields) {
 	  if (error){
 		  
@@ -665,17 +683,21 @@ router.post('/login', function(req, res, next) {
 	  
 	  if(results.length==0){
 		   
-			db.query(' select  * from contact where Email = ? and password = ?', [data.email,data.password],function (error, results, fields) {
+			db.query(' select  * from contact where email = ? and password = ?', [data.email,data.password],function (error, results, fields) {
 				console.log(results)
 				if(results.length == 0){
 					res.send('0');
 				}else{
+					let pubKey = new NodeRSA(rsaKey.public,'pkcs8-public');
+					results[0].password = pubKey.encrypt(results[0].password, 'base64');
 					res.send(results);
 				}
 			})
 		  
 	  }else{
-		  
+	  	console.log(results)
+		  let pubKey = new NodeRSA(rsaKey.public,'pkcs8-public');
+		  results[0].password = pubKey.encrypt(results[0].password, 'base64');
 		    res.send(results);
 	  }
 	  //console.log('The solution is: ');
@@ -685,7 +707,43 @@ router.post('/login', function(req, res, next) {
  // res.send('respond with a resource');
 });
 
+router.post('/loginHeart', function(req, res, next) {
 
+	var data = req.body
+	priKey = new NodeRSA(rsaKey.private,'pkcs8-private');
+	data.password = priKey.decrypt(data.password, 'utf8');
+	db.query(' select  * from user where username = ? and password = ?', [data.username,data.password],function (error, results, fields) {
+		if (error){
+			console.log("oops")
+			res.send('0');
+			return;
+		}
+
+		if(results.length==0){
+
+			db.query(' select  * from contact where email = ? and password = ?', [data.email,data.password],function (error, results, fields) {
+				console.log(results)
+				if(results.length == 0){
+					res.send('0');
+				}else{
+					let pubKey = new NodeRSA(rsaKey.public,'pkcs8-public');
+					results[0].password = pubKey.encrypt(results[0].password, 'base64');
+					res.send(results);
+				}
+			})
+
+		}else{
+			console.log(results)
+			let pubKey = new NodeRSA(rsaKey.public,'pkcs8-public');
+			results[0].password = pubKey.encrypt(results[0].password, 'base64');
+			res.send(results);
+		}
+		//console.log('The solution is: ');
+
+	});
+
+	// res.send('respond with a resource');
+});
 router.get('/udel', function(req, res, next) {
 	
 	console.log(req.query)
@@ -711,7 +769,7 @@ router.get('/udelcl', function(req, res, next) {
 });
 
 
-//重置密码
+//Reset password
 router.post('/respassword', function(req, res, next) {
 	
 	var data = req.body
