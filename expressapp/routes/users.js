@@ -4,14 +4,14 @@ var app = express();
 var NodeRSA = require('node-rsa');
 
 
-
+require("dotenv").config()
 var router = express.Router();
 var db = require( "../database/db.js" );
 
 var crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-
+const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST)
 router.post('/customerportal',function(req,res,next){
 	console.log(req.body.email)
 	if (req.body.email == '') {
@@ -488,13 +488,19 @@ router.post('/addc', function(req, res, next) {
 	});
 	
 });
-router.post('/addOrg', function(req, res, next) {
+router.post('/addOrg', async(req, res, next)=> {
+try{
+	const account = await stripe.accounts.create({
+		type: 'standard',
+		})
 	
+		
+		
 	
 	var data = req.body
 	console.log(data)
-	var  addSql = 'INSERT INTO organisation(organisationName) VALUES ( ?)';
-	var  addSqlParams = [data.oname];
+	var  addSql = 'INSERT INTO organisation(organisationName,StripeAcc) VALUES ( ?,?)';
+	var  addSqlParams = [data.oname,account.id];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
@@ -515,7 +521,10 @@ router.post('/addOrg', function(req, res, next) {
 		res.send(result)
 
 	});
-	
+}
+catch (error)
+{console.log("Error",error)}
+
 });
 
 router.post('/addcontact', function(req, res, next) {

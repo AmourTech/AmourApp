@@ -143,17 +143,51 @@ a.forEach( (item, index)=>{
 
 				var backpay = this.state.backlog*this.state.Rpay
 				this.setState({Spay: this.state.Spay+backpay})
-				
 				console.log("this is the backpay"+backpay)
 			}
 		
 			
 	}
 	)})
+var bp;
+var sp;
+var cp;
+var rp;
+var bsb
+var monies
+var temp;
+monies = a.map( (item, index)=>{
+		temp =item.then(res =>{
+				
+				rp = res.Rpay;
+				cp = res.Cpay;
+				bp = res.Rpay*this.state.backlog
+				sp =  res.Spay+bp
+				bsb = JSON.parse(res.XeroAccount).accountID
+
+				var ap={bsb,cp,bp,rp,sp}
+
+				return ap;
+		
+			
+	}
+
+	
+	).catch()
+	return temp
+	}
+);
 
 
 
 }
+
+createitem(){
+	var apple
+	
+	
+	
+	}
 getbackpay(){
 	var backpay = this.state.backlog*this.state.Rpay
 	this.setState({Spay: this.state.Spay+backpay})
@@ -199,16 +233,17 @@ async getTime(){
 	
 }
 async getstuff(){
-		this.getServices().then(()=>{
+	var mony
+	await	this.getServices().then(()=>{
 			return this.getTime().then(()=>{
 
-				return this.checkcosts()
+				this.checkcosts().then(res=>mony=res)
 
 
 }).catch()
 
 }).catch()
-
+console.log(mony)
 }
 
 async	  getServices(){
@@ -260,7 +295,8 @@ let b = 	a.map((item, index)=>
 	}
  secret = async () => {
 		try{
-			const resp = await axios.post(this.$url+"/payments/secret")
+			var data = this.state
+			const resp = await axios.post(this.$url+"/payments/secret",data)
 		 }
 		catch (err) {
 
@@ -268,6 +304,17 @@ let b = 	a.map((item, index)=>
 		}
 	 
 	 }
+
+	 getAccounts(){
+
+
+
+
+
+
+	 }
+
+
    
     getList(){
 
@@ -287,6 +334,7 @@ let b = 	a.map((item, index)=>
 					
 			   this.getbackpay()
 		   
+			   this.getAccounts()
 		  })
 		  .catch(err => {
 		     console.log(err);

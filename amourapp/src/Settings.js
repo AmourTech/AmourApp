@@ -216,7 +216,7 @@ async	applyService(){
 	await this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
 		 console.log(this.state.xeroData)
 		var data= this.state
-		axios.post(this.$url+'/users/addservo',data)
+		axios.post(this.$url+'/users/addservo?id=',data)
 		.then(res=>{
 			if(res.data===1){
 			alert("Applied Settings Succesfuly!")
@@ -423,8 +423,44 @@ this.getTerm();
 
 		
 		  }	 
-	 
 
+
+		  Stripechecker(){
+
+			axios.get(this.$url+'/payments/touchedChecked?id='+this.state.org,null).then(
+
+				res=>{
+					console.log(res.data)
+
+
+				}
+			)	  .catch(err => {
+				console.log(err);
+			 })
+
+
+		  }
+
+		  StripeCreate(){
+
+
+
+			axios.get(this.$url+'/payments/touched?id='+this.state.org,null).then(
+
+				res=>{
+					window.location.href=res.data.url
+
+
+				}
+			)	  .catch(err => {
+				console.log(err);
+			 })
+
+
+
+
+
+		  }
 	 
 	 adduser(){
 		 
@@ -642,6 +678,10 @@ this.getTerm();
 	{view}
 	
 		   <Button onClick={()=> this.authenticate()}>		   Add Xero Account
+</Button>
+<Button onClick={()=> this.StripeCreate()}>		   Add Stripe Account
+</Button>
+<Button onClick={()=> this.Stripechecker()}>		   checkStripe
 </Button>
 
 
