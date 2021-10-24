@@ -18,7 +18,7 @@ router.post('/customerportal',function(req,res,next){
 		res.status(400).send('no email')
 	}
 	const token = crypto.randomBytes(20).toString('hex');
-	const expires = Date.now() + 3600000;
+	const expires = Date.now() + ((60 * 60 * 24 * 3) * 1000);
 	
 	db.query('UPDATE pro SET token = ?, expiry = ? where id=?', [token, expires, req.query.id],function (err, result) {
 		if(err){

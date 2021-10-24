@@ -80,6 +80,7 @@ class App extends React.Component{
 				ac:"", 
 			  userid:'',
 				id:'',
+				expiry:'',
 				contactid:'',
 			  importer:[{}],
 			};
@@ -718,6 +719,7 @@ async	 sub(){
 				<td>Minimun Contract Length</td>
 				<td>Service Data</td>
 				<td>Proposal status</td>
+				{/* <td>Offer expires in...</td> */}
 				<td>operate</td>
 			 </tr>
 			 
@@ -732,6 +734,7 @@ async	 sub(){
 								   <td >{item.clen}</td>
 								   <td >{item.services}</td>
 								   <td >{item.acc === 0 ?  'Pending' : item.acc}</td>
+									 {/* <td >{item.expiry}</td> */}
 								   <td ><a href="javascript:;" onClick={() => this.delete(item.id)}>delete</a><a onClick={() => this.setShow2(true,item.message,item.name, item.sdate, item.edate, item.services, 
 										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >edit</a><a href="javascript:;" onClick={() => this.duplicate(item.id)}>duplicate</a> 
 										<a href="javascript:;" onClick={() => this.sendemail(item.id, item.contact)}>send</a>								
