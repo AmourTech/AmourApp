@@ -210,8 +210,8 @@ const session = await stripe.checkout.sessions.create({
     application_fee_amount: 0,
   },
   mode: 'payment',
-  success_url: 'https://example.com/success',
-  cancel_url: 'https://example.com/cancel',
+  success_url: 'https://localhost:3000/viewproposal/'+data.toekn+'?status=Accept',
+  cancel_url: 'https://localhost:3000/viewproposal/'+data.toekn,
 }, {
   stripeAccount: CONNECTED_STRIPE_ACCOUNT_ID,
 });

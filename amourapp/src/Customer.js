@@ -28,6 +28,7 @@ class App extends React.Component{
 	 constructor(props) {
 	    super(props);
 	    this.state = {
+			toekn: this.props.match.params.token,
 			cholder:JSON,
 			stripeAccount:'',
 			holder:JSON,
@@ -56,7 +57,7 @@ class App extends React.Component{
 			  edate:"", 
 			  clen:"12 Month", 
 			  message:"", 
-			  acc:"0", 
+			  acc:'', 
 			  pay1:"Weekly...", 
 			  pay2:"On Acceptance...",
 			  show:false,
@@ -90,12 +91,11 @@ class App extends React.Component{
 			this.getServices = this.getServices.bind(this);
 	  }
 
- componentDidMount() {
+componentDidMount() {
       //console.log(this.props.match.params.token);
  this.getList();
- 
 
-	   }
+	}
 	   handleOpenDialog = (e) => {
 		if (buttonRef.current) {
 		  buttonRef.current.open(e);
@@ -347,7 +347,12 @@ let b = 	a.map((item, index)=>
 
 	 }
 
+refuse(){
 
+	window.location.search='status=Refuse'
+
+
+}
    
     getList(){
 		axios.get(this.$url+"/")
@@ -366,7 +371,12 @@ let b = 	a.map((item, index)=>
 			   await this.getstuff();
 					
 			   this.getbackpay()
-		   
+			   if ((window.location.search.length!==0)&&(window.location.search.indexOf('status') >-1)){
+				   var data = this.state
+				  axios.post(this.$url+'/users/answerpro'+window.location.search,data)
+				  window.location.search=''
+				  this.getList()
+					 }else{}
 			   this.getAccounts()
 		  })
 		  .catch(err => {
@@ -594,7 +604,7 @@ duplicateadd(data){
 				<td>Recurring Billing</td>
 				<td>Payment on Completion</td>
 				<td>Proposal status</td>
-				<td>operate</td>
+
 			 </tr>
 			 
 			{
@@ -609,10 +619,8 @@ duplicateadd(data){
 								   <td >${this.state.Spay}</td>
 								   <td >${this.state.Rpay}</td>
 								   <td >${this.state.Cpay}</td>
-								   <td >{item.acc == 0 ?  'Pending' : item.acc}</td>
-								   <td ><a onClick={() => this.setShow2(true,item.message, item.name, item.sdate, item.edate, item.pay1, item.pay2, 
-										item.contact, item.clen, item.acc, item.id)} href="javascript:;" >Accept or Refuse</a>
-									</td>
+								   <td >{item.acc}</td>
+
 										
 										
 		
@@ -695,7 +703,8 @@ duplicateadd(data){
 					 console.log(this.state.holder)
 			<button onClick={() => this.setState({showItem:true})}>Purchase</button></> */}
 			
-      <button onClick={() => this.checkout()}>Checkout</button>
+      <button onClick={() => this.checkout()}>Checkout</button><br/><br/><br/><br/><br/>
+	  <button onClick={() => this.refuse()}>Refuse Proposal</button>
 		{/* <button onClick = {()=> this.getstuff()}>Check Cost</button>		
 		<button onClick = {()=> this.test()}>Check Cost</button>				 */}
 		</div>

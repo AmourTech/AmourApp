@@ -328,10 +328,12 @@ router.post('/updatepro', function (req, res, next) {
 })
 
 router.post('/answerpro', function (req, res, next) {
-	
+	statusing=req.query.status
+		console.log(statusing)
+
 	var data = req.body
-	console.log(data.name)
-	db.query("UPDATE pro SET acc = ? WHERE id = ?",[data.ac, data.id],function (err, results) {
+
+	db.query("UPDATE pro SET acc = ? WHERE id = ?",[statusing, data.viewdata[0].id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
