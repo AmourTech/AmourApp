@@ -148,14 +148,59 @@ router.post('/updateterm', function(req, res, next) {
 	
 	
 });
-router.post('/addservo', function(req, res, next) {
-	var data = req.body
+router.post('/addservo', async(req, res)=> {
+
+	try{
+
+		var data = req.body
+		var pay;
+		var type;
+		console.log(data.Dbill)
+		console.log(data.Sname)
+		if (data.End){
+		  pay=data.Cpay
+		  type="one";
+		}else if(data.Begin){
+		  pay=data.Spay
+		  type="one";
+		}else if(data.During){
+		  pay=data.Rpay
+		  type="time"
+		}
+		  const product = await stripe.products.create({
+			name: data.Sname,
+			
+		  });
+		  console.log(data.Sname)
+		  console.log(product.id)
+		  const PRODUCT_ID= product.id
+		  var apple;
+		  if(type === "one"){
+			  
+		  apple = {
+			  product: PRODUCT_ID,
+			  unit_amount: pay,
+			  currency: 'aud',}
+		}else{
+			apple = {
+			product: PRODUCT_ID,	
+			unit_amount: pay,
+			currency: 'aud',
+			recurring:{ interval: 'month',},
+		}
+		  }
+		  console.log(apple)
+	  
+		  const price = await stripe.prices.create(
+			
+			apple
+			
+		  )		  
+		
+
 	
-	
-	
-	console.log(data)
-	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc) VALUES (?,?,?,?,?,?,?,?,?)' ;
-	var addSqlParam = [data.org, data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
+	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc,StripeID) VALUES (?,?,?,?,?,?,?,?,?,?)' ;
+	var addSqlParam = [data.org, data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,price.id];
 	db.query(addSql, addSqlParam,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ', err.message);
@@ -164,10 +209,10 @@ router.post('/addservo', function(req, res, next) {
 	        }
 					
 		  console.log(result)
-	 
+			
 	      res.send('1');
 	});
-	
+	}catch{}	
 });
 router.post('/addterm', function(req, res, next) {
 	var data = req.body
@@ -205,8 +250,8 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, edate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,? ,?)';
-   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.edate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
+   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?)';
+   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);

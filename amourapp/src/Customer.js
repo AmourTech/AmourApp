@@ -199,8 +199,8 @@ getbackpay(){
 }
 async getTime(){
 	var date = new Date()
-	var Cday = date.getDate()+9
-	var Cmonth = date.getMonth()+2
+	var Cday = date.getDate()
+	var Cmonth = date.getMonth()
 	var Cyear = date.getFullYear()
 	console.log( this.state.viewdata[0])
 	var Sdate = this.state.viewdata[0].sdate
@@ -248,6 +248,7 @@ console.log(mony)
 
 async	  getServices(){
 		var services = JSON.parse(JSON.parse(this.state.viewdata[0].services))
+
 		console.log(services[0])
 		
 	let a = services.map((item)=>{
@@ -277,6 +278,7 @@ let b = 	a.map((item, index)=>
 	// } )
 	this.setState({holder:(b)})
 }
+
 
 	getClient(){
 			 
@@ -650,7 +652,7 @@ duplicateadd(data){
 			This Much Monthly: ${this.state.Rpay}<br/>
 			This Much on Completion: ${this.state.Cpay}</h3>
 			<button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
-		<button onClick = {()=> this.getstuff()}>Check Cost</button>		
+		<button onClick = {()=> this.getstuff()}>Check Cost</button>			
 		</div>
 	  </header>
 	</div>

@@ -12,47 +12,53 @@ const { ResourceValidationErrorsElement } = require('xero-node/dist/gen/model/as
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST)
 
+router.get('/product',async(req,res)=>{
+  try{
+  var data = req.body
+  var pay;
+  var type;
+  console.log(data.Dbill)
+  console.log(data.Sname)
+  if (data.End){
+    pay=data.Cpay
+    type="one";
+  }else if(data.Begin){
+    pay=data.Spay
+    type="one";
+  }else if(data.During){
+    pay=data.Rpay
+    type="time"
+  }
+    const product = await stripe.products.create({
+      name: data.Sname,
+      
+    });
+    console.log(data.Sname)
+    const PRODUCT_ID= product.id
+    if(type === "one"){
+
+    const price = await stripe.prices.create({
+      product: PRODUCT_ID,
+      unit_amount: pay,
+      currency: 'aud',
+      
+    })}
+    else {
+    const price = await stripe.prices.create({
+      product: PRODUCT_ID,
+      unit_amount: pay,
+      currency: 'aud',
+      recurring: {
+        interval: 'month',
+      },
+    })
+  }
+    res.send(PRODUCT_ID)
+  
+}catch{console.log("there is an error"+req)}
+  })
 
 
-
-
-
-router.get('/productMixed',async(req,res)=>{
-const apple = req.body
-  const productr = await stripe.products.create({
-    name: apple.Sname,
-  });
-const PRODUCTR_ID= productr.id
-  const pricer = await stripe.prices.create({
-    product: PRODUCTR_ID,
-    unit_amount: req.body.Rpay,
-    currency: 'aud',
-    recurring: {
-      interval: 'month',
-    },
-  });
-  const productc = await stripe.products.create({
-    name: apple.Sname,
-  });
-const PRODUCTC_ID= productc.id
-  const pricec = await stripe.prices.create({
-    product: PRODUCTC_ID,
-    unit_amount: req.body.Cpay,
-    currency: 'aud',
-  });
-  const products = await stripe.products.create({
-    name: apple.Sname,
-  });
-const PRODUCTS_ID= products.id
-  const pricec = await stripe.prices.create({
-    product: PRODUCTS_ID,
-    unit_amount: req.body.Spay,
-    currency: 'aud',
-  });
-
-{}
-
-})
 
 
 // router.get('/touchedChecked',function(req,res) {
@@ -130,20 +136,42 @@ router.get('/touched',function(req,res){
 
 router.post('/secret', cors(), async (req, res) => {
   let data= req.body
+// data.prices.map(item)=>{price:item,quantity:1,tax_rates:[process.env.GST]}
   try {
-      const paymentS = await stripe.paymentIntents.create({
-        amount: req.body.Spay,
-        currency:"AUD",
-        description: "test",
-        payment_method: ['card'],
-        confirm: true,
+    
+	let acolyte = data.holder.map((first)=>{
+		const x = first.then((item)=>{
+		
+		if(item.TaxRate ===10){
+		return  {price:item.StripeID,quantity:1,tax_rates:[process.env.TAX],}
+		}else{
+		return {price:item.StripeID,quantity:1,}
+	
+	
+		}
+		
+	})
+	return x
+
+})
+
+var temp = Promise.all(acolyte)
+var xephyr = temp.then(res=>(JSON.parse(JSON.stringify(Object.assign({}, res)))))
+xephyr.then(res=>{
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      
+      line_items: [res],
+      payment_intent_data: {
+        application_fee_amount: 0
       },
-      )
-      console.log("payment", payment)
-      res.json({
-        message:"Payment Successful",
-      success: true
-    })
+      mode: 'payment',
+      success_url: 'https://example.com/success',
+      cancel_url: 'https://example.com/cancel',
+    }, {
+      stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}',
+    });})
     }catch (error)
     {console.log("Error",error)}
     res.json({

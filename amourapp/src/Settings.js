@@ -121,11 +121,12 @@ class App extends React.Component{
 			this.setState({During:true})
 			this.setState({Begin:false})
 			this.setState({End:false})
-		}else if(DBill==="Mixed"){
-			this.setState({During:true})
-			this.setState({Begin:true})
-			this.setState({End:true})
 		}
+		// else if(DBill==="Mixed"){
+		// 	this.setState({During:true})
+		// 	this.setState({Begin:true})
+		// 	this.setState({End:true})
+		// }
 
 
 
@@ -212,11 +213,12 @@ class App extends React.Component{
 	 }
 
 async	applyService(){
+	var data= this.state
 		 if(window.confirm("confirm apply"))
 	await this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
 		 console.log(this.state.xeroData)
-		var data= this.state
-		axios.post(this.$url+'/users/addservo?id=',data)
+		
+		axios.post(this.$url+'/users/addservo',data)
 		.then(res=>{
 			if(res.data===1){
 			alert("Applied Settings Succesfuly!")
@@ -708,7 +710,7 @@ this.getTerm();
 					<option value="Begin">On Sign</option>
 					<option value="During">Recuring</option>
 					<option value="End">On Completion</option>
-					<option value="Mixed">Mixed</option>
+					<option value="Mixed" disabled hidden>Mixed</option>
 			     </Form.Select>
 				 			{this.state.Begin && <Form.Group>
 							 <Form.Label>Payment On Signing</Form.Label>
@@ -721,7 +723,7 @@ this.getTerm();
 		          onChange={e => this.setState({ Cpay: e.target.value })} type="text" placeholder="" />
 							 </Form.Group>}
 							 {this.state.During && <Form.Group>
-							 <Form.Label>Monthly Payemnts</Form.Label>
+							 <Form.Label>Monthly Payments</Form.Label>
 							<Form.Control value={this.state.Rpay}
 		          onChange={e => this.setState({ Rpay: e.target.value })} type="text" placeholder="" />
 							 </Form.Group>}
@@ -739,6 +741,7 @@ this.getTerm();
 								   <Form.Label>Xero Account</Form.Label>
 								   <Form.Select  value={this.state.ServiceID}
 										   onChange={e => this.setState({ ServiceID: e.target.value })}   >
+											<option value="default" hidden> Choose...</option>
 											{this.state.optionItems}
 				</Form.Select>
 					   
@@ -775,7 +778,7 @@ this.getTerm();
 					<option value="Begin">On Sign</option>
 					<option value="During">Recuring</option>
 					<option value="End">On Completion</option>
-					<option value="Mixed">Mixed</option>
+					<option value="Mixed" disabled hidden>Mixed</option>
 			     </Form.Select>
 				 			{this.state.Begin && <Form.Group>
 							 <Form.Label>Payment On Signing</Form.Label>

@@ -635,11 +635,7 @@ async	 sub(){
 			 					</Row>
 			 					
 			 <Row className="mb-3">
-			   <Form.Group md="3"  as={Col} controlId="formGridAddress1">
-			     <Form.Label>Effective end Date</Form.Label>
-			     <Form.Control  type="date" value={this.state.followdate}
-			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="Choose..." />
-			   </Form.Group>
+
 
 				 <Form.Group md="3"  as={Col} controlId="formGridAddress1">
 					<Form.Label>Terms</Form.Label>
@@ -660,9 +656,9 @@ async	 sub(){
 			     <Form.Label>Minimum Contract Length</Form.Label>
 			     <Form.Select value={this.state.clen}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
-			       <option value="12 Month">12 Month...</option>
-			       <option value="6 Month">6 Month...</option>
-			 	  <option value="3 Month">3 Month...</option>
+			       <option value="12">12 Month...</option>
+			       <option value="6">6 Month...</option>
+			 	  <option value="3">3 Month...</option>
 			     </Form.Select>
 			   </Form.Group>
 			   
@@ -834,9 +830,9 @@ async	 sub(){
 							<Form.Label>Contract Length</Form.Label>
 							<Form.Select value={this.state.cle}
 			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
-			       		<option value="12 Month">12 Month...</option>
-			       		<option value="6 Month">6 Month...</option>
-			 	  			<option value="3 Month">3 Month...</option>
+			       		<option value="12">12 Month...</option>
+			       		<option value="6">6 Month...</option>
+			 	  			<option value="3">3 Month...</option>
 			     </Form.Select>
 							<Form.Label>Message</Form.Label>
 							<Form.Control value={this.state.mes}
