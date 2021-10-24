@@ -1,0 +1,115 @@
+CREATE TABLE `client` (
+  `clientname` varchar(45) NOT NULL,
+  `ABN` int DEFAULT NULL,
+  `ACN` varchar(45) DEFAULT NULL,
+  `BAddress` varchar(45) NOT NULL,
+  `BName` varchar(45) DEFAULT NULL,
+  `BSBAccountNumber` int NOT NULL,
+  `BSBName` varchar(45) NOT NULL,
+  `Contact` varchar(45) NOT NULL,
+  `TFN` varchar(45) NOT NULL,
+  `Type` enum('Trader','Individual','Partner','Company','Trust','Super','NFP') NOT NULL,
+  `AccountID` int NOT NULL AUTO_INCREMENT,
+  `clientcol` varchar(45) DEFAULT NULL,
+  `Handler` int NOT NULL,
+  PRIMARY KEY (`AccountID`,`Handler`),
+  KEY `Handler_idx` (`Handler`),
+  CONSTRAINT `Handler` FOREIGN KEY (`Handler`) REFERENCES `organisation` (`OrganisationID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=646380 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `contact` (
+  `ContactID` int NOT NULL AUTO_INCREMENT,
+  `Fname` varchar(45) DEFAULT NULL,
+  `Lname` varchar(45) DEFAULT NULL,
+  `Email` varchar(45) DEFAULT NULL,
+  `Address` varchar(45) DEFAULT NULL,
+  `PhoneNbr` bigint DEFAULT NULL,
+  `Organ` int DEFAULT NULL,
+  PRIMARY KEY (`ContactID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `organisation` (
+  `organisationName` varchar(45) DEFAULT NULL,
+  `OContactID` int DEFAULT NULL,
+  `OrganisationID` int NOT NULL AUTO_INCREMENT,
+  `OrganisationLogo` blob,
+  `tokenSet` json DEFAULT NULL,
+  `StripeAcc` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`OrganisationID`),
+  UNIQUE KEY `OrganisationID_UNIQUE` (`OrganisationID`),
+  KEY `Contact_idx` (`OContactID`),
+  CONSTRAINT `OContactID` FOREIGN KEY (`OContactID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `pro` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `client` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sdate` date DEFAULT NULL,
+  `edate` date GENERATED ALWAYS AS ((`sdate` + interval `clen` month)) STORED,
+  `clen` int DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `acc` enum('Pending','Accept','Refuse') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '接受还是同意',
+  `contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `token` blob,
+  `expiry` longblob,
+  `services` json DEFAULT NULL,
+  `StripeAcc` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1239 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `relationship` (
+  `Client` int NOT NULL,
+  `Relationship` enum('Director','Shareholder','Beneficiary','Trustee','Partner','Contact') DEFAULT NULL,
+  `Contact` int DEFAULT NULL,
+  KEY `Contact_idx` (`Contact`),
+  KEY `Client_idx` (`Client`),
+  CONSTRAINT `Client` FOREIGN KEY (`Client`) REFERENCES `client` (`AccountID`),
+  CONSTRAINT `Contact` FOREIGN KEY (`Contact`) REFERENCES `contact` (`ContactID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `service` (
+  `Organisation` int NOT NULL,
+  `DBill` enum('Begin','During','End','Mixed') DEFAULT NULL,
+  `TaxRate` enum('10','0') DEFAULT NULL,
+  `XeroAccount` json DEFAULT NULL,
+  `Spay` int DEFAULT '0',
+  `Cpay` int DEFAULT '0',
+  `Rpay` int DEFAULT '0',
+  `Sname` varchar(45) DEFAULT NULL,
+  `SDesc` longtext,
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `StripeID` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  KEY `Sorg_idx` (`Organisation`),
+  CONSTRAINT `Sorg` FOREIGN KEY (`Organisation`) REFERENCES `organisation` (`OrganisationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `terms` (
+  `Organisation` int NOT NULL,
+  `TermID` int NOT NULL AUTO_INCREMENT,
+  `Terms` longtext,
+  `TermName` varchar(45) DEFAULT NULL,
+  `TermDesc` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`TermID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `user` (
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Admin` tinyint DEFAULT '0',
+  `Organisation` int NOT NULL,
+  `FirstName` varchar(45) DEFAULT NULL,
+  `LastName` varchar(45) DEFAULT NULL,
+  `UserID` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`email`,`username`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `UserID_UNIQUE` (`UserID`),
+  KEY `Organisation_idx` (`Organisation`),
+  CONSTRAINT `Organisation` FOREIGN KEY (`Organisation`) REFERENCES `organisation` (`OrganisationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
