@@ -413,7 +413,7 @@ router.get('/findus', function(req, res, next) {
 router.get('/findcont', function(req, res, next) {
 	
 	//console.log(db)
-	db.query('SELECT Email from contact WHERE Email = ?', [req.query.id],function (error, results, fields) {
+	db.query('SELECT Email from contact WHERE ContactID = ?', [req.query.id],function (error, results, fields) {
 		if (error) throw error;
 	  console.log('The solution is: ')
 	  res.send(results);
