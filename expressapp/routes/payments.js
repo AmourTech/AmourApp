@@ -157,7 +157,7 @@ router.post('/secret', cors(), async (req, res) => {
 
 var temp = Promise.all(acolyte)
 var xephyr = temp.then(res=>(JSON.parse(JSON.stringify(Object.assign({}, res)))))
-xephyr.then(res=>{
+xephyr.then(async res=>{
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
