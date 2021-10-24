@@ -63,7 +63,7 @@ class App extends React.Component{
 			  edate:"", 
 			  clen:"12 Month", 
 			  message:"", 
-			  acc:"0", 
+			  acc:"Pending", 
 			  pay1:"Weekly...", 
 			  pay2:"On Acceptance...",
 			  show:false,
@@ -294,7 +294,7 @@ async	checkboxes(){
 				 console.log(err);
 			})
 	
-}
+	}
 
 	duplicate(id){
 		if (window.confirm("confirm duplicate?")) {
@@ -635,11 +635,11 @@ async	 sub(){
 			 					</Row>
 			 					
 			 <Row className="mb-3">
-			   <Form.Group md="3"  as={Col} controlId="formGridAddress1">
+			   {/* <Form.Group md="3"  as={Col} controlId="formGridAddress1">
 			     <Form.Label>Effective end Date</Form.Label>
 			     <Form.Control  type="date" value={this.state.followdate}
 			          onChange={e => this.setState({ edate: e.target.value })}  placeholder="Choose..." />
-			   </Form.Group>
+			   </Form.Group> */}
 
 				 <Form.Group md="3"  as={Col} controlId="formGridAddress1">
 					<Form.Label>Terms</Form.Label>
@@ -653,21 +653,17 @@ async	 sub(){
 						}
 					</Form.Select>
 				</Form.Group>
-			 </Row>
-			 
-			 <Row className="mb-3">
-			   <Form.Group md="3"  as={Col} controlId="formGridAddress2">
+
+				<Form.Group md="3"  as={Col} controlId="formGridAddress2">
 			     <Form.Label>Minimum Contract Length</Form.Label>
 			     <Form.Select value={this.state.clen}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
-			       <option value="12 Month">12 Month...</option>
-			       <option value="6 Month">6 Month...</option>
-			 	  <option value="3 Month">3 Month...</option>
+			       <option value="12">12 Months</option>
+			       <option value="6">6 Months</option>
+			 	  <option value="3">3 Months</option>
 			     </Form.Select>
 			   </Form.Group>
-			   
-			   </Row>
-			 
+			 </Row>
 
 			   
 			   <Button className="me-2" onClick={() => this.setShow(true)}>
@@ -715,7 +711,7 @@ async	 sub(){
 			 
 			 <tr className="table-tr">
 			   <td>Proposal Name</td>
-			   <td>Client</td>
+			   {/* <td>Client</td> */}
 			   <td>Contact</td>
 				<td>Start Date</td>
 				<td>End Date</td>
@@ -729,7 +725,7 @@ async	 sub(){
 			                   this.state.viewdata.map((item, index) => {
 			                       return <tr>
 								   <td >{item.name}</td>
-								   <td >{item.client}</td>
+								   {/* <td >{item.client}</td> */}
 								   <td >{item.contact}</td>
 								   <td >{item.sdate}</td>
 								   <td >{item.edate}</td>
@@ -828,15 +824,15 @@ async	 sub(){
 							<Form.Label>Start Date</Form.Label>
 							<Form.Control value={this.state.sda}
 		          onChange={e => this.setState({ sda: e.target.value })} type="date" placeholder="" />
-							<Form.Label>End Date</Form.Label>
+							{/* <Form.Label>End Date</Form.Label>
 							<Form.Control value={this.state.eda}
-		          onChange={e => this.setState({ eda: e.target.value })} type="date" placeholder="" />
+		          onChange={e => this.setState({ edate: e.target.value })} type="date" placeholder="" /> */}
 							<Form.Label>Contract Length</Form.Label>
 							<Form.Select value={this.state.cle}
 			          onChange={e => this.setState({ cle: e.target.value })}  defaultValue="Choose...">
-			       		<option value="12 Month">12 Month...</option>
-			       		<option value="6 Month">6 Month...</option>
-			 	  			<option value="3 Month">3 Month...</option>
+			       		<option value="12">12 Months</option>
+			       		<option value="6">6 Months</option>
+			 	  			<option value="3">3 Months</option>
 			     </Form.Select>
 							<Form.Label>Message</Form.Label>
 							<Form.Control value={this.state.mes}

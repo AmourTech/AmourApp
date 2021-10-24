@@ -205,8 +205,8 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, edate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,? ,?)';
-   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.edate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
+   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?)';
+   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);
@@ -248,7 +248,7 @@ router.post('/updatepro', function (req, res, next) {
 	
 	var data = req.body
 	console.log(data.name)
-	db.query("UPDATE pro SET name = ?, client = ?,contact = ?, sdate = ?, edate = ?, clen = ?, message = ?, acc = ?, ,contact = ?, services = ? WHERE id = ?",[data.na, data.client,data.contactid, data.sda, data.eda, data.cle, data.mes, data.ac, data.cont, data.serviceSend, data.id],function (err, results) {
+	db.query("UPDATE pro SET name = ?, client = ?,contact = ?, sdate = ?, clen = ?, message = ?, acc = ?, contact = ?, services = ? WHERE id = ?",[data.na, data.client,data.contactid, data.sda, data.cle, data.mes, data.ac, data.cont, data.serviceSend, data.id],function (err, results) {
 					if(err){
 					 console.log('[INSERT ERROR] - ',err.message);
 		 res.send('0');
@@ -348,7 +348,7 @@ router.get('/findus', function(req, res, next) {
 router.get('/findcont', function(req, res, next) {
 	
 	//console.log(db)
-	db.query('SELECT Email from contact WHERE ContactID = ?', [req.query.id],function (error, results, fields) {
+	db.query('SELECT Email from contact WHERE Email = ?', [req.query.id],function (error, results, fields) {
 		if (error) throw error;
 	  console.log('The solution is: ')
 	  res.send(results);
