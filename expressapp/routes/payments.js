@@ -137,8 +137,8 @@ router.get('/touched',function(req,res){
 
     const accountLinks = await stripe.accountLinks.create({
     account: a,
-    refresh_url: 'http://localhost:3001/payments/touched',
-    return_url: 'http://localhost:3000/Settings',
+    refresh_url: 'https://localhost:3001/payments/touched',
+    return_url: 'https://localhost:3000/Settings',
     type: 'account_onboarding',
     });
     res.send(accountLinks)

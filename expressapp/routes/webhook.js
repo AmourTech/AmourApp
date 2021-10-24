@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const app = express();
 app.use(express.json());
-
+var db = require( "../database/db.js" );
 // Use JSON parser for all non-webhook routes
 app.use((req, res, next) => {
   if (req.originalUrl === "/webhook") {
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 // Set your secret key. Remember to switch to your live secret key in production!
 // See your keys here: https://dashboard.stripe.com/apikeys
 const Stripe = require('stripe');
-const stripe = Stripe('sk_test_51JiCbaGOEavO6Qmn9Rs4I8PciXnx22k4BB4oVTeesEMJxo4RtU27185Vqhbr7m1drE8jyV9DsF7avoJpbzpLZBIf00bHQMBKxJ');
+const stripe = Stripe(process.env.STRIPE_SECRET_TEST);
 
 // If you are testing your webhook locally with the Stripe CLI you
 // can find the endpoint's secret by running `stripe listen`
