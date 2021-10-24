@@ -82,6 +82,7 @@ class App extends React.Component{
 				id:'',
 				contactid:'',
 			  importer:[{}],
+			  StripeAcc:"",
 			};
 			
 			this.sub = this.sub.bind(this);
@@ -103,7 +104,8 @@ class App extends React.Component{
 
 	  componentDidMount() {
 	      this.getList()
-		  this.setMenu(1)			
+		  this.setMenu(1)
+		  this.Stripeid()			
 	   }
 	   handleOpenDialog = (e) => {
 		if (buttonRef.current) {
@@ -332,6 +334,18 @@ async	checkboxes(){
 	
 	})
 }
+Stripeid(){
+	let view  = JSON.parse(localStorage.getItem("user"))[0] 
+
+	axios.get(this.$url+'/payments/clientid?id='+view.Organisation,null).then(res=>
+		this.setState({StripeAcc:res.data})
+	)
+
+
+
+}
+
+
 duplicateadd(data){
 	axios.post(this.$url+'/users/add',data)
 	.then(res => {
@@ -656,6 +670,8 @@ async	 sub(){
 			     <Form.Label>Minimum Contract Length</Form.Label>
 			     <Form.Select value={this.state.clen}
 			          onChange={e => this.setState({ clen: e.target.value })}  defaultValue="Choose...">
+
+			       <option hidden default>choose...</option>
 			       <option value="12">12 Month...</option>
 			       <option value="6">6 Month...</option>
 			 	  <option value="3">3 Month...</option>

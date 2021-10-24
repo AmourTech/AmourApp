@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React,{useState} from 'react'
+import { Component } from 'react';
 import ReactFileReader from 'react-file-reader';
 import {Elements} from "@stripe/react-stripe-js"
 import { Nav, Navbar, Form, FormControl, Dropdown } from 'react-bootstrap';
@@ -19,8 +20,6 @@ import crypto from 'crypto';
 import StripeContainer from './StripeContainer';
 import internal from 'stream';
 
-//init("user_rWil2YAmTwqksmYOlnout");
-
 const nodemailer = require('nodemailer');
 const buttonRef = React.createRef();
 class App extends React.Component{
@@ -29,6 +28,8 @@ class App extends React.Component{
 	 constructor(props) {
 	    super(props);
 	    this.state = {
+			cholder:JSON,
+			stripeAccount:'',
 			holder:JSON,
 			accounts:JSON,
 			backlog:0,
@@ -92,6 +93,7 @@ class App extends React.Component{
  componentDidMount() {
       //console.log(this.props.match.params.token);
  this.getList();
+ 
 
 	   }
 	   handleOpenDialog = (e) => {
@@ -131,6 +133,30 @@ class App extends React.Component{
 		window.confirm('import confirmed')
 		console.log(csv.length)
 	  }
+
+
+
+
+async checkout(){
+	try{
+		var data = this.state
+		const res = await axios.post(this.$url+"/payments/secret",data).then(
+
+			res=>{
+				window.location.href=res.data
+
+
+			})
+		}
+	catch (err) {
+
+		console.error(err);
+	}
+ 
+
+
+}
+
 async checkcosts(){
 
 	var a = this.state.holder
@@ -183,8 +209,8 @@ monies = a.map( (item, index)=>{
 }
 
 createitem(){
-	var apple
 	
+	axios.post(this.$url+"/payments/checktax?id="+this.state.stripeAccount)
 	
 	
 	}
@@ -198,6 +224,8 @@ getbackpay(){
 
 }
 async getTime(){
+	await this.setState({stripeAccount:this.state.viewdata[0].StripeAcc})
+	this.createitem()
 	var date = new Date()
 	var Cday = date.getDate()
 	var Cmonth = date.getMonth()
@@ -277,6 +305,9 @@ let b = 	a.map((item, index)=>
 
 	// } )
 	this.setState({holder:(b)})
+	var c = Promise.all(b)
+	await c.then(res=>{this.setState({cholder:(res)})})
+	console.log(this.state.cholder)
 }
 
 
@@ -319,7 +350,7 @@ let b = 	a.map((item, index)=>
 
    
     getList(){
-
+		axios.get(this.$url+"/")
 	 
 		axios.get(this.$url+"/users/viewproposal", { params: {
       token: this.props.match.params.token
@@ -341,7 +372,7 @@ let b = 	a.map((item, index)=>
 		  .catch(err => {
 		     console.log(err);
 		  })
-	
+
 		}
 	
 
@@ -459,8 +490,9 @@ duplicateadd(data){
 	}
 	
 	setShow(flag){
-		 
+
 		  this.setState({show: flag});
+		  
 	}
 	
 	setShow1(flag,mes){
@@ -640,7 +672,14 @@ duplicateadd(data){
 						
 					</Modal.Body>
 		</Modal>
-		{this.state.showItem ? <StripeContainer/> : <> <h3>
+		
+          <br></br>
+          <br></br>
+		  
+		{/* { this.state.showItem ?
+
+		<StripeContainer allData={this.state}/>
+: <> <h3>
 			<br/>
 			This is the Start Date {this.state.Sdate}<br/>
 			this is the End Date {this.state.Edate}<br/>
@@ -650,9 +689,15 @@ duplicateadd(data){
 			
 			This Much on Startup: ${this.state.Spay}<br/>
 			This Much Monthly: ${this.state.Rpay}<br/>
-			This Much on Completion: ${this.state.Cpay}</h3>
-			<button onClick={() => this.setState({showItem:true})}>Purchase</button></>}
-		<button onClick = {()=> this.getstuff()}>Check Cost</button>			
+			This Much on Completion: ${this.state.Cpay}
+			
+			</h3>
+					 console.log(this.state.holder)
+			<button onClick={() => this.setState({showItem:true})}>Purchase</button></> */}
+			
+      <button onClick={() => this.checkout()}>Checkout</button>
+		{/* <button onClick = {()=> this.getstuff()}>Check Cost</button>		
+		<button onClick = {()=> this.test()}>Check Cost</button>				 */}
 		</div>
 	  </header>
 	</div>

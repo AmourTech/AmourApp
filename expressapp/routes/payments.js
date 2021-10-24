@@ -46,7 +46,7 @@ router.get('/product',async(req,res)=>{
     else {
     const price = await stripe.prices.create({
       product: PRODUCT_ID,
-      unit_amount: pay,
+      unit_amount:pay,
       currency: 'aud',
       recurring: {
         interval: 'month',
@@ -108,7 +108,23 @@ router.get('/touchedChecked',function(req,res) {
 
 })
 
+router.get('/clientid',function(req,res) {
+  try{
+  db.query('Select StripeAcc FROM organisation WHERE OrganisationID = ?',[req.query.id], async (error, results) =>{
+    var a = JSON.parse(JSON.stringify(results))[0].StripeAcc
+    console.log(a)
+    console.log(results.StripeAcc)
+    res.send(a)
 
+    })
+  }  catch(error){console.log("Error",error)}
+
+
+
+
+
+
+})
 router.get('/touched',function(req,res){
 
 
@@ -132,54 +148,86 @@ router.get('/touched',function(req,res){
   }
  
 )
-
+router.post('/checktax',async (req, res) => {
+ 
+});
 
 router.post('/secret', cors(), async (req, res) => {
+  
   let data= req.body
+
+  let CONNECTED_STRIPE_ACCOUNT_ID = data.stripeAccount
+var tax;
+  try{
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST,{
+      stripeAccount: CONNECTED_STRIPE_ACCOUNT_ID,
+      })
+  
+        const taxRates = await stripe.taxRates.list({
+          limit: 1,
+        });
+        console.log(taxRates)
+        if(taxRates.data==''){
+        const taxRate = await stripe.taxRates.create({
+          display_name: 'GST',
+          description: 'GST Australia',
+          jurisdiction: 'AU',
+          percentage: 10,
+          inclusive: false,
+        })
+      tax=taxRate.id
+      }else{
+
+        tax=taxRates.data[0].id}
+  
+  
+  
+      }catch(error){console.log(error)}
 // data.prices.map(item)=>{price:item,quantity:1,tax_rates:[process.env.GST]}
   try {
-    
-	let acolyte = data.holder.map((first)=>{
-		const x = first.then((item)=>{
+
+	let acolyte = data.cholder.map((first)=>{
+    console.log(first)
 		
-		if(item.TaxRate ===10){
-		return  {price:item.StripeID,quantity:1,tax_rates:[process.env.TAX],}
+		if(first.TaxRate ==='10'){
+		return  {price:first.StripeID,quantity:1,tax_rates:[tax],}
 		}else{
-		return {price:item.StripeID,quantity:1,}
+		return {price:first.StripeID,quantity:1,}
 	
 	
 		}
 		
-	})
-	return x
+
 
 })
+console.log(acolyte)
 
-var temp = Promise.all(acolyte)
-var xephyr = temp.then(res=>(JSON.parse(JSON.stringify(Object.assign({}, res)))))
-xephyr.then(async res=>{
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      
-      line_items: [res],
-      payment_intent_data: {
-        application_fee_amount: 0
-      },
-      mode: 'payment',
-      success_url: 'https://example.com/success',
-      cancel_url: 'https://example.com/cancel',
-    }, {
-      stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}',
-    });})
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: acolyte,
+  payment_intent_data: {
+    application_fee_amount: 0,
+  },
+  mode: 'payment',
+  success_url: 'https://example.com/success',
+  cancel_url: 'https://example.com/cancel',
+}, {
+  stripeAccount: CONNECTED_STRIPE_ACCOUNT_ID,
+});
+
+
+res.send(session.url)
+  
     }catch (error)
-    {console.log("Error",error)}
+    {console.log("Error",error)
     res.json({
+
       message:"Payment failed",
       success: false
-    })
-  });
+    })}
 
+  })
 
 
 

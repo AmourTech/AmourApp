@@ -10,7 +10,6 @@ var db = require( "../database/db.js" );
 
 var crypto = require('crypto');
 const nodemailer = require('nodemailer');
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST)
 router.post('/customerportal',function(req,res,next){
 	console.log(req.body.email)
@@ -57,6 +56,25 @@ router.post('/customerportal',function(req,res,next){
 	});
 })
 
+
+
+
+
+router.get('/getorgwithservo',function(req,res){
+
+db.query('SELECT Organisation FROM service where ID = ?',[req.query.id],function(error, results){
+	if(error){
+		console.log('[INSERT ERROR] - ',error.message);
+		res.send('0');
+		return;
+	   }
+
+	res.send(results)
+
+});
+
+
+})
 
 
 
@@ -149,7 +167,9 @@ router.post('/updateterm', function(req, res, next) {
 	
 });
 router.post('/addservo', async(req, res)=> {
-
+	const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST,{
+		stripeAccount: req.body.StripeAcc,
+	  })
 	try{
 
 		var data = req.body
@@ -179,12 +199,12 @@ router.post('/addservo', async(req, res)=> {
 			  
 		  apple = {
 			  product: PRODUCT_ID,
-			  unit_amount: pay,
+			  unit_amount: pay*100,
 			  currency: 'aud',}
 		}else{
 			apple = {
 			product: PRODUCT_ID,	
-			unit_amount: pay,
+			unit_amount: pay*100,
 			currency: 'aud',
 			recurring:{ interval: 'month',},
 		}
@@ -196,7 +216,7 @@ router.post('/addservo', async(req, res)=> {
 			apple
 			
 		  )		  
-		
+		console.log(price)
 
 	
 	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc,StripeID) VALUES (?,?,?,?,?,?,?,?,?,?)' ;
@@ -250,8 +270,8 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?)';
-   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
+   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid,StripeAcc) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?,?)';
+   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid,data.StripeAcc];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);

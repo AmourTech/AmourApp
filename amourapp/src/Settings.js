@@ -46,9 +46,9 @@ class App extends React.Component{
 				message:'',
 				Sname:'',
 				SDesc:'',
-				Spay:'',
-				Rpay:'',
-				Cpay:'',
+				Spay:0,
+				Rpay:0,
+				Cpay:0,
 				Begin:false,
 				During:false,
 				End:false,
@@ -67,7 +67,9 @@ class App extends React.Component{
 				  Dbill:'',
 				  TRate:'',
 				  Xero:'',
-				  id:''
+				  id:'',
+				  StripeAcc:"",
+
 				};
 
 		this.handleAdmin = this.handleAdmin.bind(this);
@@ -98,7 +100,10 @@ class App extends React.Component{
 		this.getTerm()
 
 		this.storeData()
-		
+		let view  = JSON.parse(localStorage.getItem("user"))[0] 
+		axios.get(this.$url+'/payments/clientid?id='+view.Organisation,null).then(res=>
+			this.setState({StripeAcc:res.data})
+		)
 	 }
 
 	 BillHandler(DBill){
@@ -217,7 +222,7 @@ async	applyService(){
 		 if(window.confirm("confirm apply"))
 	await this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
 		 console.log(this.state.xeroData)
-		
+
 		axios.post(this.$url+'/users/addservo',data)
 		.then(res=>{
 			if(res.data===1){
