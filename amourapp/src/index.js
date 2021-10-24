@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 
 
-React.Component.prototype.$url = 'http://localhost:3001';
+React.Component.prototype.$url = 'https://localhost:3001';
 
 ReactDOM.render(
   <React.StrictMode>
