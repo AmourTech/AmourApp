@@ -46,9 +46,9 @@ class App extends React.Component{
 				message:'',
 				Sname:'',
 				SDesc:'',
-				Spay:'',
-				Rpay:'',
-				Cpay:'',
+				Spay:0,
+				Rpay:0,
+				Cpay:0,
 				Begin:false,
 				During:false,
 				End:false,
@@ -67,7 +67,9 @@ class App extends React.Component{
 				  Dbill:'',
 				  TRate:'',
 				  Xero:'',
-				  id:''
+				  id:'',
+				  StripeAcc:"",
+
 				};
 
 		this.handleAdmin = this.handleAdmin.bind(this);
@@ -98,7 +100,10 @@ class App extends React.Component{
 		this.getTerm()
 
 		this.storeData()
-		
+		let view  = JSON.parse(localStorage.getItem("user"))[0] 
+		axios.get(this.$url+'/payments/clientid?id='+view.Organisation,null).then(res=>
+			this.setState({StripeAcc:res.data})
+		)
 	 }
 
 	 BillHandler(DBill){
@@ -121,11 +126,12 @@ class App extends React.Component{
 			this.setState({During:true})
 			this.setState({Begin:false})
 			this.setState({End:false})
-		}else if(DBill==="Mixed"){
-			this.setState({During:true})
-			this.setState({Begin:true})
-			this.setState({End:true})
 		}
+		// else if(DBill==="Mixed"){
+		// 	this.setState({During:true})
+		// 	this.setState({Begin:true})
+		// 	this.setState({End:true})
+		// }
 
 
 
@@ -212,10 +218,11 @@ class App extends React.Component{
 	 }
 
 async	applyService(){
+	var data= this.state
 		 if(window.confirm("confirm apply"))
 	await this.setState({xeroData:JSON.stringify(this.state.accounts[this.state.ServiceID])})
 		 console.log(this.state.xeroData)
-		var data= this.state
+
 		axios.post(this.$url+'/users/addservo',data)
 		.then(res=>{
 			if(res.data===1){
@@ -423,8 +430,44 @@ this.getTerm();
 
 		
 		  }	 
-	 
 
+
+		  Stripechecker(){
+
+			axios.get(this.$url+'/payments/touchedChecked?id='+this.state.org,null).then(
+
+				res=>{
+					console.log(res.data)
+
+
+				}
+			)	  .catch(err => {
+				console.log(err);
+			 })
+
+
+		  }
+
+		  StripeCreate(){
+
+
+
+			axios.get(this.$url+'/payments/touched?id='+this.state.org,null).then(
+
+				res=>{
+					window.location.href=res.data.url
+
+
+				}
+			)	  .catch(err => {
+				console.log(err);
+			 })
+
+
+
+
+
+		  }
 	 
 	 adduser(){
 		 
@@ -643,6 +686,10 @@ this.getTerm();
 	
 		   <Button onClick={()=> this.authenticate()}>		   Add Xero Account
 </Button>
+<Button onClick={()=> this.StripeCreate()}>		   Add Stripe Account
+</Button>
+<Button onClick={()=> this.Stripechecker()}>		   checkStripe
+</Button>
 
 
 	<Modal show={this.state.show} fullscreen={true} onHide={() => this.setShow(false,'')}>
@@ -668,7 +715,7 @@ this.getTerm();
 					<option value="Begin">On Sign</option>
 					<option value="During">Recuring</option>
 					<option value="End">On Completion</option>
-					<option value="Mixed">Mixed</option>
+					<option value="Mixed" disabled hidden>Mixed</option>
 			     </Form.Select>
 				 			{this.state.Begin && <Form.Group>
 							 <Form.Label>Payment On Signing</Form.Label>
@@ -681,7 +728,7 @@ this.getTerm();
 		          onChange={e => this.setState({ Cpay: e.target.value })} type="text" placeholder="" />
 							 </Form.Group>}
 							 {this.state.During && <Form.Group>
-							 <Form.Label>Monthly Payemnts</Form.Label>
+							 <Form.Label>Monthly Payments</Form.Label>
 							<Form.Control value={this.state.Rpay}
 		          onChange={e => this.setState({ Rpay: e.target.value })} type="text" placeholder="" />
 							 </Form.Group>}
@@ -699,6 +746,7 @@ this.getTerm();
 								   <Form.Label>Xero Account</Form.Label>
 								   <Form.Select  value={this.state.ServiceID}
 										   onChange={e => this.setState({ ServiceID: e.target.value })}   >
+											<option value="default" hidden> Choose...</option>
 											{this.state.optionItems}
 				</Form.Select>
 					   
@@ -735,7 +783,7 @@ this.getTerm();
 					<option value="Begin">On Sign</option>
 					<option value="During">Recuring</option>
 					<option value="End">On Completion</option>
-					<option value="Mixed">Mixed</option>
+					<option value="Mixed" disabled hidden>Mixed</option>
 			     </Form.Select>
 				 			{this.state.Begin && <Form.Group>
 							 <Form.Label>Payment On Signing</Form.Label>

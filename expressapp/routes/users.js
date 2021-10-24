@@ -4,14 +4,13 @@ var app = express();
 var NodeRSA = require('node-rsa');
 
 
-
+require("dotenv").config()
 var router = express.Router();
 var db = require( "../database/db.js" );
 
 var crypto = require('crypto');
 const nodemailer = require('nodemailer');
-
-
+const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST)
 router.post('/customerportal',function(req,res,next){
 	console.log(req.body.email)
 	if (req.body.email == '') {
@@ -57,6 +56,25 @@ router.post('/customerportal',function(req,res,next){
 	});
 })
 
+
+
+
+
+router.get('/getorgwithservo',function(req,res){
+
+db.query('SELECT Organisation FROM service where ID = ?',[req.query.id],function(error, results){
+	if(error){
+		console.log('[INSERT ERROR] - ',error.message);
+		res.send('0');
+		return;
+	   }
+
+	res.send(results)
+
+});
+
+
+})
 
 
 
@@ -148,14 +166,61 @@ router.post('/updateterm', function(req, res, next) {
 	
 	
 });
-router.post('/addservo', function(req, res, next) {
-	var data = req.body
+router.post('/addservo', async(req, res)=> {
+	const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST,{
+		stripeAccount: req.body.StripeAcc,
+	  })
+	try{
+
+		var data = req.body
+		var pay;
+		var type;
+		console.log(data.Dbill)
+		console.log(data.Sname)
+		if (data.End){
+		  pay=data.Cpay
+		  type="one";
+		}else if(data.Begin){
+		  pay=data.Spay
+		  type="one";
+		}else if(data.During){
+		  pay=data.Rpay
+		  type="time"
+		}
+		  const product = await stripe.products.create({
+			name: data.Sname,
+			
+		  });
+		  console.log(data.Sname)
+		  console.log(product.id)
+		  const PRODUCT_ID= product.id
+		  var apple;
+		  if(type === "one"){
+			  
+		  apple = {
+			  product: PRODUCT_ID,
+			  unit_amount: pay*100,
+			  currency: 'aud',}
+		}else{
+			apple = {
+			product: PRODUCT_ID,	
+			unit_amount: pay*100,
+			currency: 'aud',
+			recurring:{ interval: 'month',},
+		}
+		  }
+		  console.log(apple)
+	  
+		  const price = await stripe.prices.create(
+			
+			apple
+			
+		  )		  
+		console.log(price)
+
 	
-	
-	
-	console.log(data)
-	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc) VALUES (?,?,?,?,?,?,?,?,?)' ;
-	var addSqlParam = [data.org, data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc];
+	var addSql ='INSERT INTO service(Organisation, DBill, TaxRate, XeroAccount, Spay, Cpay, Rpay, Sname, SDesc,StripeID) VALUES (?,?,?,?,?,?,?,?,?,?)' ;
+	var addSqlParam = [data.org, data.Dbill,data.TRate,data.xeroData,data.Spay,data.Cpay,data.Rpay,data.Sname,data.SDesc,price.id];
 	db.query(addSql, addSqlParam,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ', err.message);
@@ -164,10 +229,10 @@ router.post('/addservo', function(req, res, next) {
 	        }
 					
 		  console.log(result)
-	 
+			
 	      res.send('1');
 	});
-	
+	}catch{}	
 });
 router.post('/addterm', function(req, res, next) {
 	var data = req.body
@@ -205,8 +270,8 @@ router.post('/add', function (req, res, next) {
 	
    var data = req.body
    console.log(data.name)
-   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?)';
-   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid];
+   var  addSql = 'INSERT INTO pro(name, client,contact, sdate, clen, message, acc, services,userid,StripeAcc) VALUES ( ?, ?,?, ?, ?, ?, ?, ?,?,?)';
+   var  addSqlParams = [data.name, data.client,data.contactid, data.sdate, data.clen, data.message, data.acc, JSON.stringify(data.serviceSend),data.userid,data.StripeAcc];
    db.query(addSql,addSqlParams,function (err, result) {
            if(err){
             console.log('[INSERT ERROR] - ',err.message);
@@ -488,13 +553,19 @@ router.post('/addc', function(req, res, next) {
 	});
 	
 });
-router.post('/addOrg', function(req, res, next) {
+router.post('/addOrg', async(req, res, next)=> {
+try{
+	const account = await stripe.accounts.create({
+		type: 'standard',
+		})
 	
+		
+		
 	
 	var data = req.body
 	console.log(data)
-	var  addSql = 'INSERT INTO organisation(organisationName) VALUES ( ?)';
-	var  addSqlParams = [data.oname];
+	var  addSql = 'INSERT INTO organisation(organisationName,StripeAcc) VALUES ( ?,?)';
+	var  addSqlParams = [data.oname,account.id];
 	db.query(addSql,addSqlParams,function (err, result) {
 	        if(err){
 	         console.log('[INSERT ERROR] - ',err.message);
@@ -515,7 +586,10 @@ router.post('/addOrg', function(req, res, next) {
 		res.send(result)
 
 	});
-	
+}
+catch (error)
+{console.log("Error",error)}
+
 });
 
 router.post('/addcontact', function(req, res, next) {

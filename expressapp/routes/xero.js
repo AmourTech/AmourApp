@@ -12,7 +12,7 @@ app.use(cors());
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var redirectUrl = process.env.REDIRECT_URI;
-var scopes = 'openid profile email accounting.settings accounting.reports.read accounting.journals.read accounting.contacts accounting.attachments accounting.transactions offline_access';
+var scopes = 'openid profile email accounting.settings accounting.settings.read accounting.reports.read accounting.journals.read accounting.contacts accounting.attachments accounting.transactions offline_access';
 
 
 
@@ -133,10 +133,13 @@ router.get('/accounts', async(req,res)=>{
 		var tokenSet = await xero.readTokenSet();
 		await xero.updateTenants();
 		const activeTenantId = xero.tenants[0].tenantId;
+		const ifModifiedSince = new Date("2020-02-06T12:17:43.202-08:00");
+		const where = 'Status=="ACTIVE" AND Type=="BANK"';
+		const order = 'Name ASC';
 		console.log(tokenSet)
 		console.log("1")
 		console.log(tokenSet.expired() ? 'expired' : 'valid');
-	var getAccountsResponse = await xero.accountingApi.getAccounts(activeTenantId);
+	var getAccountsResponse = await xero.accountingApi.getAccounts(activeTenantId, ifModifiedSince,where, order);
 	console.log(getAccountsResponse)
 	res.send(getAccountsResponse)
 	}

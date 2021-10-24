@@ -91,7 +91,7 @@ class App extends React.Component {
                     clearInterval(intevalId)
                     return
                 })
-        }, 500)
+        }, 1000)
         //TODO 重置时间
 
     }
